@@ -1,4 +1,4 @@
-import coverPage from "../../public/hr.jpg";
+import coverPage from "/hr.jpg";
 export default function Dashboard() {
   return (
     <>

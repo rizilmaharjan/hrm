@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Instance } from "../config/Instance";
-import { useNavigate } from "react-router-dom";
 import AddEvent from "../modal/AddEvent";
 import { useCustomContext } from "../context/DataContext";
 import { useLocation } from "react-router-dom";
@@ -28,7 +27,6 @@ export default function ServiceEvent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
-  const navigate = useNavigate();
   useEffect(() => {
     const getServiceEvents = async () => {
       setIsLoading(true);

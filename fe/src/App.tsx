@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Private from "./layout/Private";
 import Dashboard from "./pages/Dashboard";
 import UserProfile from "./pages/UserProfile";
+import JobType from "./pages/JobType";
 // import ProfileLayout from "./components/ProfileLayout";
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="/service-events" element={<ServiceEvent />} />
             {/* <Route element={<ProfileLayout />}> */}
             <Route path="/user/profile" element={<UserProfile />} />
+            <Route path="/job-type" element={<JobType />} />
             {/* </Route> */}
             {/* <Route path="/service-event/create" element={<Service />} /> */}
           </Route>
