@@ -1,4 +1,4 @@
-import userProfile from "../../public/user.jpg";
+import userProfile from "/user.jpg";
 export default function UserProfile() {
   return (
     <>
