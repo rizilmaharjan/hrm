@@ -78,10 +78,7 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
         });
         toast.success("Event Added Successfully");
       } else {
-        const res = await Instance.put(
-          `/v1/service-event/${editID}`,
-          serviceDesc
-        );
+        await Instance.put(`/v1/service-event/${editID}`, serviceDesc);
         setServiceEvents((prev) => {
           if (!prev) return [];
           return prev.map((item) => {
@@ -123,7 +120,7 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
               onClick={() => {
                 setIsModalOpen(false);
                 setIsEdit(false);
-                setServiceToEdit((prev) => {
+                setServiceToEdit((prev: any) => {
                   return {
                     ...prev,
                     SERVICE_EVENT_CD: "",

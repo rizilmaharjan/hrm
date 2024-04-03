@@ -101,8 +101,8 @@ export default function ServiceEvent() {
             {isDeleteModalOpen && (
               <Delete
                 setIsDeleteModalOpen={setIsDeleteModalOpen}
-                selectDeleteId={selectDeleteId}
                 onDeleteSuccess={onDeleteSuccess}
+                deleteUrl={`/v1/service/${selectDeleteId}`}
               />
             )}
             {isModalOpen && (
