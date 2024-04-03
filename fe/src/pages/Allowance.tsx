@@ -77,7 +77,9 @@ export default function Allowance() {
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //   useEffect(() => {

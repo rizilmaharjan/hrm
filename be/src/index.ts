@@ -11,6 +11,7 @@ import serviceRoutes from "./serviceEvent/index";
 import authRoutes from "./auth/index";
 import allowanceRoutes from "./allowance/index";
 import jobTypeRoutes from "./jobType/index";
+import positionRoutes from "./position/index";
 
 
 const app: Express = express();
@@ -30,6 +31,7 @@ app.use("/api", serviceRoutes());
 app.use("/api", authRoutes());
 app.use("/api", allowanceRoutes());
 app.use("/api", jobTypeRoutes());
+app.use("/api", positionRoutes());
 
 
 app.listen(port, () => {

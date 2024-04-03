@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Instance } from "../config/Instance";
-import { useCustomContext } from "../context/DataContext";
-import { useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Delete from "../modal/Delete";
 import AddJobType from "../modal/AddJobType";
@@ -30,7 +28,6 @@ export default function JobType() {
   // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
@@ -105,8 +102,9 @@ export default function JobType() {
             {isDeleteModalOpen && (
               <Delete
                 setIsDeleteModalOpen={setIsDeleteModalOpen}
-                selectDeleteId={selectDeleteId}
+                // selectDeleteId={selectDeleteId}
                 onDeleteSuccess={onDeleteSuccess}
+                deleteUrl={`/v1/job-type/${selectDeleteId}`}
               />
             )}
             {isModalOpen && (
