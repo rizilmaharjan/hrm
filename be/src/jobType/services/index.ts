@@ -2,9 +2,9 @@ import { TJobType } from "../../types";
 
 import * as JobTypeRepository from "../repository/index";
 
-export const postJobType = async (data: TJobType) => {
+export const postJobType = async (body: TJobType) => {
   try {
-    const resopnse = await JobTypeRepository.postJobType(data);
+    const resopnse = await JobTypeRepository.postJobType(body);
     return resopnse;
   } catch (error: any) {
     return { status: 500, message: error.message };

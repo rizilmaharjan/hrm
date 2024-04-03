@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Instance } from "../config/Instance";
-import { useCustomContext } from "../context/DataContext";
 import { useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Delete from "../modal/Delete";

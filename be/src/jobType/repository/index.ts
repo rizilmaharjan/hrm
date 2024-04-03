@@ -1,7 +1,7 @@
 import { connectToDB } from "../../config/database";
 import { TJobType } from "../../types";
 import { formatDate } from "../../utils";
-export const postJobType = async (data: TJobType) => {
+export const postJobType = async (body: TJobType) => {
   const {
     job_type_cd,
     job_type_desc,
@@ -19,7 +19,7 @@ export const postJobType = async (data: TJobType) => {
     job_expire_months,
     is_social_security_fund,
     job_type_group,
-  } = data;
+  } = body;
   const entered_dt = formatDate();
   // console.log("Repository data:", data, entered_dt);
   try {

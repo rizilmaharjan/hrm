@@ -10,6 +10,7 @@ import userRoutes from "./user/index";
 import serviceRoutes from "./serviceEvent/index";
 import authRoutes from "./auth/index";
 import jobTypeRoutes from "./jobType/index";
+import positionRoutes from "./position/index";
 
 const app: Express = express();
 const port = env.PORT;
@@ -27,6 +28,7 @@ app.use("/api", userRoutes());
 app.use("/api", serviceRoutes());
 app.use("/api", authRoutes());
 app.use("/api", jobTypeRoutes());
+app.use("/api", positionRoutes());
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${env.PORT}`);
