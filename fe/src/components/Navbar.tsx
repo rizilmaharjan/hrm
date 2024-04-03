@@ -1,5 +1,5 @@
 import { useState } from "react";
-import user from "../../public/user.jpg";
+import user from "/user.jpg";
 import ToolTip from "./ToolTip";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
