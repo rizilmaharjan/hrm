@@ -18,3 +18,20 @@ export const getPosition = async () => {
     return { status: 500, message: error.message };
   }
 };
+
+export const updatePosition = async (id: string, data: TPosition) => {
+  try {
+    const resopnse = await PositionRepository.updatePosition(id, data);
+    return resopnse;
+  } catch (error: any) {
+    return { status: 500, message: error.message };
+  }
+};
+export const deletePosition = async (id: string) => {
+  try {
+    const resopnse = await PositionRepository.deletePosition(id);
+    return resopnse;
+  } catch (error: any) {
+    return { status: 500, message: error.message };
+  }
+};

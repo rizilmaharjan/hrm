@@ -81,11 +81,11 @@ export const updatePosition = async (id: string, data: TPosition) => {
   try {
     const connection = await connectToDB();
     console.log("ID:", id, "Body:", data);
-    const sql = `UPDATE position SET position_desc = :position_desc, position_desc_nep = :position_desc_nep, upper_position_desc = :upper_position_desc, group_flag = :group_flag, disabled = :disabled, order_no = :order_no, computer_position_cd = :computer_position_cd, new_position_cd = :new_position_cd WHERE position_cd = :id`;
+    const sql = `UPDATE position SET position_desc = :position_desc, position_desc_nep = :position_desc_nep, upper_position_cd = :upper_position_cd, group_flag = :group_flag, disabled = :disabled, order_no = :order_no, computer_position_cd = :computer_position_cd, new_position_cd = :new_position_cd WHERE position_cd = :id`;
     const result = await connection.execute(sql, {
       position_desc: data.position_desc,
       position_desc_nep: data.position_desc_nep,
-      upper_position_desc: data.upper_position_cd,
+      upper_position_cd: data.upper_position_cd,
       group_flag: data.group_flag,
       disabled: data.disabled,
       order_no: data.order_no,
@@ -96,6 +96,19 @@ export const updatePosition = async (id: string, data: TPosition) => {
     await connection.commit();
     await connection.close();
     return { status: 200, message: "Position updated successfully" };
+  } catch (error: any) {
+    return { status: 500, message: error.message };
+  }
+};
+
+export const deletePosition = async (id: string) => {
+  try {
+    const connection = await connectToDB();
+    const sql = `DELETE FROM position WHERE position_cd = :id`;
+    const result = await connection.execute(sql, { id });
+    await connection.commit();
+    await connection.close();
+    return { status: 200, message: "Position deleted successfully" };
   } catch (error: any) {
     return { status: 500, message: error.message };
   }

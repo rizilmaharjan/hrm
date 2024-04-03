@@ -21,3 +21,24 @@ export const getPosition = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
+
+export const updatePosition = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const { status, message } = await PositionService.updatePosition(id, body);
+    return res.status(status).json({ message });
+  } catch (error: any) {
+    return res.status(400).json(error);
+  }
+};
+
+export const deletePosition = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status, message } = await PositionService.deletePosition(id);
+    return res.status(status).json({ message });
+  } catch (error: any) {
+    return res.status(400).json(error);
+  }
+};
