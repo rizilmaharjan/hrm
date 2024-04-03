@@ -1,5 +1,6 @@
 // DataContext.tsx
 import React, { createContext, useContext, useState } from "react";
+// import { TAllowance } from "../pages/Allowance";
 
 export type ServiceEvent = {
   SERVICE_EVENT_CD: string;
@@ -15,10 +16,10 @@ export type ServiceEvent = {
 };
 
 type Obj = {
-  serviceToEdit: ServiceEvent | null;
+  serviceToEdit: any;
   editID: string;
   isEdit: boolean;
-  setServiceToEdit: React.Dispatch<React.SetStateAction<ServiceEvent | null>>;
+  setServiceToEdit: React.Dispatch<React.SetStateAction<any>>;
   setEditID: React.Dispatch<React.SetStateAction<string>>;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -28,7 +29,7 @@ const valueContext = createContext<Obj | null>(null);
 export const DataContextProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
-  const [serviceToEdit, setServiceToEdit] = useState<ServiceEvent | null>(null);
+  const [serviceToEdit, setServiceToEdit] = useState<any>(null);
   const [editID, setEditID] = useState("");
   const [isEdit, setIsEdit] = useState(false);
 

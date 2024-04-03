@@ -18,8 +18,7 @@ export const loginUser = async (
         {
           username: response.userData.USER_CD,
         },
-        env.JWT_SECRET as string,
-        { expiresIn: 3600 }
+        env.JWT_SECRET as string
       );
       return {
         status: 200,
