@@ -3,16 +3,18 @@ import { Instance } from "../config/Instance";
 type TProps = {
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onDeleteSuccess: () => void;
-  selectDeleteId: string;
+  deleteUrl: string;
 };
 export default function Delete({
   setIsDeleteModalOpen,
-  selectDeleteId,
   onDeleteSuccess,
+  deleteUrl,
 }: TProps) {
+  console.log("delete url", deleteUrl);
   const handleDelete = async () => {
     try {
-      const res = await Instance.delete(`/v1/service/${selectDeleteId}`);
+      // const res = await Instance.delete(`/v1/service/${selectDeleteId}`);
+      await Instance.delete(deleteUrl);
       onDeleteSuccess();
     } catch (error) {
       console.log("error deleting service event");

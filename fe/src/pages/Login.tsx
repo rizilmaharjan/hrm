@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Instance } from "../config/Instance";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,12 @@ import Loader from "../components/Loader";
 import Button from "../components/ui/Button";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { loginSchema } from "../model/login.schema";
-
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  logInFailure,
+  logInStart,
+  logInSuccess,
+} from "../redux/user/userSlice";
 interface LoginDetails {
   username: string;
   hashedPassword: string;
@@ -17,9 +22,11 @@ export default function Login() {
     username: "",
     hashedPassword: "",
   });
+  const dispatch = useAppDispatch();
+  const { error, loading, errMsg } = useAppSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,21 +40,26 @@ export default function Login() {
     e.preventDefault();
     try {
       await loginSchema.validate(loginDetails, { abortEarly: false });
-      setIsLoading(true);
+      // setIsLoading(true);
+      dispatch(logInStart());
 
       const res = await Instance.post("/v1/auth/login", loginDetails);
+      console.log("login response", res);
       setLoginDetails((prev) => ({
         ...prev,
         username: "",
         hashedPassword: "",
       }));
-      localStorage.setItem("username", res.data.userData.USER_CD);
+      dispatch(logInSuccess(res.data.userData));
+      // localStorage.setItem("username", res.data.userData.USER_CD);
       navigate("/service-events");
     } catch (error: any) {
       if (error.response) {
-        toast.error(error.response.data.message);
+        // toast.error(error.response.data.message);
+        dispatch(logInFailure(error.response.data.message));
       } else if (error.request) {
-        toast.error("Network error");
+        // toast.error("Network error");
+        dispatch(logInFailure("Network Error"));
       }
 
       if (error.inner) {
@@ -57,10 +69,14 @@ export default function Login() {
         });
         setErrors(newErrors);
       }
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (error && errMsg) {
+      toast.error(errMsg);
+    }
+  }, [error, errMsg]);
   return (
     <>
       <div className="max-w-sm mx-auto mt-14">
@@ -125,10 +141,10 @@ export default function Login() {
 
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={loading}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
           >
-            {isLoading ? (
+            {loading ? (
               <>
                 <div className="flex items-center gap-2">
                   <Loader color="text-white" height="h-4" width="w-4" />

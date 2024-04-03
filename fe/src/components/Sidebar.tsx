@@ -1,12 +1,17 @@
 import { Instance } from "../config/Instance";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useAppDispatch } from "../redux/hooks";
+import { logout } from "../redux/user/userSlice";
 export default function Sidebar() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const handleLogout = async () => {
     try {
       const res = await Instance.get("/v1/auth/logout");
-      localStorage.removeItem("username");
+      dispatch(logout());
+      // localStorage.removeItem("username");
       navigate("/");
       toast.success(res.data.message);
     } catch (error) {}
@@ -52,6 +57,21 @@ export default function Sidebar() {
                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                 </svg>
                 <span className="ms-3">Services</span>
+              </NavLink>
+            </li>
+            <li className=" p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+              <NavLink className="flex items-center" to="/allowance">
+                <svg
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 576 512"
+                >
+                  <path d="M64 64C28.7 64 0 92.7 0 128v256c0 35.3 28.7 64 64 64h448c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H64zm64 320H64v-64c35.3 0 64 28.7 64 64zM64 192v-64h64c0 35.3-28.7 64-64 64zm384 192c0-35.3 28.7-64 64-64v64h-64zm64-192c-35.3 0-64-28.7-64-64h64v64zM288 352c-53 0-96-43-96-96s43-96 96-96 96 43 96 96-43 96-96 96z" />
+                </svg>
+
+                <span className="ms-3">Allowance</span>
               </NavLink>
             </li>
 
