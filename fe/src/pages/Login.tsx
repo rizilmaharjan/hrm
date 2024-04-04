@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Instance } from "../config/Instance";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Button from "../components/ui/Button";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -25,7 +24,6 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const { error, loading, errMsg } = useAppSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
   // const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -53,7 +51,6 @@ export default function Login() {
       dispatch(logInSuccess(res.data.userData));
       // localStorage.setItem("username", res.data.userData.USER_CD);
       console.log("Test routing");
-      navigate("/dashboard");
     } catch (error: any) {
       if (error.response) {
         // toast.error(error.response.data.message);

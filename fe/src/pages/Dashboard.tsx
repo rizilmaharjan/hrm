@@ -9,7 +9,7 @@ export default function Dashboard() {
           </h1>
           <p className="text-lg text-center">Ghopa, Dharan</p>
         </header>
-        <div className="w-9/12 mx-auto mt-10">
+        <div className="w-6/12 mx-auto mt-10">
           <img className="block" src={coverPage} alt="" />
         </div>
       </div>
