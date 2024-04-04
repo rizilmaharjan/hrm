@@ -5,44 +5,31 @@ import {
   serviceDelete,
   serviceUpdate,
 } from "../services";
+import { catchAsync } from "../../utils/catchAsync";
 
-export const postService = async (req: Request, res: Response) => {
-  try {
-    const { username } = res.locals.user;
-    const body = { ...req.body, entered_By: username };
-    const { status, message, data } = await createService(body);
-    return res.status(status).json({ message, data });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
-export const getService = async (req: Request, res: Response) => {
-  try {
-    const { status, message, serviceEvents } = await getAllServiceEvents();
-    return res.status(status).json({ serviceEvents, message });
-  } catch (error) {}
-};
+export const postService = catchAsync(async (req: Request, res: Response) => {
+  const { username } = res.locals.user;
+  const body = { ...req.body, entered_By: username };
+  const { status, message, data } = await createService(body);
+  return res.status(status).json({ message, data });
+});
+export const getService = catchAsync(async (req: Request, res: Response) => {
+  const { status, message, serviceEvents } = await getAllServiceEvents();
+  return res.status(status).json({ serviceEvents, message });
+});
 
-export const deleteService = async (req: Request, res: Response) => {
+export const deleteService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
-    const { status, message } = await serviceDelete(id);
-    return res.status(status).json({ message });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
-export const updateService = async (req: Request, res: Response) => {
+  const { status, message } = await serviceDelete(id);
+  return res.status(status).json({ message });
+});
+export const updateService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { username } = res.locals.user;
 
   // console.log("update id", id);
-  try {
-    const body = { ...req.body, updated_by: username };
-    console.log("update body", body);
-    const { status, message } = await serviceUpdate(body, id);
-    return res.status(status).json({ message });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
+  const body = { ...req.body, updated_by: username };
+  console.log("update body", body);
+  const { status, message } = await serviceUpdate(body, id);
+  return res.status(status).json({ message });
+});

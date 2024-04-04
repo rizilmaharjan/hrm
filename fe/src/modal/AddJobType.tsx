@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../components/ui/Button";
 import { TJobType } from "../pages/JobType";
+import { getErrorMessage } from "../utils/handleErrors";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -124,7 +125,8 @@ export default function AddJobType({
       }));
       setIsModalOpen(false);
     } catch (error: any) {
-      console.log("this is error", error);
+      const errMsg = getErrorMessage(error);
+      toast.error(errMsg);
     }
   };
   return (

@@ -8,7 +8,7 @@ export default function Private() {
   // const username = localStorage.getItem("username");
 
   if (isPublicPath && currentUser) {
-    return <Navigate to="/service-events" />;
+    return <Navigate to="/dashboard" />;
   }
 
   if (!isPublicPath && !currentUser) {

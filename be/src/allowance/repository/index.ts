@@ -142,7 +142,7 @@ export const postAllowance = async (
 
     return {
       status: 201,
-      message: "Allowance created successfully",
+      message: "Allowance inserted successfully",
       data: insertedAllowance,
     };
   } catch (error: any) {
@@ -218,7 +218,7 @@ export const deleteAllowance = async (
     await connection.commit();
     await connection.close();
 
-    return { status: 200, message: "allowance deleted successfully" };
+    return { status: 200, message: "Allowance deleted successfully" };
   } catch (error: any) {
     return { status: 500, message: error.message };
   }
@@ -256,7 +256,7 @@ export const updateAllowance = async (
     await connection.commit();
     await connection.close();
 
-    return { status: 200, message: "allowance updated successfully" };
+    return { status: 200, message: "Allowance updated successfully" };
   } catch (error: any) {
     return { status: 500, message: error.message };
   }

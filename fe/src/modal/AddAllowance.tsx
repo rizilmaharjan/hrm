@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../components/ui/Button";
 import { TAllowance } from "../pages/Allowance";
+import { getErrorMessage } from "../utils/handleErrors";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -79,7 +80,6 @@ export default function AddAllowance({
     try {
       if (!isEdit) {
         const res = await Instance.post("/v1/allowance", serviceDesc);
-        console.log("post allowance datas", res);
         setAllowanceDatas((prev) => {
           if (!prev) {
             return [res.data.data];
@@ -87,9 +87,9 @@ export default function AddAllowance({
             return [...prev, res.data.data];
           }
         });
-        toast.success("Event Added Successfully");
+        toast.success(res.data.message);
       } else {
-        await Instance.put(`/v1/allowance/${editID}`, serviceDesc);
+        const res = await Instance.put(`/v1/allowance/${editID}`, serviceDesc);
         setAllowanceDatas((prev) => {
           if (!prev) return [];
           return prev.map((item) => {
@@ -100,6 +100,7 @@ export default function AddAllowance({
             return item;
           });
         });
+        toast.success(res.data.message);
 
         setServiceToEdit(null);
         setIsEdit(false);
@@ -122,7 +123,8 @@ export default function AddAllowance({
       }));
       setIsModalOpen(false);
     } catch (error: any) {
-      console.log("this is error", error);
+      const errMsg = getErrorMessage(error);
+      toast.error(errMsg);
     }
   };
   return (

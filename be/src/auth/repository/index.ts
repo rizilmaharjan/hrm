@@ -1,4 +1,5 @@
 import OracleDB from "oracledb";
+import { appError } from "../../utils/appError";
 
 const oracleConfig = {
   user: "cpay",
@@ -12,7 +13,7 @@ const oracleConfig = {
 export const userLogin = async (
   username: string,
   hashedPassword: string
-): Promise<{ status: number; message: string; userData?: any }> => {
+): Promise<{ status?: number; message?: string; userData?: any }> => {
   try {
     const connection = await OracleDB.getConnection(oracleConfig);
     const result = await connection.execute(
@@ -30,9 +31,12 @@ export const userLogin = async (
       const userData = users[0];
       return { status: 200, message: "User logged in successfully", userData };
     } else {
-      return { status: 401, message: "Invalid username or password" };
+      // throw { statusCode: 401, message: "Invalid username or password" };
+      throw new appError(401, "Invalid username or password");
+      // return { status: 401, message: "Invalid username or password" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
