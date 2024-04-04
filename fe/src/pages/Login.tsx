@@ -52,7 +52,8 @@ export default function Login() {
       }));
       dispatch(logInSuccess(res.data.userData));
       // localStorage.setItem("username", res.data.userData.USER_CD);
-      navigate("/service-events");
+      console.log("Test routing");
+      navigate("/dashboard");
     } catch (error: any) {
       if (error.response) {
         // toast.error(error.response.data.message);

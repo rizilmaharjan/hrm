@@ -91,7 +91,7 @@ export default function ServiceEvent() {
 
   return (
     <>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+      <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
         {isLoading ? (
           <div className="min-h-screen flex items-center justify-center w-full">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
@@ -121,84 +121,91 @@ export default function ServiceEvent() {
                 Add Event
               </button>
             </div>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    Code
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12">
-                    Description
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12 ">
-                    Description (IN NEPALI)
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Type
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Disabled
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+            <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Code
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-2/12">
+                      Description
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-2/12 ">
+                      Description (IN NEPALI)
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Type
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Disabled
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
 
-              <tbody>
-                {serviceEvents &&
-                  serviceEvents.length > 0 &&
-                  serviceEvents.map((item) => (
-                    <tr className="odd:bg-white even:bg-gray-50  border-b ">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                <tbody>
+                  {serviceEvents &&
+                    serviceEvents.length > 0 &&
+                    serviceEvents.map((item) => (
+                      <tr
+                        key={item.SERVICE_EVENT_CD}
+                        className="odd:bg-white even:bg-gray-50  border-b "
                       >
-                        {item.SERVICE_EVENT_CD}
-                      </th>
-                      <td className="px-6 py-4">{item.SERVICE_EVENT_DESC}</td>
-                      <td className="px-6 py-4">
-                        {item.SERVICE_EVENT_DESC_NEP
-                          ? item.SERVICE_EVENT_DESC_NEP
-                          : "_"}
-                      </td>
-                      <td className="px-6 py-4">
-                        {mapServiceEventType(item.SERVICE_EVENT_TYPE) || "_"}
-                      </td>
-                      <td className="px-6 py-4">{item.DISABLED}</td>
-                      {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                        >
+                          {item.SERVICE_EVENT_CD}
+                        </th>
+                        <td className="px-6 py-4">{item.SERVICE_EVENT_DESC}</td>
+                        <td className="px-6 py-4 font-[Preeti] text-lg">
+                          {item.SERVICE_EVENT_DESC_NEP
+                            ? item.SERVICE_EVENT_DESC_NEP
+                            : "_"}
+                        </td>
+                        <td className="px-6 py-4">
+                          {mapServiceEventType(item.SERVICE_EVENT_TYPE) || "_"}
+                        </td>
+                        <td className="px-6 py-4">{item.DISABLED}</td>
+                        {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
                     <td className="px-6 py-4">
                       {dateConversion(item.ENTERED_DT)}
                     </td> */}
-                      {/* <td className="px-6 py-4">
+                        {/* <td className="px-6 py-4">
                       {item.IS_AUTO_SALARY_ADJUST || "_"}
                     </td> */}
-                      {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
+                        {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
                     <td className="px-6 py-4">
                       {(item.LAST_UPDATED_ON &&
                         dateConversion(item.LAST_UPDATED_ON)) ||
                         "_"}
                     </td> */}
-                      <td className="px-6 py-4">
-                        <span className="flex items-center gap-4">
-                          <p
-                            onClick={() => handleEdit(item.SERVICE_EVENT_CD)}
-                            className="font-medium text-blue-600 cursor-pointer hover:underline"
-                          >
-                            Edit
-                          </p>
-                          <p
-                            onClick={() => handleDelete(item.SERVICE_EVENT_CD)}
-                            className="font-medium cursor-pointer text-red-600 hover:underline"
-                          >
-                            Delete
-                          </p>
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                        <td className="px-6 py-4">
+                          <span className="flex items-center gap-4">
+                            <p
+                              onClick={() => handleEdit(item.SERVICE_EVENT_CD)}
+                              className="font-medium text-blue-600 cursor-pointer hover:underline"
+                            >
+                              Edit
+                            </p>
+                            <p
+                              onClick={() =>
+                                handleDelete(item.SERVICE_EVENT_CD)
+                              }
+                              className="font-medium cursor-pointer text-red-600 hover:underline"
+                            >
+                              Delete
+                            </p>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>
