@@ -12,7 +12,8 @@ export const createService = async (
     const response = await postService(service);
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -25,7 +26,8 @@ export const getAllServiceEvents = async (): Promise<{
     const response = await getServices();
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -40,7 +42,8 @@ export const serviceDelete = async (
     const response = await deleteService(id);
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 export const serviceUpdate = async (
@@ -55,6 +58,7 @@ export const serviceUpdate = async (
     const response = await updateService(service, id);
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };

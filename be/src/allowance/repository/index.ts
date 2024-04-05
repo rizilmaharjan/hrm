@@ -142,11 +142,12 @@ export const postAllowance = async (
 
     return {
       status: 201,
-      message: "Allowance created successfully",
+      message: "Allowance inserted successfully",
       data: insertedAllowance,
     };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -198,7 +199,8 @@ export const getAllowances = async (): Promise<{
       return { status: 404, message: "Services not found" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -218,9 +220,10 @@ export const deleteAllowance = async (
     await connection.commit();
     await connection.close();
 
-    return { status: 200, message: "allowance deleted successfully" };
+    return { status: 200, message: "Allowance deleted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -256,8 +259,9 @@ export const updateAllowance = async (
     await connection.commit();
     await connection.close();
 
-    return { status: 200, message: "allowance updated successfully" };
+    return { status: 200, message: "Allowance updated successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };

@@ -7,7 +7,9 @@ export const postJobType = async (body: TJobType) => {
     const resopnse = await JobTypeRepository.postJobType(body);
     return resopnse;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -16,7 +18,9 @@ export const getJobType = async () => {
     const resopnse = await JobTypeRepository.getJobType();
     return resopnse;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -25,7 +29,9 @@ export const deleteJobType = async (id: string) => {
     const resopnse = await JobTypeRepository.deleteJobType(id);
     return resopnse;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -34,6 +40,8 @@ export const updateJobType = async (id: string, data: TJobType) => {
     const resopnse = await JobTypeRepository.updateJobType(id, data);
     return resopnse;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };

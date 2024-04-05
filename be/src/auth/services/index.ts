@@ -1,6 +1,7 @@
 import { userLogin } from "../repository";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env";
+import { appError } from "../../utils/appError";
 
 export const loginUser = async (
   username: string,
@@ -13,22 +14,33 @@ export const loginUser = async (
 }> => {
   try {
     const response = await userLogin(username, hashedPassword);
-    if (response.status === 200) {
+    const {
+      status = 500,
+      userData,
+      message = "something went wrong",
+    } = response;
+    if (status === 200) {
       const token = jwt.sign(
         {
-          username: response.userData.USER_CD,
+          username: userData.USER_CD,
         },
         env.JWT_SECRET as string
       );
       return {
         status: 200,
-        message: "Login successful",
+        message: "Login successfull",
         token: token,
-        userData: response.userData,
+        userData: userData,
+      };
+    } else {
+      // throw new appError(status, message);
+      return {
+        status,
+        message,
       };
     }
-    return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };

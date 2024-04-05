@@ -12,7 +12,9 @@ export const createAllowance = async (
     const response = await postAllowance(service);
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -25,7 +27,9 @@ export const getAllAllowances = async (): Promise<{
     const response = await getAllowances();
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -40,7 +44,8 @@ export const allowanceDelete = async (
     const response = await deleteAllowance(id);
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 export const allowanceUpdate = async (
@@ -55,6 +60,8 @@ export const allowanceUpdate = async (
     const response = await updateAllowance(allowance, id);
     return response;
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };

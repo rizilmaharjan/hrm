@@ -37,7 +37,9 @@ export const postPosition = async (body: TPosition) => {
     await connection.close();
     return { status: 200, message: "Position inserted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -73,7 +75,9 @@ export const getPosition = async () => {
       return { status: 404, message: "Positions not found" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -97,7 +101,9 @@ export const updatePosition = async (id: string, data: TPosition) => {
     await connection.close();
     return { status: 200, message: "Position updated successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -110,6 +116,8 @@ export const deletePosition = async (id: string) => {
     await connection.close();
     return { status: 200, message: "Position deleted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };

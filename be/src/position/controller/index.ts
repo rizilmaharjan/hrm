@@ -1,44 +1,39 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { catchAsync } from "../../utils/catchAsync";
 
 import * as PositionService from "../services/index";
+import { appError } from "../../utils/appError";
 
-export const postPosition = async (req: Request, res: Response) => {
-  try {
-    const { username } = res.locals.user;
-    const body = { ...req.body, entered_by: username };
-    const { status, message } = await PositionService.postPosition(body);
-    return res.status(status).json({ message });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
+export const postPosition = catchAsync(async (req: Request, res: Response) => {
+  const { username } = res.locals.user;
+  const body = { ...req.body, entered_by: username };
+  const { status, message } = await PositionService.postPosition(body);
+  return res.status(status).json({ message });
+});
 
-export const getPosition = async (req: Request, res: Response) => {
-  try {
+export const getPosition = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { status, message, data } = await PositionService.getPosition();
+    if (status === 404) {
+      next(new appError(status, message));
+    }
     return res.status(status).json({ message, data });
-  } catch (error) {
-    return res.status(400).json(error);
   }
-};
+);
 
-export const updatePosition = async (req: Request, res: Response) => {
-  try {
+export const updatePosition = catchAsync(
+  async (req: Request, res: Response) => {
     const { id } = req.params;
     const body = req.body;
     const { status, message } = await PositionService.updatePosition(id, body);
     return res.status(status).json({ message });
-  } catch (error: any) {
-    return res.status(400).json(error);
   }
-};
+);
 
-export const deletePosition = async (req: Request, res: Response) => {
-  try {
+export const deletePosition = catchAsync(
+  async (req: Request, res: Response) => {
     const { id } = req.params;
     const { status, message } = await PositionService.deletePosition(id);
     return res.status(status).json({ message });
-  } catch (error: any) {
-    return res.status(400).json(error);
   }
-};
+);
