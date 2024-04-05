@@ -127,7 +127,7 @@ export default function AddAllowance({
   };
   return (
     <>
-      <div className="flex items-center justify-center fixed inset-0 w-full bg-black/60">
+      <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
         <form onSubmit={handleSubmit} className="bg-white w-1/3 p-8 rounded-lg">
           <div className="flex justify-between mb-6">
             <h1 className="text-lg font-semibold">Add Allowance</h1>
