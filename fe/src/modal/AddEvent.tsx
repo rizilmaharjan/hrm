@@ -115,7 +115,8 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
   };
   return (
     <>
-      <div className="flex items-center justify-center fixed inset-0 w-full bg-black/60">
+      <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
+        {" "}
         <form
           onSubmit={handleSubmit}
           className="bg-white w-[28%] p-8 rounded-lg"

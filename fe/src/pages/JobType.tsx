@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, RefObject } from "react";
 import { Instance } from "../config/Instance";
 import Loader from "../components/Loader";
 import Delete from "../modal/Delete";
@@ -33,6 +33,45 @@ export default function JobType() {
   const [selectDeleteId, setSelectDeleteId] = useState("");
   const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const closeJobModalRef: RefObject<HTMLDivElement> =
+    useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        closeJobModalRef.current &&
+        !closeJobModalRef.current.contains(event.target)
+      ) {
+        setIsModalOpen(false);
+        setIsEdit(false);
+        setJobTypeToEdit((prev) => {
+          if (prev) {
+            return {
+              ...prev,
+              job_type_cd: "",
+              job_type_desc: "",
+              tax: "Y",
+              tax_percent: "",
+              pf_allowed: "N",
+              cit: "N",
+              pay_generate: "N",
+              grade_allowed: "N",
+              single_rebate: "",
+              married_rebate: "",
+              disabled: "N",
+            };
+          }
+        });
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeJobModalRef, setIsModalOpen, setIsEdit, setJobTypeToEdit]);
+
   //Get all Job type data
   useEffect(() => {
     const getJobType = async () => {
@@ -94,7 +133,7 @@ export default function JobType() {
     <>
       <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
         {isLoading ? (
-          <div className="min-h-screen flex items-center justify-center w-full">
+          <div className="min-h-screen flex items-center justify-center w-screen">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
           </div>
         ) : (
@@ -112,8 +151,10 @@ export default function JobType() {
                 setJobType={setJobType}
                 setIsModalOpen={setIsModalOpen}
                 jobTypeToEdit={jobTypeToEdit}
+                closeJobModalRef={closeJobModalRef}
                 isEdit={isEdit}
                 setIsEdit={setIsEdit}
+                setJobTypeToEdit={setJobTypeToEdit}
               />
             )}
             <div className="flex justify-between p-3">
