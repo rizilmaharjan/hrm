@@ -157,7 +157,7 @@ export const getAllowances = async (): Promise<{
 }> => {
   try {
     const connection = await OracleDB.getConnection(oracleConfig);
-    const sql = `SELECT * FROM allowance`;
+    const sql = `SELECT * FROM allowance WHERE allowance_facility = 'A'`;
     const result = await connection.execute(sql);
 
     await connection.close();

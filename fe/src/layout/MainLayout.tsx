@@ -7,10 +7,12 @@ export default function MainLayout() {
       <Navbar />
 
       <div className="flex">
-        <div className="min-h-screen">
+        <div className="h-[90vh]">
           <Sidebar />
         </div>
-        <Outlet />
+        <div className="h-[80vh]">
+          <Outlet />
+        </div>
       </div>
     </>
   );
