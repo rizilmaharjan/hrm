@@ -52,7 +52,8 @@ export const postJobType = async (body: TJobType) => {
       data: result.rows,
     };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -93,7 +94,8 @@ export const getJobType = async () => {
       return { status: 404, message: "No JobType found" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -106,7 +108,9 @@ export const deleteJobType = async (id: string) => {
     await connection.close();
     return { status: 200, message: "Job Type deleted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -132,6 +136,8 @@ export const updateJobType = async (id: string, data: TJobType) => {
     await connection.close();
     return { status: 200, message: "Job Type updated successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+
+    // return { status: 500, message: error.message };
   }
 };

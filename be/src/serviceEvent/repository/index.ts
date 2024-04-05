@@ -25,8 +25,6 @@ export const postService = async (
   try {
     const connection = await OracleDB.getConnection(oracleConfig);
 
-    console.log("service", service);
-
     // const id = uuidv4();
     const enteredDt = new Date().toISOString().slice(0, 10);
     const sql = `
@@ -87,11 +85,12 @@ export const postService = async (
 
     return {
       status: 201,
-      message: "User created successfully",
+      message: "Service inserted successfully",
       data: insertedData,
     };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -127,14 +126,15 @@ export const getServices = async (): Promise<{
 
       return {
         status: 200,
-        message: "services fetched successfully",
+        message: "Services fetched successfully",
         serviceEvents,
       };
     } else {
       return { status: 404, message: "Services not found" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -154,9 +154,10 @@ export const deleteService = async (
     await connection.commit();
     await connection.close();
 
-    return { status: 200, message: "User deleted successfully" };
+    return { status: 200, message: "Service deleted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -186,8 +187,9 @@ export const updateService = async (
     await connection.commit();
     await connection.close();
 
-    return { status: 200, message: "User updated successfully" };
+    return { status: 200, message: "Service updated successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };

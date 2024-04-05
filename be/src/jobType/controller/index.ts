@@ -1,44 +1,35 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { catchAsync } from "../../utils/catchAsync";
 
 import * as JobTypeService from "../services/index";
+import { appError } from "../../utils/appError";
 
-export const postJobType = async (req: Request, res: Response) => {
-  try {
-    const { username } = res.locals.user;
-    const body = { ...req.body, entered_by: username };
-    const { status, message, data } = await JobTypeService.postJobType(body);
-    return res.status(status).json({ message, data });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
+export const postJobType = catchAsync(async (req: Request, res: Response) => {
+  const { username } = res.locals.user;
+  const body = { ...req.body, entered_by: username };
+  const { status, message, data } = await JobTypeService.postJobType(body);
+  return res.status(status).json({ message, data });
+});
 
-export const getJobType = async (req: Request, res: Response) => {
-  try {
+export const getJobType = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { status, message, data } = await JobTypeService.getJobType();
+    if (status === 404) {
+      next(new appError(status, message));
+    }
     return res.status(status).json({ message, data });
-  } catch (error: any) {
-    return res.status(400).json(error);
   }
-};
+);
 
-export const deleteJobType = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { status, message } = await JobTypeService.deleteJobType(id);
-    return res.status(status).json({ message });
-  } catch (error: any) {
-    return res.status(400).json(error);
-  }
-};
+export const deleteJobType = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { status, message } = await JobTypeService.deleteJobType(id);
+  return res.status(status).json({ message });
+});
 
-export const updateJobType = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const body = req.body;
-    const { status, message } = await JobTypeService.updateJobType(id, body);
-    return res.status(status).json({ message });
-  } catch (error: any) {
-    return res.status(400).json(error);
-  }
-};
+export const updateJobType = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const body = req.body;
+  const { status, message } = await JobTypeService.updateJobType(id, body);
+  return res.status(status).json({ message });
+});

@@ -1,19 +1,27 @@
 import { Request, Response } from "express";
 import { loginUser } from "../services";
-export const userLogin = async (req: Request, res: Response) => {
-  try {
+import { NextFunction } from "express-serve-static-core";
+import { catchAsync } from "../../utils/catchAsync";
+import { appError } from "../../utils/appError";
+
+export const userLogin = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { username, hashedPassword } = req.body;
     const { status, message, token, userData } = await loginUser(
       username,
       hashedPassword
     );
-    const expiryDate = new Date(Date.now() + 3600000);
+    if (status === 401) {
+      next(new appError(status, message));
+    }
+    // const expiryDate = new Date(Date.now() + 3600000);
     return res
-      .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
+      .cookie("access_token", token, { httpOnly: true })
       .status(status)
       .json({ message, userData });
-  } catch (error) {}
-};
+  }
+);
+
 export const userLogout = async (req: Request, res: Response) => {
   res
     .clearCookie("access_token")
