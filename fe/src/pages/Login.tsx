@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../utils/Instance";
 import toast from "react-hot-toast";
 import Loader from "../components/Loader";
 import Button from "../components/ui/Button";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { loginSchema } from "../model/login.schema";
+import { loginSchema } from "../validations/login.schema";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   logInFailure,
   logInStart,
   logInSuccess,
 } from "../redux/user/userSlice";
-interface LoginDetails {
-  username: string;
-  hashedPassword: string;
-}
+import { TLogin } from "../interfaces/types/login.types";
 
 export default function Login() {
-  const [loginDetails, setLoginDetails] = useState<LoginDetails>({
+  const [loginDetails, setLoginDetails] = useState<TLogin>({
     username: "",
     hashedPassword: "",
   });

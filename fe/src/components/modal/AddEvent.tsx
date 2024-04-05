@@ -1,15 +1,14 @@
-import { useCustomContext } from "../context/DataContext";
+import { useCustomContext } from "../../context/DataContext";
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
-import { ServiceEvent } from "../pages/ServiceEvent";
+import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
 import { RxCross2 } from "react-icons/rx";
-import Button from "../components/ui/Button";
-import { getErrorMessage } from "../utils/handleErrors";
+import Button from "../ui/Button";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setServiceEvents: React.Dispatch<React.SetStateAction<ServiceEvent[]>>;
+  setServiceEvents: React.Dispatch<React.SetStateAction<TServiceEvent[]>>;
 };
 export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
   const {
@@ -77,22 +76,19 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
             return [...prev, res.data.data];
           }
         });
-        toast.success(res.data.message);
+        toast.success("Event Added Successfully");
       } else {
-        const res = await Instance.put(
-          `/v1/service-event/${editID}`,
-          serviceDesc
-        );
+        await Instance.put(`/v1/service-event/${editID}`, serviceDesc);
         setServiceEvents((prev) => {
           if (!prev) return [];
           return prev.map((item) => {
             if (item.SERVICE_EVENT_CD === editID) {
+              console.log("this is item", serviceDesc);
               return { ...item, ...serviceDesc };
             }
             return item;
           });
         });
-        toast.success(res.data.message);
 
         setServiceToEdit(null);
         setIsEdit(false);
@@ -109,8 +105,7 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
       }));
       setIsModalOpen(false);
     } catch (error: any) {
-      const errMsg = getErrorMessage(error);
-      toast.error(errMsg);
+      console.log("this is error", error);
     }
   };
   return (

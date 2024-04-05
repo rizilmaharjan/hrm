@@ -1,28 +1,14 @@
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../utils/Instance";
 // import { useNavigate } from "react-router-dom";
 // import AddEvent from "../modal/AddEvent";
 import { useCustomContext } from "../context/DataContext";
 // import { useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
-import Delete from "../modal/Delete";
+import Delete from "../components/modal/Delete";
 // import { mapServiceEventType } from "../utils/serviceEventType";
-import AddAllowance from "../modal/AddAllowance";
-export type TAllowance = {
-  allowance_CD: string;
-  allowance_description: string;
-  allowance_nepali_desc: string;
-  allowance_facility: string;
-  allowance_taxable: string;
-  allowance_facility_percent: string;
-  allowance_cit_flag: string;
-  allowance_type: string;
-  salary_allowance_flag: string;
-  allowance_acc_cd: string;
-  allowance_disabled: string;
-  // order_sno: string;
-  // is_pf_rf_as_salary: string;
-};
+import AddAllowance from "../components/modal/AddAllowance";
+import { TAllowance } from "../interfaces/types/allowance.types";
 export default function Allowance() {
   const [allowanceDatas, setAllowanceDatas] = useState<TAllowance[]>([]);
   const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();

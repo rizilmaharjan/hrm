@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../utils/Instance";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import AddRelationship from "../components/AddRelationship";

@@ -1,6 +1,4 @@
-import { Instance } from "../config/Instance";
-import toast from "react-hot-toast";
-import { getErrorMessage } from "../utils/handleErrors";
+import { Instance } from "../../utils/Instance";
 
 type TProps = {
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,12 +13,12 @@ export default function Delete({
   console.log("delete url", deleteUrl);
   const handleDelete = async () => {
     try {
-      const res = await Instance.delete(deleteUrl);
+      // const res = await Instance.delete(`/v1/service/${selectDeleteId}`);
+      await Instance.delete(deleteUrl);
+
       onDeleteSuccess();
-      toast.success(res.data.message);
-    } catch (error: any) {
-      const errorMsg = getErrorMessage(error);
-      toast.error(errorMsg);
+    } catch (error) {
+      console.log("error deleting service event");
     } finally {
       setIsDeleteModalOpen(false);
     }

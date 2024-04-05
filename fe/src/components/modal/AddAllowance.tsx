@@ -1,10 +1,10 @@
-import { useCustomContext } from "../context/DataContext";
+import { useCustomContext } from "../../context/DataContext";
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
-import Button from "../components/ui/Button";
-import { TAllowance } from "../pages/Allowance";
+import Button from "../ui/Button";
+import { TAllowance } from "../../interfaces/types/allowance.types";
 import AccountList from "./AccountList";
 import { getErrorMessage } from "../utils/handleErrors";
 

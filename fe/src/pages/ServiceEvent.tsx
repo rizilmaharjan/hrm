@@ -1,25 +1,15 @@
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
-import AddEvent from "../modal/AddEvent";
+import { Instance } from "../utils/Instance";
+import AddEvent from "../components/modal/AddEvent";
 import { useCustomContext } from "../context/DataContext";
 import { useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
-import Delete from "../modal/Delete";
+import Delete from "../components/modal/Delete";
 import { mapServiceEventType } from "../utils/serviceEventType";
-export type ServiceEvent = {
-  SERVICE_EVENT_CD: string;
-  SERVICE_EVENT_DESC: string;
-  SERVICE_EVENT_DESC_NEP: string | null;
-  DISABLED: string;
-  ENTERED_BY: string;
-  ENTERED_DT: string;
-  SERVICE_EVENT_TYPE: string;
-  IS_AUTO_SALARY_ADJUST: string;
-  LAST_UPDATED_BY: string | null;
-  LAST_UPDATED_ON: string | null;
-};
+import { TServiceEvent } from "../interfaces/types/serviceEvent.types";
+
 export default function ServiceEvent() {
-  const [serviceEvents, setServiceEvents] = useState<ServiceEvent[]>([]);
+  const [serviceEvents, setServiceEvents] = useState<TServiceEvent[]>([]);
   const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -76,7 +66,9 @@ export default function ServiceEvent() {
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
