@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../components/ui/Button";
 import { TAllowance } from "../pages/Allowance";
+import AccountList from "./AccountList";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,6 +42,9 @@ export default function AddAllowance({
     // updated_by: serviceToEdit?.LAST_UPDATED_BY || "",
     // updated_on: serviceToEdit.LAST_UPDATED_ON || "",
   });
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<string>("");
 
   useEffect(() => {
     const checkboxValue = localStorage.getItem("checkboxValue");
@@ -125,6 +129,20 @@ export default function AddAllowance({
       console.log("this is error", error);
     }
   };
+
+  const handleDoubleClick = () => {
+    setIsOpen(true);
+  };
+
+  const handleAccountSelect = (account: string) => {
+    setSelectedAccount(account);
+    setServiceDesc((prev) => ({
+      ...prev,
+      allowance_acc: account,
+    }));
+    setIsOpen(false);
+  };
+
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
@@ -336,6 +354,7 @@ export default function AddAllowance({
               name="allowance_acc"
               onChange={handleChange}
               value={serviceDesc.allowance_acc}
+              onDoubleClick={handleDoubleClick}
               className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -460,6 +479,10 @@ export default function AddAllowance({
             {isEdit ? "Edit" : "Submit"}
           </Button>
         </form>
+        <AccountList
+          isOpen={isOpen}
+          handleAccountSelect={handleAccountSelect}
+        />
       </div>
     </>
   );
