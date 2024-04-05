@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../utils/Instance";
 import { TRelationData } from "../pages/Relationship";
 import { RxCross2 } from "react-icons/rx";
 

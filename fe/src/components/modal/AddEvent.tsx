@@ -1,14 +1,14 @@
-import { useCustomContext } from "../context/DataContext";
+import { useCustomContext } from "../../context/DataContext";
 import { useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
-import { ServiceEvent } from "../pages/ServiceEvent";
+import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
 import { RxCross2 } from "react-icons/rx";
-import Button from "../components/ui/Button";
+import Button from "../ui/Button";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setServiceEvents: React.Dispatch<React.SetStateAction<ServiceEvent[]>>;
+  setServiceEvents: React.Dispatch<React.SetStateAction<TServiceEvent[]>>;
 };
 export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
   const {

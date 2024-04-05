@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../utils/Instance";
 import { useCustomContext } from "../context/DataContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";

@@ -1,5 +1,5 @@
 import React from "react";
-import { accountList } from "../constants";
+import { accountList } from "../../constants";
 
 interface AccountListProps {
   isOpen: boolean;

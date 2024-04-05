@@ -1,10 +1,10 @@
-import { Instance } from "../config/Instance";
+import { Instance } from "../utils/Instance";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../redux/hooks";
 import { logout } from "../redux/user/userSlice";
 import { LogoutIcon } from "../assets/svg";
-import { navbarItems } from "../constants";
+import { sidebarItems } from "../constants";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function Sidebar() {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-[#111827]">
           <ul className="space-y-2 font-medium ">
-            {navbarItems.map((item) => (
+            {sidebarItems.map((item) => (
               <li
                 key={item.title}
                 className=" text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"

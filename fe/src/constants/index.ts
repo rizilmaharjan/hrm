@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import {
   AllowanceIcon,
   ClockIcon,
@@ -8,14 +7,9 @@ import {
   JobTypeIcon,
   ServiceEventIcon,
 } from "../assets/svg";
+import { TsidebarItems } from "../interfaces/types/sidebar.types";
 
-type TnavbarItems = {
-  title: string;
-  icon: () => ReactNode;
-  path: string;
-};
-
-export const navbarItems: TnavbarItems[] = [
+export const sidebarItems: TsidebarItems[] = [
   {
     title: "Dashboard",
     icon: HomeIcon,
@@ -39,7 +33,7 @@ export const navbarItems: TnavbarItems[] = [
   {
     title: "Service Event",
     icon: ServiceEventIcon,
-    path: "/service-events",
+    path: "/service-event",
   },
   {
     title: "Allowance",

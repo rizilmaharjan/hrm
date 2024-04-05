@@ -1,9 +1,9 @@
 import { RefObject, useEffect, useState } from "react";
-import { Instance } from "../config/Instance";
+import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
-import Button from "../components/ui/Button";
-import { TJobType } from "../pages/JobType";
+import Button from "../ui/Button";
+import { TJobType } from "../../interfaces/types/jobType.type";
 import { forwardRef } from "react";
 
 type TProps = {
