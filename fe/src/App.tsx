@@ -10,6 +10,9 @@ import Dashboard from "./pages/Dashboard";
 import UserProfile from "./pages/UserProfile";
 import Allowance from "./pages/Allowance";
 import JobType from "./pages/JobType";
+import Employee from "./pages/Employee";
+import Payroll from "./pages/Payroll";
+import Attendence from "./pages/Attendence";
 // import ProfileLayout from "./components/ProfileLayout";
 
 export default function App() {
@@ -24,6 +27,10 @@ export default function App() {
             <Route path="/service-events" element={<ServiceEvent />} />
             <Route path="/allowance" element={<Allowance />} />
             {/* <Route element={<ProfileLayout />}> */}
+            <Route path="/employee" element={<Employee />} />
+            <Route path="/payroll" element={<Payroll />} />
+            <Route path="/attendence" element={<Attendence />} />
+
             <Route path="/user/profile" element={<UserProfile />} />
             <Route path="/job-type" element={<JobType />} />
             {/* </Route> */}

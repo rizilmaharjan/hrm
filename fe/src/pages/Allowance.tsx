@@ -95,7 +95,7 @@ export default function Allowance() {
 
   return (
     <>
-      <div className="relative overflow-x-auto h-11/12 shadow-md sm:rounded-lg w-full">
+      <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
         {isLoading ? (
           <div className="min-h-screen flex items-center justify-center w-full">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
@@ -126,9 +126,10 @@ export default function Allowance() {
                 Add
               </button>
             </div>
-            <div className="overflow-y-auto h-full">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            {/* <div className="h-full w-full bg-red-700"> */}
+            <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                   <tr>
                     <th scope="col" className="px-6 py-3 w-1/12">
                       Code
@@ -170,7 +171,10 @@ export default function Allowance() {
                   {allowanceDatas &&
                     allowanceDatas.length > 0 &&
                     allowanceDatas.map((item) => (
-                      <tr className="odd:bg-white even:bg-gray-50  border-b ">
+                      <tr
+                        key={item.allowance_CD}
+                        className="odd:bg-white even:bg-gray-50  border-b "
+                      >
                         <th
                           scope="row"
                           className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
@@ -180,7 +184,7 @@ export default function Allowance() {
                         <td className="px-6 py-4">
                           {item.allowance_description}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 font-[Preeti] text-lg">
                           {item.allowance_nepali_desc
                             ? item.allowance_nepali_desc
                             : "_"}
@@ -226,6 +230,7 @@ export default function Allowance() {
                 </tbody>
               </table>
             </div>
+            {/* </div> */}
           </>
         )}
       </div>

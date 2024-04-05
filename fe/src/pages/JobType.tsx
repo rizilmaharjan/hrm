@@ -92,7 +92,7 @@ export default function JobType() {
 
   return (
     <>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+      <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
         {isLoading ? (
           <div className="min-h-screen flex items-center justify-center w-full">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
@@ -126,113 +126,124 @@ export default function JobType() {
                 Add Job Type
               </button>
             </div>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 top-0">
-                <tr>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    Code
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-4/12">
-                    Description
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12 ">
-                    Tax Applicable?
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    Flat %
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    PF
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    CIT
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    Pay Gen.
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-1/12">
-                    Is Grade
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Single Rebate
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Married rebate
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Disable
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+            <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Code
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Description
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12 ">
+                      Tax Applicable?
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Flat %
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      PF
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      CIT
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Pay Gen.
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Is Grade
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Single Rebate
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Married rebate
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Disable
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
 
-              <tbody className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-3xl scrollbar-track-gray-100 h-64">
-                {jobType &&
-                  jobType.length > 0 &&
-                  jobType.map((item) => (
-                    <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                <tbody>
+                  {jobType &&
+                    jobType.length > 0 &&
+                    jobType.map((item) => (
+                      <tr
+                        key={item.job_type_cd}
+                        className="odd:bg-white even:bg-gray-50 border-b "
                       >
-                        {item && item.job_type_cd}
-                      </th>
-                      <td className="px-6 py-4">
-                        {item && item.job_type_desc}
-                      </td>
-                      <td className="px-6 py-4">{item && item.tax}</td>
-                      <td className="px-6 py-4">{item && item.tax_percent}</td>
-                      <td className="px-6 py-4">{item && item.pf_allowed}</td>
-                      <td className="px-6 py-4">{item && item.cit}</td>
-                      <td className="px-6 py-4">{item && item.pay_generate}</td>
-                      <td className="px-6 py-4">
-                        {item && item.grade_allowed}
-                      </td>
-                      <td className="px-6 py-4">
-                        {item && item.single_rebate}
-                      </td>
-                      <td className="px-6 py-4">
-                        {item && item.married_rebate}
-                      </td>
-                      <td className="px-6 py-4">{item && item.disabled}</td>
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                        >
+                          {item && item.job_type_cd}
+                        </th>
+                        <td className="px-6 py-4">
+                          {item && item.job_type_desc}
+                        </td>
+                        <td className="px-6 py-4">{item && item.tax}</td>
+                        <td className="px-6 py-4">
+                          {item && item.tax_percent}
+                        </td>
+                        <td className="px-6 py-4">{item && item.pf_allowed}</td>
+                        <td className="px-6 py-4">{item && item.cit}</td>
+                        <td className="px-6 py-4">
+                          {item && item.pay_generate}
+                        </td>
+                        <td className="px-6 py-4">
+                          {item && item.grade_allowed}
+                        </td>
+                        <td className="px-6 py-4">
+                          {item && item.single_rebate}
+                        </td>
+                        <td className="px-6 py-4">
+                          {item && item.married_rebate}
+                        </td>
+                        <td className="px-6 py-4">{item && item.disabled}</td>
 
-                      {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
+                        {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
         <td className="px-6 py-4">
           {dateConversion(item.ENTERED_DT)}
         </td> */}
-                      {/* <td className="px-6 py-4">
+                        {/* <td className="px-6 py-4">
           {item.IS_AUTO_SALARY_ADJUST || "_"}
         </td> */}
-                      {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
+                        {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
         <td className="px-6 py-4">
           {(item.LAST_UPDATED_ON &&
             dateConversion(item.LAST_UPDATED_ON)) ||
             "_"}
         </td> */}
-                      <td className="px-6 py-4">
-                        <span className="flex items-center gap-4">
-                          <p
-                            onClick={() => handleEdit(item && item.job_type_cd)}
-                            className="font-medium text-blue-600 cursor-pointer hover:underline"
-                          >
-                            Edit
-                          </p>
-                          <p
-                            onClick={() =>
-                              handleDelete(item && item.job_type_cd)
-                            }
-                            className="font-medium cursor-pointer text-red-600 hover:underline"
-                          >
-                            Delete
-                          </p>
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                        <td className="px-6 py-4">
+                          <span className="flex items-center gap-4">
+                            <p
+                              onClick={() =>
+                                handleEdit(item && item.job_type_cd)
+                              }
+                              className="font-medium text-blue-600 cursor-pointer hover:underline"
+                            >
+                              Edit
+                            </p>
+                            <p
+                              onClick={() =>
+                                handleDelete(item && item.job_type_cd)
+                              }
+                              className="font-medium cursor-pointer text-red-600 hover:underline"
+                            >
+                              Delete
+                            </p>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>
