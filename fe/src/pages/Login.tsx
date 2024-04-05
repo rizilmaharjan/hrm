@@ -47,15 +47,8 @@ export default function Login() {
       }));
       dispatch(logInSuccess(res.data.userData));
       // localStorage.setItem("username", res.data.userData.USER_CD);
-      console.log("Test routing");
     } catch (error: any) {
-      if (error.response) {
-        // toast.error(error.response.data.message);
-        dispatch(logInFailure(error.response.data.message));
-      } else if (error.request) {
-        // toast.error("Network error");
-        dispatch(logInFailure("Network Error"));
-      }
+      dispatch(logInFailure(error.response.data.message));
 
       if (error.inner) {
         const newErrors: { [key: string]: string } = {};

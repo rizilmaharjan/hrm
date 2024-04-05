@@ -58,6 +58,7 @@ export default function Allowance() {
       setEditID(id);
       setIsEdit(true);
       console.log("updateAllowance clicked", updateAllowance);
+
       if (updateAllowance) {
         setServiceToEdit(updateAllowance);
         // navigate("/service-event/create");
