@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   createService,
   getAllServiceEvents,
@@ -6,6 +6,7 @@ import {
   serviceUpdate,
 } from "../services";
 import { catchAsync } from "../../utils/catchAsync";
+import { appError } from "../../utils/appError";
 
 export const postService = catchAsync(async (req: Request, res: Response) => {
   const { username } = res.locals.user;
@@ -13,10 +14,15 @@ export const postService = catchAsync(async (req: Request, res: Response) => {
   const { status, message, data } = await createService(body);
   return res.status(status).json({ message, data });
 });
-export const getService = catchAsync(async (req: Request, res: Response) => {
-  const { status, message, serviceEvents } = await getAllServiceEvents();
-  return res.status(status).json({ serviceEvents, message });
-});
+export const getService = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { status, message, serviceEvents } = await getAllServiceEvents();
+    if (status === 404) {
+      next(new appError(status, message));
+    }
+    return res.status(status).json({ serviceEvents, message });
+  }
+);
 
 export const deleteService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

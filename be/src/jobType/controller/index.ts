@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 
 import * as JobTypeService from "../services/index";
+import { appError } from "../../utils/appError";
 
 export const postJobType = catchAsync(async (req: Request, res: Response) => {
   const { username } = res.locals.user;
@@ -10,10 +11,15 @@ export const postJobType = catchAsync(async (req: Request, res: Response) => {
   return res.status(status).json({ message, data });
 });
 
-export const getJobType = catchAsync(async (req: Request, res: Response) => {
-  const { status, message, data } = await JobTypeService.getJobType();
-  return res.status(status).json({ message, data });
-});
+export const getJobType = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { status, message, data } = await JobTypeService.getJobType();
+    if (status === 404) {
+      next(new appError(status, message));
+    }
+    return res.status(status).json({ message, data });
+  }
+);
 
 export const deleteJobType = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

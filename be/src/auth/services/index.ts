@@ -33,15 +33,13 @@ export const loginUser = async (
         userData: userData,
       };
     } else {
-      throw new appError(status, message);
+      // throw new appError(status, message);
+      return {
+        status,
+        message,
+      };
     }
-    // return {
-    //   status,
-    //   message,
-    // };
   } catch (error: any) {
-    console.log("service-error", error);
-    console.log("i am in service layer");
     throw new Error(error.message);
     // return { status: 500, message: error.message };
   }

@@ -1,5 +1,4 @@
 import OracleDB from "oracledb";
-import { appError } from "../../utils/appError";
 
 const oracleConfig = {
   user: "cpay",
@@ -32,8 +31,8 @@ export const userLogin = async (
       return { status: 200, message: "User logged in successfully", userData };
     } else {
       // throw { statusCode: 401, message: "Invalid username or password" };
-      throw new appError(401, "Invalid username or password");
-      // return { status: 401, message: "Invalid username or password" };
+      // throw new appError(401, "Invalid username or password");
+      return { status: 401, message: "Invalid username or password" };
     }
   } catch (error: any) {
     throw new Error(error.message);

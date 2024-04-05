@@ -146,7 +146,8 @@ export const postAllowance = async (
       data: insertedAllowance,
     };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -198,7 +199,8 @@ export const getAllowances = async (): Promise<{
       return { status: 404, message: "Services not found" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -220,7 +222,8 @@ export const deleteAllowance = async (
 
     return { status: 200, message: "Allowance deleted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -258,6 +261,7 @@ export const updateAllowance = async (
 
     return { status: 200, message: "Allowance updated successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };

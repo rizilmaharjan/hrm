@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { loginUser } from "../services";
 import { NextFunction } from "express-serve-static-core";
 import { catchAsync } from "../../utils/catchAsync";
+import { appError } from "../../utils/appError";
 
 export const userLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -10,6 +11,9 @@ export const userLogin = catchAsync(
       username,
       hashedPassword
     );
+    if (status === 401) {
+      next(new appError(status, message));
+    }
     // const expiryDate = new Date(Date.now() + 3600000);
     return res
       .cookie("access_token", token, { httpOnly: true })

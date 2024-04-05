@@ -89,7 +89,8 @@ export const postService = async (
       data: insertedData,
     };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -132,7 +133,8 @@ export const getServices = async (): Promise<{
       return { status: 404, message: "Services not found" };
     }
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -154,7 +156,8 @@ export const deleteService = async (
 
     return { status: 200, message: "Service deleted successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };
 
@@ -186,6 +189,7 @@ export const updateService = async (
 
     return { status: 200, message: "Service updated successfully" };
   } catch (error: any) {
-    return { status: 500, message: error.message };
+    throw new Error(error.message);
+    // return { status: 500, message: error.message };
   }
 };

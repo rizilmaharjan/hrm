@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   allowanceDelete,
   allowanceUpdate,
@@ -6,6 +6,7 @@ import {
   getAllAllowances,
 } from "../services";
 import { catchAsync } from "../../utils/catchAsync";
+import { appError } from "../../utils/appError";
 
 export const postAllowance = catchAsync(async (req: Request, res: Response) => {
   const { username } = res.locals.user;
@@ -13,10 +14,15 @@ export const postAllowance = catchAsync(async (req: Request, res: Response) => {
   const { status, message, data } = await createAllowance(body);
   return res.status(status).json({ message, data });
 });
-export const getAllowance = catchAsync(async (req: Request, res: Response) => {
-  const { status, message, allowance } = await getAllAllowances();
-  return res.status(status).json({ allowance, message });
-});
+export const getAllowance = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { status, message, allowance } = await getAllAllowances();
+    if (status === 404) {
+      next(new appError(status, message));
+    }
+    return res.status(status).json({ allowance, message });
+  }
+);
 
 export const deleteAllowance = catchAsync(
   async (req: Request, res: Response) => {
