@@ -5,14 +5,14 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 import { env } from "./config/env";
-import userRoutes from "./user/index";
-import serviceRoutes from "./serviceEvent/index";
-import authRoutes from "./auth/index";
-import allowanceRoutes from "./allowance/index";
-import jobTypeRoutes from "./jobType/index";
-import positionRoutes from "./position/index";
-import { errorMiddleware } from "./middlewares/error-handler";
-import { appError } from "./utils/appError";
+// import userRoutes from "./api/v1/routes/";
+import serviceRoutes from "./api/v1/routes/serviceEventRoutes";
+import authRoutes from "./api/v1/routes/authRoutes";
+import allowanceRoutes from "./api/v1/routes/allowanceRoutes";
+import jobTypeRoutes from "./api/v1/routes/jobTypeRoutes";
+import positionRoutes from "./api/v1/routes/positionRoutes";
+import { errorMiddleware } from "./api/v1/middlewares/error-handler";
+import { appError } from "./api/v1/helpers/appError";
 
 const app: Express = express();
 const port = env.PORT;
@@ -27,7 +27,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/api", userRoutes());
 app.use("/api", serviceRoutes());
 app.use("/api", authRoutes());
 app.use("/api", allowanceRoutes());
