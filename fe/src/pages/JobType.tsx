@@ -101,7 +101,7 @@ export default function JobType() {
       item.pf_allowed,
       item.disabled,
     ]);
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: yPos,
       head: [headers],
       body: data,

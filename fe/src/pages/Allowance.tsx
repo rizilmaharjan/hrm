@@ -103,7 +103,7 @@ export default function Allowance() {
       item.allowance_taxable,
       item.allowance_acc_cd,
     ]);
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: yPos,
       head: [headers],
       body: data,

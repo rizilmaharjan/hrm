@@ -109,7 +109,7 @@ export default function ServiceEvent() {
       item.SERVICE_EVENT_TYPE,
       item.DISABLED,
     ]);
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: yPos,
       head: [headers],
       body: data,
