@@ -5,6 +5,7 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
 import { forwardRef } from "react";
+import { jobTypeSchema } from "../../validations/login.schema";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -83,6 +84,7 @@ const AddJobType = forwardRef<HTMLDivElement, TProps>(
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
+        jobTypeSchema.parse(jobTypeDesc);
         if (!isEdit) {
           const res = await Instance.post("/v1/job-type", jobTypeDesc);
           console.log(res);
