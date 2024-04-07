@@ -28,7 +28,7 @@ export const allowanceSchema = z.object({
       .max(1, { message: "taxable should be 1 character" }),
     allowance_facility_percent: z
       .number()
-      .max(999.99, { message: "facility percent should be between 1 and 99" }),
+      .max(999.99, { message: "facility percent should be between 1 and 999" }),
     allowance_cit: z
       .string()
       .trim()
