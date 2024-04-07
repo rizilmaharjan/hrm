@@ -6,8 +6,6 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TAllowance } from "../../interfaces/types/allowance.types";
 import AccountList from "./AccountList";
-import { getErrorMessage } from "../utils/handleErrors";
-
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -128,8 +126,7 @@ export default function AddAllowance({
       }));
       setIsModalOpen(false);
     } catch (error: any) {
-      const errMsg = getErrorMessage(error);
-      toast.error(errMsg);
+      toast.error(error);
     }
   };
 

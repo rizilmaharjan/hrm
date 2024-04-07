@@ -5,7 +5,6 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
 import { forwardRef } from "react";
-import { getErrorMessage } from "../utils/handleErrors";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -136,7 +135,7 @@ const AddJobType = forwardRef<HTMLDivElement, TProps>(
           }
         });
 
-  setIsModalOpen(false);
+        setIsModalOpen(false);
       } catch (error: any) {
         console.log("this is error", error);
       }
