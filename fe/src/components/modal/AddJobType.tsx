@@ -1,151 +1,159 @@
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
-import { forwardRef } from "react";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setJobType: React.Dispatch<React.SetStateAction<TJobType[]>>;
   jobTypeToEdit: TJobType | undefined;
+  isModalOpen: boolean;
   isEdit: boolean;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
   setJobTypeToEdit: React.Dispatch<React.SetStateAction<TJobType | undefined>>;
-  closeJobModalRef: RefObject<HTMLDivElement>;
 };
-const AddJobType = forwardRef<HTMLDivElement, TProps>(
-  (
-    {
-      setIsModalOpen,
-      setJobType,
-      jobTypeToEdit,
-      isEdit,
-      setIsEdit,
-      setJobTypeToEdit,
-      closeJobModalRef,
-    }: TProps,
-    ref
-  ) => {
-    const [jobTypeDesc, setJobTypeDesc] = useState({
-      job_type_cd: "",
-      job_type_desc: "",
-      tax: "Y",
-      tax_percent: "",
-      pf_allowed: "N",
-      cit: "N",
-      pay_generate: "N",
-      grade_allowed: "N",
-      single_rebate: "",
-      married_rebate: "",
-      disabled: "N",
-    });
-    useEffect(() => {
-      // Update userInfo when editedData changes
-      if (jobTypeToEdit) {
-        setJobTypeDesc(jobTypeToEdit);
-      }
-    }, [jobTypeToEdit]);
 
-    useEffect(() => {
-      const checkboxValue = localStorage.getItem("checkboxValue");
-      if (checkboxValue === "true") {
-        setJobTypeDesc((prev) => ({
-          ...prev,
-          disabled: "Y",
-        }));
-      }
-    }, []);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, type } = e.target;
-      const checked = (e.target as HTMLInputElement).checked;
-      const newValue =
-        type === "checkbox" ? (checked ? "Y" : "N") : e.target.value;
-      setJobTypeDesc((prev) => ({
-        ...prev,
-        [name]: newValue,
-      }));
-      if (name === "DISABLED" && type === "checkbox") {
-        localStorage.setItem("checkboxValue", newValue);
-      }
-    };
-
-    const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const { name, value } = e.target;
-      setJobTypeDesc((prev) => ({
-        ...prev,
-        [name]: value, // Update the SERVICE_EVENT_TYPE property
-      }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      try {
-        if (!isEdit) {
-          const res = await Instance.post("/v1/job-type", jobTypeDesc);
-          console.log(res);
-          if (res.status === 201) {
-            toast.success(res.data.message);
-            setJobType((prev) => {
-              if (!prev) {
-                return [res.data.data];
-              } else {
-                return [...prev, jobTypeDesc];
-              }
-            });
-          }
-        } else {
-          const res = await Instance.put(
-            `/v1/job-type/${jobTypeDesc.job_type_cd}`,
-            jobTypeDesc
-          );
-          if (res.status === 200) {
-            toast.success(res.data.message);
-            setJobType((prev) => {
-              if (!prev) return [];
-              return prev.map((item) => {
-                if (item.job_type_cd === jobTypeDesc.job_type_cd) {
-                  return { ...item, ...jobTypeDesc };
-                }
-                return item;
-              });
-            });
-          }
-          setIsEdit(false);
-        }
-
-        setJobTypeToEdit((prev) => {
-          if (prev) {
-            return {
-              ...prev,
-              job_type_cd: "",
-              job_type_desc: "",
-              tax: "Y",
-              tax_percent: "",
-              pf_allowed: "N",
-              cit: "N",
-              pay_generate: "N",
-              grade_allowed: "N",
-              single_rebate: "",
-              married_rebate: "",
-              disabled: "N",
-            };
-          }
-        });
-
+export default function AddJobType({
+  setIsModalOpen,
+  setJobType,
+  jobTypeToEdit,
+  isEdit,
+  setIsEdit,
+  setJobTypeToEdit,
+  isModalOpen,
+}: TProps) {
+  const [jobTypeDesc, setJobTypeDesc] = useState({
+    job_type_cd: "",
+    job_type_desc: "",
+    tax: "Y",
+    tax_percent: "",
+    pf_allowed: "N",
+    cit: "N",
+    pay_generate: "N",
+    grade_allowed: "N",
+    single_rebate: "",
+    married_rebate: "",
+    disabled: "N",
+  });
+  const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let handler = (e: any) => {
+      if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-      } catch (error: any) {
-        console.log("this is error", error);
+        console.log("i am inside the if block");
       }
     };
-    return (
-      <>
-        <div
-          ref={ref}
-          className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60"
-        >
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    // Update userInfo when editedData changes
+    if (jobTypeToEdit) {
+      setJobTypeDesc(jobTypeToEdit);
+    }
+  }, [jobTypeToEdit]);
+
+  useEffect(() => {
+    const checkboxValue = localStorage.getItem("checkboxValue");
+    if (checkboxValue === "true") {
+      setJobTypeDesc((prev) => ({
+        ...prev,
+        disabled: "Y",
+      }));
+    }
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    const newValue =
+      type === "checkbox" ? (checked ? "Y" : "N") : e.target.value;
+    setJobTypeDesc((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+    if (name === "DISABLED" && type === "checkbox") {
+      localStorage.setItem("checkboxValue", newValue);
+    }
+  };
+
+  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setJobTypeDesc((prev) => ({
+      ...prev,
+      [name]: value, // Update the SERVICE_EVENT_TYPE property
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      if (!isEdit) {
+        const res = await Instance.post("/v1/job-type", jobTypeDesc);
+        console.log(res);
+        if (res.status === 201) {
+          toast.success(res.data.message);
+          setJobType((prev) => {
+            if (!prev) {
+              return [res.data.data];
+            } else {
+              return [...prev, jobTypeDesc];
+            }
+          });
+        }
+      } else {
+        const res = await Instance.put(
+          `/v1/job-type/${jobTypeDesc.job_type_cd}`,
+          jobTypeDesc
+        );
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          setJobType((prev) => {
+            if (!prev) return [];
+            return prev.map((item) => {
+              if (item.job_type_cd === jobTypeDesc.job_type_cd) {
+                return { ...item, ...jobTypeDesc };
+              }
+              return item;
+            });
+          });
+        }
+        setIsEdit(false);
+      }
+
+      setJobTypeToEdit((prev) => {
+        if (prev) {
+          return {
+            ...prev,
+            job_type_cd: "",
+            job_type_desc: "",
+            tax: "Y",
+            tax_percent: "",
+            pf_allowed: "N",
+            cit: "N",
+            pay_generate: "N",
+            grade_allowed: "N",
+            single_rebate: "",
+            married_rebate: "",
+            disabled: "N",
+          };
+        }
+      });
+
+      setIsModalOpen(false);
+    } catch (error: any) {
+      console.log("this is error", error);
+    }
+  };
+  return (
+    <>
+      <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
+        <div ref={modalRef}>
           <form
             onSubmit={handleSubmit}
             className="bg-white max-w-[30rem] p-8 rounded-lg"
@@ -376,9 +384,7 @@ const AddJobType = forwardRef<HTMLDivElement, TProps>(
             </Button>
           </form>
         </div>
-      </>
-    );
-  }
-);
-
-export default AddJobType;
+      </div>
+    </>
+  );
+}

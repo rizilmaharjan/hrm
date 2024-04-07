@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, RefObject } from "react";
+import { useEffect, useState } from "react";
 import { Instance } from "../utils/Instance";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
@@ -15,44 +15,6 @@ export default function JobType() {
   const [selectDeleteId, setSelectDeleteId] = useState("");
   const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const closeJobModalRef: RefObject<HTMLDivElement> =
-    useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        closeJobModalRef.current &&
-        !closeJobModalRef.current.contains(event.target)
-      ) {
-        setIsModalOpen(false);
-        setIsEdit(false);
-        setJobTypeToEdit((prev) => {
-          if (prev) {
-            return {
-              ...prev,
-              job_type_cd: "",
-              job_type_desc: "",
-              tax: "Y",
-              tax_percent: "",
-              pf_allowed: "N",
-              cit: "N",
-              pay_generate: "N",
-              grade_allowed: "N",
-              single_rebate: "",
-              married_rebate: "",
-              disabled: "N",
-            };
-          }
-        });
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [closeJobModalRef, setIsModalOpen, setIsEdit, setJobTypeToEdit]);
 
   //Get all Job type data
   useEffect(() => {
@@ -132,8 +94,8 @@ export default function JobType() {
               <AddJobType
                 setJobType={setJobType}
                 setIsModalOpen={setIsModalOpen}
+                isModalOpen={isModalOpen}
                 jobTypeToEdit={jobTypeToEdit}
-                closeJobModalRef={closeJobModalRef}
                 isEdit={isEdit}
                 setIsEdit={setIsEdit}
                 setJobTypeToEdit={setJobTypeToEdit}
