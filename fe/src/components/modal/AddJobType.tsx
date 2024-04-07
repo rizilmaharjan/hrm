@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
 import { jobTypeSchema } from "../../validations/jobType.schema";
 
+
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setJobType: React.Dispatch<React.SetStateAction<TJobType[]>>;
@@ -51,6 +52,7 @@ export default function AddJobType({
       document.removeEventListener("mousedown", handler);
     };
   }, [isModalOpen, setIsModalOpen]);
+
 
   useEffect(() => {
     // Update userInfo when editedData changes

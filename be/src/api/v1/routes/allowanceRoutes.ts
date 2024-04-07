@@ -6,14 +6,26 @@ import {
   postAllowance,
   updateAllowance,
 } from "../controllers/allowanceController";
+import { validateResource } from "../middlewares/validateResource";
+import { allowanceSchema } from "../validations/allowance.schema";
 
 const router = Router();
 
 const routes = () => {
-  router.post("/v1/allowance", verifyToken, postAllowance);
+  router.post(
+    "/v1/allowance",
+    verifyToken,
+    validateResource(allowanceSchema),
+    postAllowance
+  );
   router.get("/v1/allowance", verifyToken, getAllowance);
   router.delete("/v1/allowance/:id", verifyToken, deleteAllowance);
-  router.put("/v1/allowance/:id", verifyToken, updateAllowance);
+  router.put(
+    "/v1/allowance/:id",
+    verifyToken,
+    validateResource(allowanceSchema),
+    updateAllowance
+  );
   // router.get("/v1/users", getUser);
   return router;
 };

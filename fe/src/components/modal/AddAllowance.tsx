@@ -51,6 +51,7 @@ export default function AddAllowance({
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
+
     const handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
@@ -62,6 +63,7 @@ export default function AddAllowance({
       document.removeEventListener("mousedown", handler);
     };
   }, [isModalOpen, setIsModalOpen]);
+
   useEffect(() => {
     const checkboxValue = localStorage.getItem("checkboxValue");
     if (checkboxValue === "true") {
