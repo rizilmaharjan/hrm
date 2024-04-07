@@ -1,5 +1,5 @@
 import { useCustomContext } from "../../context/DataContext";
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
 import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
@@ -9,8 +9,13 @@ import Button from "../ui/Button";
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setServiceEvents: React.Dispatch<React.SetStateAction<TServiceEvent[]>>;
+  isModalOpen: boolean;
 };
-export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
+export default function AddEvent({
+  setIsModalOpen,
+  setServiceEvents,
+  isModalOpen,
+}: TProps) {
   const {
     serviceToEdit,
     isEdit,
@@ -31,6 +36,20 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
     // updated_by: serviceToEdit?.LAST_UPDATED_BY || "",
     // updated_on: serviceToEdit.LAST_UPDATED_ON || "",
   });
+
+  const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let handler = (e: any) => {
+      if (!modalRef.current?.contains(e.target)) {
+        setIsModalOpen(false);
+        console.log("i am inside the if block");
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [isModalOpen]);
 
   useEffect(() => {
     const checkboxValue = localStorage.getItem("checkboxValue");
@@ -111,95 +130,92 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
-        {" "}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white w-[28%] p-8 rounded-lg"
-        >
-          <div className="flex justify-end mb-4">
-            <RxCross2
-              onClick={() => {
-                setIsModalOpen(false);
-                setIsEdit(false);
-                setServiceToEdit((prev: any) => {
-                  return {
-                    ...prev,
-                    SERVICE_EVENT_CD: "",
-                    SERVICE_EVENT_DESC: "",
-                    SERVICE_EVENT_DESC_NEP: "",
-                    DISABLED: "N",
-                    SERVICE_EVENT_TYPE: "",
-                  };
-                });
-              }}
-              className="cursor-pointer"
-            />
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <label
-              htmlFor="SERVICE_EVENT_CD"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Event CD
-            </label>
-            <input
-              id="SERVICE_EVENT_CD"
-              name="SERVICE_EVENT_CD"
-              onChange={handleChange}
-              value={serviceDesc.SERVICE_EVENT_CD}
-              className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <label
-              htmlFor="SERVICE_EVENT_DESC"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Description
-            </label>
-            <input
-              id="SERVICE_EVENT_DESC"
-              name="SERVICE_EVENT_DESC"
-              onChange={handleChange}
-              value={serviceDesc.SERVICE_EVENT_DESC}
-              className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Description..."
-            />
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <label
-              htmlFor="SERVICE_EVENT_DESC_NEP"
-              className="block mb-2 text-sm font-medium text-gray-900 "
-            >
-              Description (In Nepali)
-            </label>
+        <div ref={modalRef} className="bg-white w-[28%] p-8 rounded-lg">
+          <form onSubmit={handleSubmit}>
+            <div className="flex justify-end mb-4">
+              <RxCross2
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setIsEdit(false);
+                  setServiceToEdit((prev: any) => {
+                    return {
+                      ...prev,
+                      SERVICE_EVENT_CD: "",
+                      SERVICE_EVENT_DESC: "",
+                      SERVICE_EVENT_DESC_NEP: "",
+                      DISABLED: "N",
+                      SERVICE_EVENT_TYPE: "",
+                    };
+                  });
+                }}
+                className="cursor-pointer"
+              />
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <label
+                htmlFor="SERVICE_EVENT_CD"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Event CD
+              </label>
+              <input
+                id="SERVICE_EVENT_CD"
+                name="SERVICE_EVENT_CD"
+                onChange={handleChange}
+                value={serviceDesc.SERVICE_EVENT_CD}
+                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <label
+                htmlFor="SERVICE_EVENT_DESC"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Description
+              </label>
+              <input
+                id="SERVICE_EVENT_DESC"
+                name="SERVICE_EVENT_DESC"
+                onChange={handleChange}
+                value={serviceDesc.SERVICE_EVENT_DESC}
+                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Description..."
+              />
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <label
+                htmlFor="SERVICE_EVENT_DESC_NEP"
+                className="block mb-2 text-sm font-medium text-gray-900 "
+              >
+                Description (In Nepali)
+              </label>
 
-            <input
-              id="SERVICE_EVENT_DESC_NEP"
-              name="SERVICE_EVENT_DESC_NEP"
-              onChange={handleChange}
-              value={serviceDesc.SERVICE_EVENT_DESC_NEP}
-              className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Description In Nepali..."
-            />
-          </div>
-          <div className="flex items-center mb-5">
-            <input
-              id="checkbox"
-              type="checkbox"
-              name="DISABLED"
-              checked={serviceDesc.DISABLED === "Y"}
-              onChange={handleChange}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
-            />
-            <label
-              htmlFor="checkbox"
-              className="ms-2 text-sm font-medium text-gray-900"
-            >
-              Disable
-            </label>
-          </div>
-          {/* <div className="relative z-0 w-full mb-5 group">
+              <input
+                id="SERVICE_EVENT_DESC_NEP"
+                name="SERVICE_EVENT_DESC_NEP"
+                onChange={handleChange}
+                value={serviceDesc.SERVICE_EVENT_DESC_NEP}
+                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Description In Nepali..."
+              />
+            </div>
+            <div className="flex items-center mb-5">
+              <input
+                id="checkbox"
+                type="checkbox"
+                name="DISABLED"
+                checked={serviceDesc.DISABLED === "Y"}
+                onChange={handleChange}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+              />
+              <label
+                htmlFor="checkbox"
+                className="ms-2 text-sm font-medium text-gray-900"
+              >
+                Disable
+              </label>
+            </div>
+            {/* <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
               id="entered_By"
@@ -211,7 +227,7 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
               placeholder="Entered By"
             />
           </div> */}
-          {/* <div className="relative z-0 w-full mb-5 group">
+            {/* <div className="relative z-0 w-full mb-5 group">
             <label
               htmlFor="SERVICE_EVENT_TYPE"
               className="block mb-2 text-sm font-medium text-gray-900 "
@@ -231,42 +247,42 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
             />
           </div> */}
 
-          <label
-            htmlFor="SERVICE_EVENT_TYPE"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            Service Event Type
-          </label>
-          <select
-            id="SERVICE_EVENT_TYPE"
-            name="SERVICE_EVENT_TYPE"
-            value={serviceDesc.SERVICE_EVENT_TYPE}
-            onChange={handleChangeSelect}
-            className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          >
-            <option value="N">Normal</option>
-            <option value="P">Promotion</option>
-            <option value="T">Transfer</option>
-            <option value="A">Appoinment</option>
-          </select>
-
-          <div className="flex items-center mb-5">
-            <input
-              id="checkbox"
-              type="checkbox"
-              name="SALARY_ADJUST"
-              checked={serviceDesc.SALARY_ADJUST === "Y"}
-              onChange={handleChange}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
-            />
             <label
-              htmlFor="checkbox"
-              className="ms-2 text-sm font-medium text-gray-900"
+              htmlFor="SERVICE_EVENT_TYPE"
+              className="block mb-2 text-sm font-medium text-gray-900"
             >
-              Salary Adjust
+              Service Event Type
             </label>
-          </div>
-          {/* <div className="relative z-0 w-full mb-5 group">
+            <select
+              id="SERVICE_EVENT_TYPE"
+              name="SERVICE_EVENT_TYPE"
+              value={serviceDesc.SERVICE_EVENT_TYPE}
+              onChange={handleChangeSelect}
+              className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            >
+              <option value="N">Normal</option>
+              <option value="P">Promotion</option>
+              <option value="T">Transfer</option>
+              <option value="A">Appoinment</option>
+            </select>
+
+            <div className="flex items-center mb-5">
+              <input
+                id="checkbox"
+                type="checkbox"
+                name="SALARY_ADJUST"
+                checked={serviceDesc.SALARY_ADJUST === "Y"}
+                onChange={handleChange}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+              />
+              <label
+                htmlFor="checkbox"
+                className="ms-2 text-sm font-medium text-gray-900"
+              >
+                Salary Adjust
+              </label>
+            </div>
+            {/* <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
               id="updated_by"
@@ -278,7 +294,7 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
               placeholder="Updated By"
             />
           </div> */}
-          {/* <div className="relative z-0 w-full mb-5 group">
+            {/* <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
               id="updated_on"
@@ -291,17 +307,18 @@ export default function AddEvent({ setIsModalOpen, setServiceEvents }: TProps) {
             />
           </div> */}
 
-          <Button
-            type="submit"
-            className={`text-white ${
-              isEdit ? "bg-green-500" : "bg-blue-700"
-            }  ${
-              isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
-            }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
-          >
-            {isEdit ? "Edit" : "Submit"}
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              className={`text-white ${
+                isEdit ? "bg-green-500" : "bg-blue-700"
+              }  ${
+                isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
+              }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+            >
+              {isEdit ? "Edit" : "Submit"}
+            </Button>
+          </form>
+        </div>
       </div>
     </>
   );
