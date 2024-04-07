@@ -6,6 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TAllowance } from "../../interfaces/types/allowance.types";
 import AccountList from "./AccountList";
+import { allowanceSchema } from "../../validations/allowance.schema";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,7 +51,8 @@ export default function AddAllowance({
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let handler = (e: any) => {
+
+    const handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
         console.log("i am inside the if block");
@@ -60,7 +62,8 @@ export default function AddAllowance({
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  }, [isModalOpen]);
+  }, [isModalOpen, setIsModalOpen]);
+
   useEffect(() => {
     const checkboxValue = localStorage.getItem("checkboxValue");
     if (checkboxValue === "true") {
@@ -95,6 +98,7 @@ export default function AddAllowance({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    allowanceSchema.parse(serviceDesc);
     try {
       if (!isEdit) {
         const res = await Instance.post("/v1/allowance", serviceDesc);

@@ -7,6 +7,9 @@ import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import { mapServiceEventType } from "../utils/serviceEventType";
 import { TServiceEvent } from "../interfaces/types/serviceEvent.types";
+import { serviceEventTitle } from "../constants";
+import { FileExport } from "../assets/svg";
+import jsPDF from "jspdf";
 
 export default function ServiceEvent() {
   const [serviceEvents, setServiceEvents] = useState<TServiceEvent[]>([]);
@@ -77,6 +80,55 @@ export default function ServiceEvent() {
     setEditID("");
   }, [location.pathname]);
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    let yPos = 10;
+    doc.text("Service Event Data", 14, yPos);
+    yPos += 10;
+
+    const addFooter = (doc: jsPDF, pageNumber: number) => {
+      const pageCount = doc.getNumberOfPages();
+      doc.setFontSize(10);
+      doc.text(
+        `Page ${pageNumber} of ${pageCount}`,
+        doc.internal.pageSize.width / 2,
+        doc.internal.pageSize.height - 10,
+        { align: "center" }
+      );
+      doc.text(
+        new Date().toLocaleDateString(),
+        10,
+        doc.internal.pageSize.height - 10
+      );
+    };
+
+    const headers = ["Code", "Description", "Type", "Disabled"];
+    const data = serviceEvents.map((item) => [
+      item.SERVICE_EVENT_CD,
+      item.SERVICE_EVENT_DESC,
+      item.SERVICE_EVENT_TYPE,
+      item.DISABLED,
+    ]);
+    doc.autoTable({
+      startY: yPos,
+      head: [headers],
+      body: data,
+      didDrawPage: (data: any) => {
+        // Call addFooter function on each page draw
+        addFooter(doc, data.pageNumber);
+      },
+    });
+    // Generate Blob URL for the PDF content
+    const blob = doc.output("blob");
+    const pdfBlobUrl = URL.createObjectURL(blob);
+
+    // Open the PDF content in a new tab
+    const newTab = window.open(pdfBlobUrl);
+    if (!newTab) {
+      alert("Please allow pop-ups for this website");
+    }
+  };
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -106,34 +158,37 @@ export default function ServiceEvent() {
             )}
             <div className="flex justify-between p-3">
               <h1 className="font-semibold text-xl">Service Event</h1>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
-                type="button"
-              >
-                Add Event
-              </button>
+              <div className="flex gap-4">
+                <button
+                  onClick={exportToPDF}
+                  className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
+                  type="button"
+                >
+                  <FileExport />
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
+                  type="button"
+                >
+                  Add Event
+                </button>
+              </div>
             </div>
             <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                   <tr>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Code
-                    </th>
+                    {serviceEventTitle.map((item) => (
+                      <th
+                        key={item.id}
+                        scope="col"
+                        className={`px-6 py-3 ${item.width}`}
+                      >
+                        {item.title}
+                      </th>
+                    ))}
                     <th scope="col" className="px-6 py-3 w-2/12">
-                      Description
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-2/12 ">
-                      Description (IN NEPALI)
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Type
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Disabled
-                    </th>
-                    <th scope="col" className="px-6 py-3">
                       Actions
                     </th>
                   </tr>

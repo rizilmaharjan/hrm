@@ -34,7 +34,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await loginSchema.validate(loginDetails, { abortEarly: false });
+      loginSchema.parse(loginDetails);
       // setIsLoading(true);
       dispatch(logInStart());
 

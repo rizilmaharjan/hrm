@@ -4,6 +4,10 @@ import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import AddJobType from "../components/modal/AddJobType";
 import { TJobType } from "../interfaces/types/jobType.type";
+import jsPDF from "jspdf";
+import { FileExport } from "../assets/svg";
+import "jspdf-autotable";
+import { jobTypeTitle } from "../constants";
 
 export default function JobType() {
   const [jobType, setJobType] = useState<TJobType[]>([]);
@@ -68,6 +72,54 @@ export default function JobType() {
   //   setServiceToEdit(null);
   //   setEditID("");
   // }, [location.pathname]);
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    let yPos = 10;
+    doc.text("Job Type Data", 10, yPos);
+    yPos += 10;
+    const addFooter = (doc: jsPDF, pageNumber: number) => {
+      const pageCount = doc.getNumberOfPages();
+      doc.setFontSize(10);
+      doc.text(
+        `Page ${pageNumber} of ${pageCount}`,
+        doc.internal.pageSize.width / 2,
+        doc.internal.pageSize.height - 10,
+        { align: "center" }
+      );
+      doc.text(
+        new Date().toLocaleDateString(),
+        10,
+        doc.internal.pageSize.height - 10
+      );
+    };
+    const headers = ["Code", "Description", "Tax", "CIT", "PF", "Disabled"];
+    const data = jobType.map((item) => [
+      item.job_type_cd,
+      item.job_type_desc,
+      item.tax,
+      item.cit,
+      item.pf_allowed,
+      item.disabled,
+    ]);
+    doc.autoTable({
+      startY: yPos,
+      head: [headers],
+      body: data,
+      didDrawPage: (data: any) => {
+        // Call addFooter function on each page draw
+        addFooter(doc, data.pageNumber);
+      },
+    });
+    // Generate Blob URL for the PDF content
+    const blob = doc.output("blob");
+    const pdfBlobUrl = URL.createObjectURL(blob);
+
+    // Open the PDF content in a new tab
+    const newTab = window.open(pdfBlobUrl);
+    if (!newTab) {
+      alert("Please allow pop-ups for this website");
+    }
+  };
 
   if (error) {
     return <div>{error}</div>;
@@ -103,51 +155,36 @@ export default function JobType() {
             )}
             <div className="flex justify-between p-3">
               <h1 className="font-semibold text-xl">Job Type</h1>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-green-500 text-white w-32 py-1 rounded-lg font-semibold"
-                type="button"
-              >
-                Add Job Type
-              </button>
+              <div className="flex gap-4">
+                <button
+                  onClick={exportToPDF}
+                  className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
+                  type="button"
+                >
+                  <FileExport />
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-green-500 text-white w-32 py-1 rounded-lg font-semibold"
+                  type="button"
+                >
+                  Add Job Type
+                </button>
+              </div>
             </div>
             <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                   <tr>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Code
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Description
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12 ">
-                      Tax Applicable?
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Flat %
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      PF
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      CIT
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Pay Gen.
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Is Grade
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Single Rebate
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Married rebate
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Disable
-                    </th>
+                    {jobTypeTitle.map((item) => (
+                      <th
+                        key={item.id}
+                        scope="col"
+                        className={`px-6 py-3 ${item.width}`}
+                      >
+                        {item.title}
+                      </th>
+                    ))}
                     <th scope="col" className="px-6 py-3">
                       Actions
                     </th>

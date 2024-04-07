@@ -93,3 +93,142 @@ export const accountList = [
     dsp_acc_desc: "Appron Allowance",
   },
 ];
+
+export const allowanceTitle = [
+  {
+    id: 1,
+    title: "Code",
+    width: "w-1/12",
+  },
+  {
+    id: 2,
+    title: "Description",
+    width: "w-2/12",
+  },
+  {
+    id: 3,
+    title: "Description (in Nepali)",
+    width: "w-1/12",
+  },
+  {
+    id: 4,
+    title: "Taxable",
+    width: "w-1/12",
+  },
+  {
+    id: 5,
+    title: "Facility(%)",
+    width: "w-1/12",
+  },
+  {
+    id: 6,
+    title: "Deduct CIT",
+    width: "w-1/12",
+  },
+  {
+    id: 7,
+    title: "Type",
+    width: "w-1/12",
+  },
+  {
+    id: 8,
+    title: "Salary + Allowance Flag",
+    width: "w-1/12",
+  },
+  {
+    id: 9,
+    title: "A/C",
+    width: "w-1/12",
+  },
+  {
+    id: 9,
+    title: "Disabled",
+    width: "w-1/12",
+  },
+];
+
+export const jobTypeTitle = [
+  {
+    id: 1,
+    title: "Code",
+    width: "w-1/12",
+  },
+  {
+    id: 2,
+    title: "Description",
+    width: "w-1/12",
+  },
+  {
+    id: 3,
+    title: "Tax Applicable?",
+    width: "w-1/12",
+  },
+  {
+    id: 4,
+    title: "Flat %",
+    width: "w-1/12",
+  },
+  {
+    id: 5,
+    title: "PF",
+    width: "w-1/12",
+  },
+  {
+    id: 6,
+    title: "CIT",
+    width: "w-1/12",
+  },
+  {
+    id: 7,
+    title: "Pay Gen.",
+    width: "w-1/12",
+  },
+  {
+    id: 8,
+    title: "Is Grade",
+    width: "w-1/12",
+  },
+  {
+    id: 9,
+    title: "Single Rebate",
+    width: "w-1/12",
+  },
+  {
+    id: 10,
+    title: "Married Rebate",
+    width: "w-1/12",
+  },
+  {
+    id: 11,
+    title: "Disabled",
+    width: "w-1/12",
+  },
+];
+
+export const serviceEventTitle = [
+  {
+    id: 1,
+    title: "Code",
+    width: "w-1/12",
+  },
+  {
+    id: 2,
+    title: "Description",
+    width: "w-3/12",
+  },
+  {
+    id: 3,
+    title: "Description (in Nepali)",
+    width: "w-3/12",
+  },
+  {
+    id: 4,
+    title: "Type",
+    width: "w-2/12",
+  },
+  {
+    id: 5,
+    title: "Disabled",
+    width: "w-1/12",
+  },
+];

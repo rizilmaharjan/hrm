@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
+import { jobTypeSchema } from "../../validations/jobType.schema";
+
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -49,7 +51,8 @@ export default function AddJobType({
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  }, [isModalOpen]);
+  }, [isModalOpen, setIsModalOpen]);
+
 
   useEffect(() => {
     // Update userInfo when editedData changes
@@ -92,9 +95,16 @@ export default function AddJobType({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = {
+      ...jobTypeDesc,
+      single_rebate: Number(jobTypeDesc.single_rebate),
+      married_rebate: Number(jobTypeDesc.married_rebate),
+    };
+
+    jobTypeSchema.parse(formData);
     try {
       if (!isEdit) {
-        const res = await Instance.post("/v1/job-type", jobTypeDesc);
+        const res = await Instance.post("/v1/job-type", formData);
         console.log(res);
         if (res.status === 201) {
           toast.success(res.data.message);
