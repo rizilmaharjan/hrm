@@ -112,7 +112,6 @@ export default function Allowance() {
       item.allowance_acc_cd,
       item.allowance_acc_desc,
     ]);
-    console.log("Data to Export", data);
     (doc as any).autoTable({
       startY: yPos,
       head: [headers],

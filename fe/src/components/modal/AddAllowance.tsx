@@ -76,6 +76,7 @@ export default function AddAllowance({
     };
   }, [setIsModalOpen, setServiceToEdit]);
 
+
   //   const checkboxValue = localStorage.getItem("checkboxValue");
   //   if (checkboxValue === "true") {
   //     setServiceDesc((prev) => ({
@@ -195,6 +196,7 @@ export default function AddAllowance({
 
     reset({ ...defaultValues });
   }, [reset, serviceToEdit]);
+
 
   useEffect(() => {
     if (isEdit && serviceToEdit?.allowance_disabled === "Y") {
