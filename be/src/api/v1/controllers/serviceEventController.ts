@@ -11,6 +11,7 @@ import { appError } from "../helpers/appError";
 export const postService = catchAsync(async (req: Request, res: Response) => {
   const { username } = res.locals.user;
   const body = { ...req.body, entered_By: username };
+  console.log("service event values", body);
   const { status, message, data } = await createService(body);
   return res.status(status).json({ message, data });
 });

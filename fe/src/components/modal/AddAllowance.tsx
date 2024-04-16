@@ -8,6 +8,10 @@ import { TAllowance } from "../../interfaces/types/allowance.types";
 import AccountList from "./AccountList";
 import { allowanceSchema } from "../../validations/allowance.schema";
 
+import Input from "../ui/Input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setAllowanceDatas: React.Dispatch<React.SetStateAction<TAllowance[]>>;
@@ -26,35 +30,43 @@ export default function AddAllowance({
     setEditID,
     setIsEdit,
   } = useCustomContext();
-  const [serviceDesc, setServiceDesc] = useState({
-    allowance_CD: serviceToEdit?.allowance_CD || "",
-    allowance_facility: serviceToEdit?.allowance_facility || "",
-    allowance_description: serviceToEdit?.allowance_description || "",
-    allowance_nepali_desc: serviceToEdit?.allowance_nepali_desc || "",
-    allowance_taxable: serviceToEdit?.allowance_taxable || "N",
-    allowance_facility_percent: serviceToEdit?.allowance_facility_percent || "",
-    allowance_cit: serviceToEdit?.allowance_cit_flag || "N",
-    allowance_type: serviceToEdit?.allowance_type || "A",
-    salary_allowance_flag: serviceToEdit?.salary_allowance_flag || "N",
-    allowance_acc: serviceToEdit?.allowance_acc_cd || "",
-    allowance_disabled: serviceToEdit?.allowance_disabled || "N",
-    // entered_By: serviceToEdit?.ENTERED_BY || "",
-    // entered_Dt: serviceToEdit?.ENTERED_DT || "",
-    // SERVICE_EVENT_TYPE: serviceToEdit?.SERVICE_EVENT_TYPE || "N",
-    // SALARY_ADJUST: serviceToEdit?.IS_AUTO_SALARY_ADJUST || "N",
-    // updated_by: serviceToEdit?.LAST_UPDATED_BY || "",
-    // updated_on: serviceToEdit.LAST_UPDATED_ON || "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<TAllowance>({
+    resolver: zodResolver(allowanceSchema),
   });
+  const [citVal, setCitVal] = useState(false);
+  const [salaryAllowanceFlag, setSalaryALlowanceFlag] = useState(false);
+  const [disabledVal, setDisabledVal] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<string>("");
+  // const [isOpen, setIsOpen] = useState(false);
+  // const [selectedAccount, setSelectedAccount] = useState<string>("");
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
-
     const handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
+        setServiceToEdit((prev: any) => {
+          return {
+            ...prev,
+            allowance_CD: "",
+            allowance_description: "",
+            allowance_nepali_desc: "",
+            allowance_taxable: "N",
+            allowance_facility_percent: "",
+            allowance_facility: "",
+            allowance_cit_flag: "N",
+            allowance_type: "",
+            salary_allowance_flag: "N",
+            allowance_acc_cd: "",
+            allowance_disabled: "N",
+          };
+        });
         console.log("i am inside the if block");
       }
     };
@@ -64,44 +76,157 @@ export default function AddAllowance({
     };
   }, [isModalOpen, setIsModalOpen]);
 
+  //   const checkboxValue = localStorage.getItem("checkboxValue");
+  //   if (checkboxValue === "true") {
+  //     setServiceDesc((prev) => ({
+  //       ...prev,
+  //       disabled: "Y",
+  //     }));
+  //   }
+  // }, []);
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, type } = e.target;
+  //   const checked = (e.target as HTMLInputElement).checked;
+  //   const newValue =
+  //     type === "checkbox" ? (checked ? "Y" : "N") : e.target.value;
+  //   setServiceDesc((prev) => ({
+  //     ...prev,
+  //     [name]: newValue,
+  //   }));
+  //   if (name === "DISABLED" && type === "checkbox") {
+  //     localStorage.setItem("checkboxValue", newValue);
+  //   }
+  // };
+
+  // const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   setServiceDesc((prev) => ({
+  //     ...prev,
+  //     [name]: value, // Update the SERVICE_EVENT_TYPE property
+  //   }));
+  // };
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   allowanceSchema.parse(serviceDesc);
+  //   try {
+  //     if (!isEdit) {
+  //       const res = await Instance.post("/v1/allowance", serviceDesc);
+  //       setAllowanceDatas((prev) => {
+  //         if (!prev) {
+  //           return [res.data.data];
+  //         } else {
+  //           return [...prev, res.data.data];
+  //         }
+  //       });
+  //       toast.success(res.data.message);
+  //     } else {
+  //       const res = await Instance.put(`/v1/allowance/${editID}`, serviceDesc);
+  //       setAllowanceDatas((prev) => {
+  //         if (!prev) return [];
+  //         return prev.map((item) => {
+  //           if (item.allowance_CD === editID) {
+  //             console.log("this is item", serviceDesc);
+  //             return { ...item, ...serviceDesc };
+  //           }
+  //           return item;
+  //         });
+  //       });
+  //       toast.success(res.data.message);
+
+  //       setServiceToEdit(null);
+  //       setIsEdit(false);
+  //       setEditID("");
+  //     }
+
+  //     setServiceDesc((prev) => ({
+  //       ...prev,
+  //       allowance_CD: "",
+  //       allowance_facility: "",
+  //       allowance_description: "",
+  //       allowance_nepali_desc: "",
+  //       allowance_taxable: "N",
+  //       allowance_facility_percent: "",
+  //       allowance_cit: "N",
+  //       allowance_type: "A",
+  //       salary_allowance_flag: "N",
+  //       allowance_acc: "",
+  //       allowance_disabled: "N",
+  //     }));
+  //     setIsModalOpen(false);
+  //   } catch (error: any) {
+  //     toast.error(error);
+  //   }
+  // };
+
+  // const handleDoubleClick = () => {
+  //   setIsOpen(true);
+  // };
+
+  // const handleAccountSelect = (account: string) => {
+  //   setSelectedAccount(account);
+  //   setServiceDesc((prev) => ({
+  //     ...prev,
+  //     allowance_acc: account,
+  //   }));
+  //   setIsOpen(false);
+  // };
+
   useEffect(() => {
-    const checkboxValue = localStorage.getItem("checkboxValue");
-    if (checkboxValue === "true") {
-      setServiceDesc((prev) => ({
-        ...prev,
-        disabled: "Y",
-      }));
-    }
+    let defaultValues: any = {};
+    defaultValues.allowance_CD = serviceToEdit?.allowance_CD || "";
+    defaultValues.allowance_description =
+      serviceToEdit?.allowance_description || "";
+    defaultValues.allowance_nepali_desc =
+      serviceToEdit?.allowance_nepali_desc || "";
+    defaultValues.allowance_taxable = serviceToEdit?.allowance_taxable || "N";
+    defaultValues.allowance_facility = serviceToEdit?.allowance_facility || "";
+    defaultValues.allowance_facility_percent =
+      serviceToEdit?.allowance_facility_percent || "";
+    defaultValues.allowance_cit_flag =
+      serviceToEdit?.allowance_cit_flag === "Y" ? true : false;
+    defaultValues.allowance_type = serviceToEdit?.allowance_type || "A";
+    defaultValues.salary_allowance_flag =
+      serviceToEdit?.salary_allowance_flag === "Y" ? true : false;
+    defaultValues.allowance_acc_cd = serviceToEdit?.allowance_acc_cd || "";
+    defaultValues.allowance_disabled =
+      serviceToEdit?.allowance_disabled === "Y" ? true : false;
+
+    reset({ ...defaultValues });
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-    const newValue =
-      type === "checkbox" ? (checked ? "Y" : "N") : e.target.value;
-    setServiceDesc((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
-    if (name === "DISABLED" && type === "checkbox") {
-      localStorage.setItem("checkboxValue", newValue);
+  useEffect(() => {
+    if (isEdit && serviceToEdit?.allowance_disabled === "Y") {
+      setDisabledVal(true);
+    } else {
+      setDisabledVal(false);
     }
-  };
+    if (isEdit && serviceToEdit?.salary_allowance_flag === "Y") {
+      setSalaryALlowanceFlag(true);
+    } else {
+      setSalaryALlowanceFlag(false);
+    }
 
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setServiceDesc((prev) => ({
-      ...prev,
-      [name]: value, // Update the SERVICE_EVENT_TYPE property
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    allowanceSchema.parse(serviceDesc);
+    if (isEdit && serviceToEdit?.allowance_cit_flag === "Y") {
+      setCitVal(true);
+    } else {
+      setCitVal(false);
+    }
+  }, [isEdit, serviceToEdit]);
+  const onSubmit = async (data: any) => {
+    // console.log("these are the allowances datas", data);
+    const allowanceDatas = {
+      ...data,
+      allowance_CD: data.allowance_CD.toUpperCase(),
+      allowance_cit_flag: data.allowance_cit_flag ? "Y" : "N",
+      allowance_disabled: data.allowance_disabled ? "Y" : "N",
+      salary_allowance_flag: data.salary_allowance_flag ? "Y" : "N",
+    };
     try {
       if (!isEdit) {
-        const res = await Instance.post("/v1/allowance", serviceDesc);
+        const res = await Instance.post("/v1/allowance", allowanceDatas);
+        console.log("allowance datas response", res);
         setAllowanceDatas((prev) => {
           if (!prev) {
             return [res.data.data];
@@ -111,62 +236,44 @@ export default function AddAllowance({
         });
         toast.success(res.data.message);
       } else {
-        const res = await Instance.put(`/v1/allowance/${editID}`, serviceDesc);
+        const res = await Instance.put(
+          `/v1/allowance/${editID}`,
+          allowanceDatas
+        );
+        console.log("allowance edit datas response", res);
         setAllowanceDatas((prev) => {
           if (!prev) return [];
           return prev.map((item) => {
             if (item.allowance_CD === editID) {
-              console.log("this is item", serviceDesc);
-              return { ...item, ...serviceDesc };
+              return { ...item, ...allowanceDatas };
             }
             return item;
           });
         });
         toast.success(res.data.message);
-
-        setServiceToEdit(null);
         setIsEdit(false);
         setEditID("");
       }
-
-      setServiceDesc((prev) => ({
-        ...prev,
-        allowance_CD: "",
-        allowance_facility: "",
-        allowance_description: "",
-        allowance_nepali_desc: "",
-        allowance_taxable: "N",
-        allowance_facility_percent: "",
-        allowance_cit: "N",
-        allowance_type: "A",
-        salary_allowance_flag: "N",
-        allowance_acc: "",
-        allowance_disabled: "N",
-      }));
+      reset();
+      setCitVal(false);
+      setSalaryALlowanceFlag(false);
+      setDisabledVal(false);
       setIsModalOpen(false);
     } catch (error: any) {
       toast.error(error);
+      console.log("allowance errors", error);
     }
-  };
-
-  const handleDoubleClick = () => {
-    setIsOpen(true);
-  };
-
-  const handleAccountSelect = (account: string) => {
-    setSelectedAccount(account);
-    setServiceDesc((prev) => ({
-      ...prev,
-      allowance_acc: account,
-    }));
-    setIsOpen(false);
+    console.log(
+      "these are the allowances datas after conversion",
+      allowanceDatas
+    );
   };
 
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
         <div ref={modalRef} className="bg-white w-1/3 p-8 rounded-lg">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex justify-between mb-6">
               <h1 className="text-lg font-semibold">Add Allowance</h1>
               <RxCross2
@@ -182,11 +289,11 @@ export default function AddAllowance({
                       allowance_taxable: "N",
                       allowance_facility_percent: "",
                       allowance_facility: "",
-                      allowance_cit: "",
+                      allowance_cit_flag: "N",
                       allowance_type: "",
                       salary_allowance_flag: "N",
                       allowance_acc_cd: "",
-                      allowance_disabled: "",
+                      allowance_disabled: "N",
                     };
                   });
                 }}
@@ -201,15 +308,15 @@ export default function AddAllowance({
                 >
                   Code
                 </label>
-                <input
-                  disabled={isEdit}
-                  id="allowance_CD"
-                  name="allowance_CD"
-                  onChange={handleChange}
-                  value={serviceDesc.allowance_CD}
+                <Input
+                  fieldName="allowance_CD"
+                  register={register}
+                  errors={errors}
+                  type="text"
+                  maxLength={3}
                   className={`block p-2.5 w-full ${
                     isEdit ? "opacity-50" : ""
-                  } text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500`}
+                  } text-sm text-black rounded-lg border uppercase border-gray-300 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
 
@@ -220,11 +327,11 @@ export default function AddAllowance({
                 >
                   Allowance Facility
                 </label>
-                <input
-                  id="allowance_CD"
-                  name="allowance_facility"
-                  onChange={handleChange}
-                  value={serviceDesc.allowance_facility}
+                <Input
+                  fieldName="allowance_facility"
+                  register={register}
+                  errors={errors}
+                  type="text"
                   className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -239,13 +346,12 @@ export default function AddAllowance({
                 >
                   Description
                 </label>
-                <input
-                  id="allowance_description"
-                  name="allowance_description"
-                  onChange={handleChange}
-                  value={serviceDesc.allowance_description}
+                <Input
+                  fieldName="allowance_description"
+                  register={register}
+                  errors={errors}
+                  type="text"
                   className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Description..."
                 />
               </div>
 
@@ -257,13 +363,12 @@ export default function AddAllowance({
                   Description (In Nepali)
                 </label>
 
-                <input
-                  id="allowance_nepali_desc"
-                  name="allowance_nepali_desc"
-                  onChange={handleChange}
-                  value={serviceDesc.allowance_nepali_desc}
+                <Input
+                  fieldName="allowance_nepali_desc"
+                  register={register}
+                  errors={errors}
+                  type="text"
                   className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Description In Nepali..."
                 />
               </div>
             </div>
@@ -279,10 +384,8 @@ export default function AddAllowance({
                   Taxable
                 </label>
                 <select
+                  {...register("allowance_taxable")}
                   id="allowance_taxable"
-                  name="allowance_taxable"
-                  value={serviceDesc.allowance_taxable}
-                  onChange={handleChangeSelect}
                   className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 >
                   <option value="Y">Yes</option>
@@ -298,10 +401,8 @@ export default function AddAllowance({
                   Type
                 </label>
                 <select
+                  {...register("allowance_type")}
                   id="allowance_type"
-                  name="allowance_type"
-                  value={serviceDesc.allowance_type}
-                  onChange={handleChangeSelect}
                   className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 >
                   <option value="A">Anually</option>
@@ -314,12 +415,19 @@ export default function AddAllowance({
 
             <div className="flex justify-around items-center">
               <div className="flex items-center w-1/2 mb-5">
-                <input
-                  id="allowance_cit"
+                <Input
+                  fieldName="allowance_cit_flag"
+                  register={register}
+                  errors={errors}
                   type="checkbox"
-                  name="allowance_cit"
-                  checked={serviceDesc.allowance_cit === "Y"}
-                  onChange={handleChange}
+                  checked={citVal}
+                  onChange={(e) => {
+                    setValue(
+                      "allowance_cit_flag",
+                      e.target.checked ? "yes" : "no"
+                    );
+                    setCitVal(!citVal);
+                  }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                 />
                 <label
@@ -330,12 +438,19 @@ export default function AddAllowance({
                 </label>
               </div>
               <div className="flex items-center w-1/2 mb-5">
-                <input
-                  id="salary_allowance_flag"
+                <Input
+                  fieldName="salary_allowance_flag"
+                  register={register}
+                  errors={errors}
                   type="checkbox"
-                  name="salary_allowance_flag"
-                  checked={serviceDesc.salary_allowance_flag === "Y"}
-                  onChange={handleChange}
+                  checked={salaryAllowanceFlag}
+                  onChange={(e) => {
+                    setValue(
+                      "salary_allowance_flag",
+                      e.target.checked ? "yes" : "no"
+                    );
+                    setSalaryALlowanceFlag(!salaryAllowanceFlag);
+                  }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                 />
                 <label
@@ -353,11 +468,12 @@ export default function AddAllowance({
               >
                 Facility(%)
               </label>
-              <input
-                id="allowance_facility_percent"
-                name="allowance_facility_percent"
-                onChange={handleChange}
-                value={serviceDesc.allowance_facility_percent}
+              <Input
+                fieldName="allowance_facility_percent"
+                register={register}
+                errors={errors}
+                setValueAs={(v) => (v === "" ? "" : parseInt(v, 10))}
+                type="text"
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -369,23 +485,29 @@ export default function AddAllowance({
               >
                 ACC_CD
               </label>
-              <input
-                id="allowance_acc"
-                name="allowance_acc"
-                onChange={handleChange}
-                value={serviceDesc.allowance_acc}
-                onDoubleClick={handleDoubleClick}
+              <Input
+                fieldName="allowance_acc_cd"
+                register={register}
+                errors={errors}
+                type="text"
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             <div className="flex items-center mb-5">
-              <input
-                id="allowance_disabled"
+              <Input
+                fieldName="allowance_disabled"
                 type="checkbox"
-                name="allowance_disabled"
-                checked={serviceDesc.allowance_disabled === "Y"}
-                onChange={handleChange}
+                register={register}
+                errors={errors}
+                checked={disabledVal}
+                onChange={(e) => {
+                  setValue(
+                    "allowance_disabled",
+                    e.target.checked ? "yes" : "no"
+                  );
+                  setDisabledVal(!disabledVal);
+                }}
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
               />
               <label
@@ -501,10 +623,10 @@ export default function AddAllowance({
           </form>
         </div>
 
-        <AccountList
+        {/* <AccountList
           isOpen={isOpen}
           handleAccountSelect={handleAccountSelect}
-        />
+        /> */}
       </div>
     </>
   );

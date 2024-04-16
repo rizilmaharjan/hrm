@@ -5,6 +5,7 @@ import { ExecuteResultService } from "../interfaces/model.interface";
 export const postService = async (
   service: any
 ): Promise<{ status: number; message: string; data?: any }> => {
+  console.log("service", service);
   try {
     const connection = await connectToDB();
 
@@ -61,8 +62,8 @@ export const postService = async (
           result.outBinds.new_service_event_type[0]) ||
         "",
       SALARY_ADJUST:
-        (result.outBinds?.new_service_event_type &&
-          result.outBinds.new_service_event_type[0]) ||
+        (result.outBinds?.new_service_salary_adjust &&
+          result.outBinds.new_service_salary_adjust[0]) ||
         "",
     };
 
@@ -91,6 +92,7 @@ export const getServices = async (): Promise<{
 
     if (result.rows) {
       const rows: any[] = result.rows;
+      console.log("service events datas", rows);
 
       const serviceEvents = rows.map((row: any[]) => {
         return {
@@ -101,7 +103,7 @@ export const getServices = async (): Promise<{
           // ENTERED_BY: row[4],
           // ENTERED_DT: row[5],
           SERVICE_EVENT_TYPE: row[6],
-          // IS_AUTO_SALARY_ADJUST: row[7],
+          SALARY_ADJUST: row[7],
           // LAST_UPDATED_BY: row[8],
           // LAST_UPDATED_ON: row[9],
         };
