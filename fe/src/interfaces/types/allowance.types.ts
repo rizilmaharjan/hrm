@@ -9,5 +9,6 @@ export type TAllowance = {
   allowance_type: string;
   salary_allowance_flag: string;
   allowance_acc_cd: string;
+  allowance_acc_desc?: string;
   allowance_disabled: string;
 };

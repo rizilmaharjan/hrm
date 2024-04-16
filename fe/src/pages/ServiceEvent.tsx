@@ -9,6 +9,7 @@ import { mapServiceEventType } from "../utils/serviceEventType";
 import { TServiceEvent } from "../interfaces/types/serviceEvent.types";
 import { serviceEventTitle } from "../constants";
 import { FileExport } from "../assets/svg";
+import "jspdf-autotable";
 import jsPDF from "jspdf";
 
 export default function ServiceEvent() {
@@ -78,7 +79,7 @@ export default function ServiceEvent() {
     setIsEdit(false);
     setServiceToEdit(null);
     setEditID("");
-  }, [location.pathname]);
+  }, [location.pathname, setEditID, setIsEdit, setServiceToEdit]);
 
   const exportToPDF = () => {
     const doc = new jsPDF();

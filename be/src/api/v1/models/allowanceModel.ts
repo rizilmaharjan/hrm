@@ -134,7 +134,8 @@ export const getAllowances = async (): Promise<{
 }> => {
   try {
     const connection = await connectToDB();
-    const sql = `SELECT * FROM allowance WHERE allowance_facility = 'A'`;
+    const sql = `SELECT a.*, m.acc_desc FROM allowance a LEFT JOIN acc_mst m ON a.acc_cd = m.acc_cd`;
+    // const sql = `SELECT * FROM allowance WHERE allowance_facility = 'A'`;
     const result = await connection.execute(sql);
 
     await connection.close();
@@ -155,6 +156,7 @@ export const getAllowances = async (): Promise<{
           salary_allowance_flag: row[12],
           allowance_acc_cd: row[7],
           allowance_disabled: row[8],
+          allowance_acc_desc: row[15],
           // order_sno: row[13],
           // is_pf_rf_as_salary: row[14],
           // ENTERED_BY: row[4],

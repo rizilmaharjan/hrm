@@ -74,7 +74,8 @@ export default function AddAllowance({
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  }, [isModalOpen, setIsModalOpen]);
+  }, [setIsModalOpen, setServiceToEdit]);
+
 
   //   const checkboxValue = localStorage.getItem("checkboxValue");
   //   if (checkboxValue === "true") {
@@ -174,7 +175,7 @@ export default function AddAllowance({
   // };
 
   useEffect(() => {
-    let defaultValues: any = {};
+    const defaultValues: any = {};
     defaultValues.allowance_CD = serviceToEdit?.allowance_CD || "";
     defaultValues.allowance_description =
       serviceToEdit?.allowance_description || "";
@@ -194,7 +195,8 @@ export default function AddAllowance({
       serviceToEdit?.allowance_disabled === "Y" ? true : false;
 
     reset({ ...defaultValues });
-  }, []);
+  }, [reset, serviceToEdit]);
+
 
   useEffect(() => {
     if (isEdit && serviceToEdit?.allowance_disabled === "Y") {

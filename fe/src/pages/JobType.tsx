@@ -4,6 +4,7 @@ import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import AddJobType from "../components/modal/AddJobType";
 import { TJobType } from "../interfaces/types/jobType.type";
+import "jspdf-autotable";
 import jsPDF from "jspdf";
 import { FileExport } from "../assets/svg";
 import { jobTypeTitle } from "../constants";
