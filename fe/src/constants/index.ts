@@ -249,6 +249,11 @@ export const serviceEventTitle = [
   },
   {
     id: 5,
+    title: "Salary Adjust",
+    width: "w-2/12",
+  },
+  {
+    id: 6,
     title: "Disabled",
     width: "w-1/12",
   },

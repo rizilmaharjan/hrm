@@ -9,6 +9,7 @@ import { mapServiceEventType } from "../utils/serviceEventType";
 import { TServiceEvent } from "../interfaces/types/serviceEvent.types";
 import { serviceEventTitle } from "../constants";
 import { FileExport } from "../assets/svg";
+import "jspdf-autotable";
 import jsPDF from "jspdf";
 
 export default function ServiceEvent() {
@@ -78,7 +79,7 @@ export default function ServiceEvent() {
     setIsEdit(false);
     setServiceToEdit(null);
     setEditID("");
-  }, [location.pathname]);
+  }, [location.pathname, setEditID, setIsEdit, setServiceToEdit]);
 
   const exportToPDF = () => {
     const doc = new jsPDF();
@@ -109,7 +110,7 @@ export default function ServiceEvent() {
       item.SERVICE_EVENT_TYPE,
       item.DISABLED,
     ]);
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: yPos,
       head: [headers],
       body: data,
@@ -217,6 +218,10 @@ export default function ServiceEvent() {
                         <td className="px-6 py-4">
                           {mapServiceEventType(item.SERVICE_EVENT_TYPE) || "_"}
                         </td>
+                        <td className="px-6 py-4">
+                          {item.SALARY_ADJUST || "_"}
+                        </td>
+
                         <td className="px-6 py-4">{item.DISABLED}</td>
                         {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
                     <td className="px-6 py-4">

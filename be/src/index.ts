@@ -17,6 +17,7 @@ import relationRoutes from "./api/v1/routes/relationRoutes";
 import districtRoutes from "./api/v1/routes/districtRoutes";
 import { errorMiddleware } from "./api/v1/middlewares/error-handler";
 import { appError } from "./api/v1/helpers/appError";
+import { limiter } from "./api/v1/helpers/rateLimit";
 
 const app: Express = express();
 const port = env.PORT;
@@ -30,6 +31,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(limiter);
 
 app.use("/api", serviceRoutes());
 app.use("/api", authRoutes());

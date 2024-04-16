@@ -1,48 +1,89 @@
 import { RefObject, useEffect, useRef, useState } from "react";
-import { Instance } from "../../utils/Instance";
-import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
 import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
 import { jobTypeSchema } from "../../validations/jobType.schema";
+import Input from "../ui/Input";
+import { useCustomContext } from "../../context/DataContext";
+import { Instance } from "../../utils/Instance";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setJobType: React.Dispatch<React.SetStateAction<TJobType[]>>;
-  jobTypeToEdit: TJobType | undefined;
   isModalOpen: boolean;
-  isEdit: boolean;
-  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
-  setJobTypeToEdit: React.Dispatch<React.SetStateAction<TJobType | undefined>>;
 };
 
 export default function AddJobType({
   setIsModalOpen,
   setJobType,
-  jobTypeToEdit,
-  isEdit,
-  setIsEdit,
-  setJobTypeToEdit,
   isModalOpen,
 }: TProps) {
-  const [jobTypeDesc, setJobTypeDesc] = useState({
-    job_type_cd: "",
-    job_type_desc: "",
-    tax: "Y",
-    tax_percent: "",
-    pf_allowed: "N",
-    cit: "N",
-    pay_generate: "N",
-    grade_allowed: "N",
-    single_rebate: "",
-    married_rebate: "",
-    disabled: "N",
+  // const [jobTypeDesc, setJobTypeDesc] = useState({
+  //   job_type_cd: "",
+  //   job_type_desc: "",
+  //   tax: "Y",
+  //   tax_percent: "",
+  //   pf_allowed: "N",
+  //   cit: "N",
+  //   pay_generate: "N",
+  //   grade_allowed: "N",
+  //   single_rebate: "",
+  //   married_rebate: "",
+  //   disabled: "N",
+  // });
+  const {
+    serviceToEdit,
+    isEdit,
+    editID,
+    setServiceToEdit,
+    setEditID,
+    setIsEdit,
+  } = useCustomContext();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<TJobType>({
+    resolver: zodResolver(jobTypeSchema),
   });
+  const [disabledVal, setDisabledVal] = useState(false);
+  const [pfAllowedVal, setPfAllowedVal] = useState(false);
+  const [citVal, setCitVal] = useState(false);
+  const [payGenerateVal, setPayGenerateVal] = useState(false);
+  const [gradeAllowedVal, setGradeAllowedVal] = useState(false);
+
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
+        setServiceToEdit((prev: any) => {
+          if (prev) {
+            return {
+              ...prev,
+              job_type_cd: "",
+              job_type_desc: "",
+              tax: "Y",
+              tax_percent: "",
+              pf_allowed: "N",
+              cit: "N",
+              pay_generate: "N",
+              grade_allowed: "N",
+              single_rebate: "",
+              married_rebate: "",
+              disabled: "N",
+            };
+          }
+        });
+        if (isEdit) {
+          setIsEdit(false);
+        }
         console.log("i am inside the if block");
       }
     };
@@ -52,118 +93,120 @@ export default function AddJobType({
     };
   }, [isModalOpen, setIsModalOpen]);
 
-  useEffect(() => {
-    // Update userInfo when editedData changes
-    if (jobTypeToEdit) {
-      setJobTypeDesc(jobTypeToEdit);
-    }
-  }, [jobTypeToEdit]);
+  // useEffect(() => {
+  //   // Update userInfo when editedData changes
+  //   if (jobTypeToEdit) {
+  //     setJobTypeDesc(jobTypeToEdit);
+  //   }
+  // }, [jobTypeToEdit]);
 
   useEffect(() => {
-    const checkboxValue = localStorage.getItem("checkboxValue");
-    if (checkboxValue === "true") {
-      setJobTypeDesc((prev) => ({
-        ...prev,
-        disabled: "Y",
-      }));
-    }
+    let defaultValues: any = {};
+    defaultValues.job_type_cd = serviceToEdit?.job_type_cd || "";
+    defaultValues.job_type_desc = serviceToEdit?.job_type_desc || "";
+    defaultValues.tax = serviceToEdit?.tax || "Y";
+    defaultValues.tax_percent = serviceToEdit?.tax_percent || "";
+    defaultValues.pf_allowed = serviceToEdit?.pf_allowed === "Y" ? true : false;
+    defaultValues.cit = serviceToEdit?.cit === "Y" ? true : false;
+    defaultValues.pay_generate =
+      serviceToEdit?.pay_generate === "Y" ? true : false;
+    defaultValues.grade_allowed =
+      serviceToEdit?.grade_allowed === "Y" ? true : false;
+    defaultValues.single_rebate = serviceToEdit?.single_rebate || "";
+
+    defaultValues.married_rebate = serviceToEdit?.married_rebate || "";
+    defaultValues.disabled = serviceToEdit?.disabled === "Y" ? true : false;
+
+    reset({ ...defaultValues });
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-    const newValue =
-      type === "checkbox" ? (checked ? "Y" : "N") : e.target.value;
-    setJobTypeDesc((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
-    if (name === "DISABLED" && type === "checkbox") {
-      localStorage.setItem("checkboxValue", newValue);
+  useEffect(() => {
+    if (isEdit && serviceToEdit?.disabled === "Y") {
+      setDisabledVal(true);
+    } else {
+      setDisabledVal(false);
     }
-  };
+    if (isEdit && serviceToEdit?.pf_allowed === "Y") {
+      setPfAllowedVal(true);
+    } else {
+      setPfAllowedVal(false);
+    }
+    if (isEdit && serviceToEdit?.cit === "Y") {
+      setCitVal(true);
+    } else {
+      setCitVal(false);
+    }
+    if (isEdit && serviceToEdit?.pay_generate === "Y") {
+      setPayGenerateVal(true);
+    } else {
+      setPayGenerateVal(false);
+    }
+    if (isEdit && serviceToEdit?.grade_allowed === "Y") {
+      setGradeAllowedVal(true);
+    } else {
+      setGradeAllowedVal(false);
+    }
+  }, [isEdit, serviceToEdit]);
 
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setJobTypeDesc((prev) => ({
-      ...prev,
-      [name]: value, // Update the SERVICE_EVENT_TYPE property
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = {
-      ...jobTypeDesc,
-      single_rebate: Number(jobTypeDesc.single_rebate),
-      married_rebate: Number(jobTypeDesc.married_rebate),
+  const onSubmit = async (data: any) => {
+    console.log("i am clicked");
+    console.log("add job type datas", data);
+    const jobTypeData = {
+      ...data,
+      job_type_cd: data.job_type_cd.toUpperCase(),
+      cit: data.cit ? "Y" : "N",
+      pf_allowed: data.pf_allowed ? "Y" : "N",
+      pay_generate: data.pay_generate ? "Y" : "N",
+      grade_allowed: data.grade_allowed ? "Y" : "N",
+      disabled: data.disabled ? "Y" : "N",
     };
 
-    jobTypeSchema.parse(formData);
-    try {
-      if (!isEdit) {
-        const res = await Instance.post("/v1/job-type", formData);
-        console.log(res);
-        if (res.status === 201) {
-          toast.success(res.data.message);
-          setJobType((prev) => {
-            if (!prev) {
-              return [res.data.data];
-            } else {
-              return [...prev, jobTypeDesc];
-            }
-          });
-        }
-      } else {
-        const res = await Instance.put(
-          `/v1/job-type/${jobTypeDesc.job_type_cd}`,
-          jobTypeDesc
-        );
-        if (res.status === 200) {
-          toast.success(res.data.message);
-          setJobType((prev) => {
-            if (!prev) return [];
-            return prev.map((item) => {
-              if (item.job_type_cd === jobTypeDesc.job_type_cd) {
-                return { ...item, ...jobTypeDesc };
-              }
-              return item;
-            });
-          });
-        }
-        setIsEdit(false);
+    if (!isEdit) {
+      const res = await Instance.post("/v1/job-type", jobTypeData);
+      console.log(res);
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        setJobType((prev) => {
+          if (!prev) {
+            return [res.data.data];
+          } else {
+            return [...prev, jobTypeData];
+          }
+        });
       }
-
-      setJobTypeToEdit((prev) => {
-        if (prev) {
-          return {
-            ...prev,
-            job_type_cd: "",
-            job_type_desc: "",
-            tax: "Y",
-            tax_percent: "",
-            pf_allowed: "N",
-            cit: "N",
-            pay_generate: "N",
-            grade_allowed: "N",
-            single_rebate: "",
-            married_rebate: "",
-            disabled: "N",
-          };
-        }
-      });
-
-      setIsModalOpen(false);
-    } catch (error: any) {
-      console.log("this is error", error);
+    } else {
+      const res = await Instance.put(`/v1/job-type/${editID}`, jobTypeData);
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        setJobType((prev) => {
+          if (!prev) return [];
+          return prev.map((item) => {
+            if (item.job_type_cd === editID) {
+              return { ...item, ...jobTypeData };
+            }
+            return item;
+          });
+        });
+      }
+      setIsEdit(false);
+      setEditID("");
     }
+    reset();
+    setGradeAllowedVal(false);
+    setPayGenerateVal(false);
+    setCitVal(false);
+    setDisabledVal(false);
+    setPfAllowedVal(false);
+    setIsModalOpen(false);
+
+    console.log("modified data", jobTypeData);
   };
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
         <div ref={modalRef}>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             className="bg-white max-w-[30rem] p-8 rounded-lg"
           >
             <div className="flex justify-end mb-4">
@@ -171,7 +214,7 @@ export default function AddJobType({
                 onClick={() => {
                   setIsModalOpen(false);
                   setIsEdit(false);
-                  setJobTypeToEdit((prev) => {
+                  setServiceToEdit((prev: any) => {
                     if (prev) {
                       return {
                         ...prev,
@@ -201,15 +244,13 @@ export default function AddJobType({
                 >
                   Code
                 </label>
-                <input
-                  disabled={isEdit}
-                  id="job_type_cd"
-                  name="job_type_cd"
-                  onChange={handleChange}
-                  value={jobTypeDesc.job_type_cd}
-                  className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Code"
-                  required
+                <Input
+                  fieldName="job_type_cd"
+                  register={register}
+                  errors={errors}
+                  maxLength={2}
+                  type="text"
+                  className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div className="relative z-0 w-full mb-5 group col-start-2 col-span-4">
@@ -219,14 +260,12 @@ export default function AddJobType({
                 >
                   Description
                 </label>
-                <input
-                  id="job_type_desc"
-                  name="job_type_desc"
-                  onChange={handleChange}
-                  value={jobTypeDesc.job_type_desc}
+                <Input
+                  fieldName="job_type_desc"
+                  register={register}
+                  errors={errors}
+                  type="text"
                   className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Description..."
-                  required
                 />
               </div>
             </div>
@@ -238,10 +277,8 @@ export default function AddJobType({
                 Tax Applicable?
               </label>
               <select
+                {...register("tax")}
                 id="tax"
-                name="tax"
-                value={jobTypeDesc.tax}
-                onChange={handleChangeSelect}
                 className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
                 <option value="Y">Yes(Slab)</option>
@@ -256,23 +293,27 @@ export default function AddJobType({
               >
                 Flat %
               </label>
-              <input
-                id="tax_percent"
-                name="tax_percent"
-                onChange={handleChange}
-                value={jobTypeDesc.tax_percent}
+              <Input
+                fieldName="tax_percent"
+                register={register}
+                errors={errors}
+                type="text"
+                setValueAs={(v) => (v === "" ? "" : parseInt(v, 10))}
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                //   placeholder="Description In Nepali..."
               />
             </div>
             <div className="grid grid-cols-2">
               <div className="flex items-center mb-5">
-                <input
-                  id="pf_allowed"
+                <Input
+                  fieldName="pf_allowed"
+                  register={register}
+                  errors={errors}
                   type="checkbox"
-                  name="pf_allowed"
-                  checked={jobTypeDesc.pf_allowed === "Y"}
-                  onChange={handleChange}
+                  checked={pfAllowedVal}
+                  onChange={(e) => {
+                    setValue("pf_allowed", e.target.checked ? "yes" : "no");
+                    setPfAllowedVal(!pfAllowedVal);
+                  }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                 />
                 <label
@@ -283,12 +324,16 @@ export default function AddJobType({
                 </label>
               </div>
               <div className="flex items-center mb-5">
-                <input
-                  id="cit"
+                <Input
+                  fieldName="cit"
+                  register={register}
+                  errors={errors}
                   type="checkbox"
-                  name="cit"
-                  checked={jobTypeDesc.cit === "Y"}
-                  onChange={handleChange}
+                  checked={citVal}
+                  onChange={(e) => {
+                    setValue("cit", e.target.checked ? "yes" : "no");
+                    setCitVal(!citVal);
+                  }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                 />
                 <label
@@ -299,12 +344,16 @@ export default function AddJobType({
                 </label>
               </div>
               <div className="flex items-center mb-5">
-                <input
-                  id="pay_generate"
+                <Input
+                  fieldName="pay_generate"
+                  register={register}
+                  errors={errors}
                   type="checkbox"
-                  name="pay_generate"
-                  checked={jobTypeDesc.pay_generate === "Y"}
-                  onChange={handleChange}
+                  checked={payGenerateVal}
+                  onChange={(e) => {
+                    setValue("pay_generate", e.target.checked ? "yes" : "no");
+                    setPayGenerateVal(!payGenerateVal);
+                  }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                 />
                 <label
@@ -315,12 +364,16 @@ export default function AddJobType({
                 </label>
               </div>
               <div className="flex items-center mb-5">
-                <input
-                  id="grade_allowed"
+                <Input
+                  fieldName="grade_allowed"
+                  register={register}
+                  errors={errors}
                   type="checkbox"
-                  name="grade_allowed"
-                  checked={jobTypeDesc.grade_allowed === "Y"}
-                  onChange={handleChange}
+                  checked={gradeAllowedVal}
+                  onChange={(e) => {
+                    setValue("grade_allowed", e.target.checked ? "yes" : "no");
+                    setGradeAllowedVal(!gradeAllowedVal);
+                  }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                 />
                 <label
@@ -338,13 +391,13 @@ export default function AddJobType({
               >
                 Single Rebate
               </label>
-              <input
-                id="single_rebate"
-                name="single_rebate"
-                onChange={handleChange}
-                value={jobTypeDesc.single_rebate}
+              <Input
+                fieldName="single_rebate"
+                register={register}
+                errors={errors}
+                type="text"
+                setValueAs={(v) => (v === "" ? "" : parseInt(v, 10))}
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                //   placeholder="Description..."
               />
             </div>
             <div className="relative z-0 w-full mb-5 group">
@@ -354,22 +407,27 @@ export default function AddJobType({
               >
                 Married Rebate
               </label>
-              <input
-                id="married_rebate"
-                name="married_rebate"
-                onChange={handleChange}
-                value={jobTypeDesc.married_rebate}
+              <Input
+                fieldName="married_rebate"
+                register={register}
+                errors={errors}
+                type="text"
+                setValueAs={(v) => (v === "" ? "" : parseInt(v, 10))}
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 //   placeholder="Description..."
               />
             </div>
             <div className="flex items-center mb-5">
-              <input
-                id="disabled"
+              <Input
+                fieldName="disabled"
+                register={register}
+                errors={errors}
                 type="checkbox"
-                name="disabled"
-                checked={jobTypeDesc.disabled === "Y"}
-                onChange={handleChange}
+                checked={disabledVal}
+                onChange={(e) => {
+                  setValue("disabled", e.target.checked ? "yes" : "no");
+                  setDisabledVal(!disabledVal);
+                }}
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
               />
               <label

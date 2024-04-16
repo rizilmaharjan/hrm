@@ -1,27 +1,34 @@
 import { z } from "zod";
+
 export const jobTypeSchema = z.object({
   job_type_cd: z
     .string()
-    .toUpperCase()
     .trim()
-    .min(1, { message: "required" })
-    .max(2, { message: "Code must be less than 2 characters" }),
+    .min(1, { message: "Required" })
+    .max(2, { message: "Max 2 chars." }),
   job_type_desc: z
     .string()
     .trim()
-    .min(1, { message: "required" })
-    .max(50, "Description must be less than 50 characters"),
-  tax: z.string().min(1, { message: "required" }).max(1),
-  pf_allowed: z.string().max(1),
-  cit: z.string().max(1),
-  disabled: z.string().max(1),
-  pay_generate: z.string().max(1).optional(),
-  tax_percent: z.string().optional(),
-  single_rebate: z.number().optional(),
-  married_rebate: z.number().optional(),
-  grade_allowed: z.string().max(1).optional(),
-  is_job_expire_date: z.string().max(1).optional(),
-  job_expire_months: z.number().optional(),
-  is_social_security_fund: z.string().max(1).optional(),
-  job_type_group: z.string().optional(),
+    .min(1, { message: "Description is required" })
+    .max(50, { message: "Description should be under 100 character" }),
+  tax: z.string().trim().min(1, { message: "tax is required" }).max(1, {
+    message: "Tax should be 1 character",
+  }),
+  tax_percent: z
+    .union([z.number().int().positive().min(1), z.string()])
+    .optional(),
+
+  pf_allowed: z.boolean(),
+
+  cit: z.boolean(),
+
+  pay_generate: z.boolean(),
+
+  grade_allowed: z.boolean(),
+  single_rebate: z.union([z.number().int().positive(), z.string()]).optional(),
+  married_rebate: z.union([z.number().int().positive(), z.string()]).optional(),
+  disabled: z.boolean(),
 });
+
+// extracting the type
+export type TJobTypeSchema = z.infer<typeof jobTypeSchema>;

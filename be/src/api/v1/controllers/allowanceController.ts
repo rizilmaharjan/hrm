@@ -14,6 +14,7 @@ export const postAllowance = catchAsync(async (req: Request, res: Response) => {
   const { status, message, data } = await createAllowance(body);
   return res.status(status).json({ message, data });
 });
+
 export const getAllowance = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { status, message, allowance } = await getAllAllowances();
@@ -35,7 +36,6 @@ export const updateAllowance = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const body = { ...req.body };
-    console.log("update body", body);
     const { status, message } = await allowanceUpdate(body, id);
     return res.status(status).json({ message });
   }

@@ -11,8 +11,9 @@ import AddAllowance from "../components/modal/AddAllowance";
 import { TAllowance } from "../interfaces/types/allowance.types";
 import { FileExport } from "../assets/svg";
 import { allowanceTitle } from "../constants";
-
+import "jspdf-autotable";
 import jsPDF from "jspdf";
+
 export default function Allowance() {
   const [allowanceDatas, setAllowanceDatas] = useState<TAllowance[]>([]);
   const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
@@ -111,7 +112,8 @@ export default function Allowance() {
       item.allowance_acc_cd,
       item.allowance_acc_desc,
     ]);
-    doc.autoTable({
+    console.log("Data to Export", data);
+    (doc as any).autoTable({
       startY: yPos,
       head: [headers],
       body: data,

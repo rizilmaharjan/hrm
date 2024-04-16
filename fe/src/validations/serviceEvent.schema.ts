@@ -12,7 +12,7 @@ export const serviceEvent = z.object({
     .min(1, { message: "Description is required" })
     .max(100, { message: "Code must be less than 100 characters" }),
   SERVICE_EVENT_DESC_NEP: z.string().optional(),
-  DISABLED: z.string().max(1, { message: "This field is required" }),
+  DISABLED: z.boolean(),
   SERVICE_EVENT_TYPE: z.string().max(1, { message: "Event type is required" }),
-  IS_AUTO_SALARY_ADJUST: z.string().max(1),
+  SALARY_ADJUST: z.boolean(),
 });
