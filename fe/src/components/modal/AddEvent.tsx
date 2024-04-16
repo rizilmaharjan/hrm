@@ -131,6 +131,17 @@ export default function AddEvent({
           });
         });
         toast.success(res.data.message);
+        setServiceToEdit((prev: any) => {
+          return {
+            ...prev,
+            SERVICE_EVENT_CD: "",
+            SERVICE_EVENT_DESC: "",
+            SERVICE_EVENT_DESC_NEP: "",
+            SERVICE_EVENT_TYPE: "N",
+            SALARY_ADJUST: "N",
+            DISABLED: "N",
+          };
+        });
       }
       reset();
       setEditID("");
