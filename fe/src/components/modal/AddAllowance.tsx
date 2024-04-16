@@ -47,21 +47,22 @@ export default function AddAllowance({
   });
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [accountDescription, setAccountDescription] = useState<string>("");
 
-  const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handler = (e: any) => {
-      if (!modalRef.current?.contains(e.target)) {
-        setIsModalOpen(false);
-        console.log("i am inside the if block");
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  }, [isModalOpen, setIsModalOpen]);
+  // const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  // useEffect(() => {
+  //   const handler = (e: any) => {
+  //     if (!modalRef.current?.contains(e.target)) {
+  //       setIsModalOpen(false);
+  //       console.log("i am inside the if block");
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // }, [isModalOpen, setIsModalOpen]);
+
   useEffect(() => {
     const checkboxValue = localStorage.getItem("checkboxValue");
     if (checkboxValue === "true") {
@@ -151,19 +152,19 @@ export default function AddAllowance({
     setIsOpen(true);
   };
 
-  const handleAccountSelect = (account: string) => {
-    setSelectedAccount(account);
+  const handleAccountSelect = (account: string, desc: string) => {
     setServiceDesc((prev) => ({
       ...prev,
       allowance_acc: account,
     }));
+    setAccountDescription(desc);
     setIsOpen(false);
   };
 
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
-        <div ref={modalRef} className="bg-white w-1/3 p-8 rounded-lg">
+        <div className="bg-white w-1/3 p-8 rounded-lg">
           <form onSubmit={handleSubmit}>
             <div className="flex justify-between mb-6">
               <h1 className="text-lg font-semibold">Add Allowance</h1>
@@ -359,22 +360,39 @@ export default function AddAllowance({
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-
-            <div className="relative z-0 w-full mb-5 group">
-              <label
-                htmlFor="allowance_acc"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                ACC_CD
-              </label>
-              <input
-                id="allowance_acc"
-                name="allowance_acc"
-                onChange={handleChange}
-                value={serviceDesc.allowance_acc}
-                onDoubleClick={handleDoubleClick}
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-              />
+            <div className="flex items-center gap-4">
+              <div className="relative z-0 w-1/4 mb-5 group">
+                <label
+                  htmlFor="allowance_acc"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  A/c
+                </label>
+                <input
+                  id="allowance_acc"
+                  name="allowance_acc"
+                  onChange={handleChange}
+                  value={serviceDesc.allowance_acc}
+                  onDoubleClick={handleDoubleClick}
+                  className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div className="relative z-0 w-3/4 mb-5 group">
+                <label
+                  htmlFor="allowance_acc_desc"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  A/c Description
+                </label>
+                <input
+                  disabled
+                  id="allowance_acc_desc"
+                  name="allowance_acc_desc"
+                  onChange={handleChange}
+                  value={accountDescription}
+                  className="block p-2.5 w-full opacity-70 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
             </div>
 
             <div className="flex items-center mb-5">
@@ -502,6 +520,7 @@ export default function AddAllowance({
         <AccountList
           isOpen={isOpen}
           handleAccountSelect={handleAccountSelect}
+          setIsOpen={setIsOpen}
         />
       </div>
     </>

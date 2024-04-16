@@ -26,7 +26,7 @@ export default function Sidebar() {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className=" w-14 sm:w-64 h-full transform"
+        className="w-14 sm:w-64 h-full transform"
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-[#111827]">

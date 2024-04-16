@@ -11,6 +11,10 @@ import authRoutes from "./api/v1/routes/authRoutes";
 import allowanceRoutes from "./api/v1/routes/allowanceRoutes";
 import jobTypeRoutes from "./api/v1/routes/jobTypeRoutes";
 import positionRoutes from "./api/v1/routes/positionRoutes";
+import accountRoutes from "./api/v1/routes/accountRoutes";
+import religionRoutes from "./api/v1/routes//religionRoutes";
+import relationRoutes from "./api/v1/routes/relationRoutes";
+import districtRoutes from "./api/v1/routes/districtRoutes";
 import { errorMiddleware } from "./api/v1/middlewares/error-handler";
 import { appError } from "./api/v1/helpers/appError";
 
@@ -32,6 +36,10 @@ app.use("/api", authRoutes());
 app.use("/api", allowanceRoutes());
 app.use("/api", jobTypeRoutes());
 app.use("/api", positionRoutes());
+app.use("/api", accountRoutes());
+app.use("/api", religionRoutes());
+app.use("/api", relationRoutes());
+app.use("/api", districtRoutes());
 
 // Handling unhandled routes
 app.all("*", (req, res, next) => {

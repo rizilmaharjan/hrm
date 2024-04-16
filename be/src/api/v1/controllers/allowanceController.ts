@@ -7,6 +7,7 @@ import {
 } from "../services/allowanceServices";
 import { catchAsync } from "../helpers/catchAsync";
 import { appError } from "../helpers/appError";
+
 export const postAllowance = catchAsync(async (req: Request, res: Response) => {
   const { username } = res.locals.user;
   const body = { ...req.body, entered_By: username };

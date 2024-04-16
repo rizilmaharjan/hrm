@@ -278,3 +278,19 @@ export const FileExport = () => {
     </svg>
   );
 };
+
+export const HierarchyIcon = () => {
+  return (
+    <svg viewBox="0 0 21 21" fill="currentColor" height="1em" width="1em">
+      <g
+        fill="none"
+        fillRule="evenodd"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M7.5 2.5h6v5h-6zM12.5 13.5h6v5h-6zM2.5 13.5h6v5h-6zM5.498 13.5v-3h10v3M10.5 10.5v-3" />
+      </g>
+    </svg>
+  );
+};

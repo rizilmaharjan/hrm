@@ -95,13 +95,21 @@ export default function Allowance() {
       );
     };
 
-    const headers = ["Code", "Description", "Type", "Taxable", "A/c"];
+    const headers = [
+      "Code",
+      "Description",
+      "Type",
+      "Taxable",
+      "A/c",
+      "A/c Description",
+    ];
     const data = allowanceDatas.map((item) => [
       item.allowance_CD,
       item.allowance_description,
       item.allowance_type,
       item.allowance_taxable,
       item.allowance_acc_cd,
+      item.allowance_acc_desc,
     ]);
     doc.autoTable({
       startY: yPos,
@@ -261,7 +269,12 @@ export default function Allowance() {
                           {item.salary_allowance_flag}
                         </td>
                         <td className="px-6 py-4">
-                          {item.allowance_acc_cd ? item.allowance_acc_cd : "_"}
+                          {item.allowance_acc_cd ? item.allowance_acc_cd : "-"}
+                        </td>
+                        <td className="px-6 py-4">
+                          {item.allowance_acc_desc
+                            ? item.allowance_acc_desc
+                            : "-"}
                         </td>
                         <td className="px-6 py-4">{item.allowance_disabled}</td>
                         <td className="px-6 py-4">
