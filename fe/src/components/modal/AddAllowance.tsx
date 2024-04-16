@@ -253,6 +253,22 @@ export default function AddAllowance({
         toast.success(res.data.message);
         setIsEdit(false);
         setEditID("");
+        setServiceToEdit((prev: any) => {
+          return {
+            ...prev,
+            allowance_CD: "",
+            allowance_description: "",
+            allowance_nepali_desc: "",
+            allowance_taxable: "N",
+            allowance_facility_percent: "",
+            allowance_facility: "",
+            allowance_cit_flag: "N",
+            allowance_type: "",
+            salary_allowance_flag: "N",
+            allowance_acc_cd: "",
+            allowance_disabled: "N",
+          };
+        });
       }
       reset();
       setCitVal(false);

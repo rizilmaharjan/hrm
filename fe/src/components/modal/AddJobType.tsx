@@ -190,6 +190,24 @@ export default function AddJobType({
       }
       setIsEdit(false);
       setEditID("");
+      setServiceToEdit((prev: any) => {
+        if (prev) {
+          return {
+            ...prev,
+            job_type_cd: "",
+            job_type_desc: "",
+            tax: "Y",
+            tax_percent: "",
+            pf_allowed: "N",
+            cit: "N",
+            pay_generate: "N",
+            grade_allowed: "N",
+            single_rebate: "",
+            married_rebate: "",
+            disabled: "N",
+          };
+        }
+      });
     }
     reset();
     setGradeAllowedVal(false);
