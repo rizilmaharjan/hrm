@@ -5,8 +5,8 @@ export const allowanceSchema = z.object({
     allowance_CD: z
       .string()
       .trim()
-      .min(1, { message: "code is required" })
-      .max(3, { message: "allowance should be under 3 characters" }),
+      .min(3, { message: "Required" })
+      .max(3, { message: "Allowance should be under 3 characters" }),
     allowance_facility: z
       .string()
       .trim()
@@ -26,10 +26,14 @@ export const allowanceSchema = z.object({
       .trim()
       .min(1, { message: "taxable is required" })
       .max(1, { message: "taxable should be 1 character" }),
+    // allowance_facility_percent: z
+    //   .number()
+    //   .max(999.99, { message: "facility percent should be between 1 and 999" })
+    //   .optional(),
     allowance_facility_percent: z
-      .number()
-      .max(999.99, { message: "facility percent should be between 1 and 999" }),
-    allowance_cit: z
+      .union([z.number().int().positive().min(1), z.string()])
+      .optional(),
+    allowance_cit_flag: z
       .string()
       .trim()
       .max(1, { message: "CIT flag should be 1 character" }),
@@ -42,7 +46,7 @@ export const allowanceSchema = z.object({
       .string()
       .trim()
       .max(1, { message: "salary allowance flag should be 1 character" }),
-    allowance_acc: z
+    allowance_acc_cd: z
       .string()
       .trim()
       .max(30, { message: "allowance_acc should be under 30 characters" }),

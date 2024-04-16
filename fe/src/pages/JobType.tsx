@@ -6,19 +6,18 @@ import AddJobType from "../components/modal/AddJobType";
 import { TJobType } from "../interfaces/types/jobType.type";
 import jsPDF from "jspdf";
 import { FileExport } from "../assets/svg";
-import "jspdf-autotable";
 import { jobTypeTitle } from "../constants";
+import { useCustomContext } from "../context/DataContext";
 
 export default function JobType() {
   const [jobType, setJobType] = useState<TJobType[]>([]);
-  // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
+  const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
-  const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  // const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
 
   //Get all Job type data
   useEffect(() => {
@@ -59,10 +58,13 @@ export default function JobType() {
 
   const handleEdit = (id: string) => {
     const update = jobType.find((item) => item.job_type_cd === id);
+
+    setEditID(id);
+    setIsEdit(true);
+
     if (update) {
-      setIsEdit(true);
-      // setEditID(id);
-      setJobTypeToEdit(update);
+      setServiceToEdit(update);
+      // setJobTypeToEdit(update);
       setIsModalOpen(true);
     }
   };
@@ -147,10 +149,6 @@ export default function JobType() {
                 setJobType={setJobType}
                 setIsModalOpen={setIsModalOpen}
                 isModalOpen={isModalOpen}
-                jobTypeToEdit={jobTypeToEdit}
-                isEdit={isEdit}
-                setIsEdit={setIsEdit}
-                setJobTypeToEdit={setJobTypeToEdit}
               />
             )}
             <div className="flex justify-between p-3">
@@ -210,7 +208,7 @@ export default function JobType() {
                         </td>
                         <td className="px-6 py-4">{item && item.tax}</td>
                         <td className="px-6 py-4">
-                          {item && item.tax_percent}
+                          {item.tax_percent ? item.tax_percent : "_"}
                         </td>
                         <td className="px-6 py-4">{item && item.pf_allowed}</td>
                         <td className="px-6 py-4">{item && item.cit}</td>
@@ -221,10 +219,10 @@ export default function JobType() {
                           {item && item.grade_allowed}
                         </td>
                         <td className="px-6 py-4">
-                          {item && item.single_rebate}
+                          {item.single_rebate ? item.single_rebate : "_"}
                         </td>
                         <td className="px-6 py-4">
-                          {item && item.married_rebate}
+                          {item.married_rebate ? item.married_rebate : "_"}
                         </td>
                         <td className="px-6 py-4">{item && item.disabled}</td>
 

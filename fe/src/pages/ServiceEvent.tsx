@@ -217,6 +217,10 @@ export default function ServiceEvent() {
                         <td className="px-6 py-4">
                           {mapServiceEventType(item.SERVICE_EVENT_TYPE) || "_"}
                         </td>
+                        <td className="px-6 py-4">
+                          {item.SALARY_ADJUST || "_"}
+                        </td>
+
                         <td className="px-6 py-4">{item.DISABLED}</td>
                         {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
                     <td className="px-6 py-4">

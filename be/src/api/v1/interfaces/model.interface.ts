@@ -5,6 +5,7 @@ export interface ExecuteResultService {
     new_event_desc_nep: string[];
     new_disabled: string[];
     new_service_event_type: string[];
+    new_service_salary_adjust: string[];
   };
 }
 

@@ -1,10 +1,15 @@
-import { useCustomContext } from "../../context/DataContext";
+import { FieldValues, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { RefObject, useEffect, useRef, useState } from "react";
-import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
-import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
 import { RxCross2 } from "react-icons/rx";
+
+import { useCustomContext } from "../../context/DataContext";
+import { Instance } from "../../utils/Instance";
+import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
 import Button from "../ui/Button";
+import Input from "../ui/Input";
+import { serviceEvent } from "../../validations/serviceEvent.schema";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,24 +29,36 @@ export default function AddEvent({
     setEditID,
     setIsEdit,
   } = useCustomContext();
-  const [serviceDesc, setServiceDesc] = useState({
-    SERVICE_EVENT_CD: serviceToEdit?.SERVICE_EVENT_CD || "",
-    SERVICE_EVENT_DESC: serviceToEdit?.SERVICE_EVENT_DESC || "",
-    SERVICE_EVENT_DESC_NEP: serviceToEdit?.SERVICE_EVENT_DESC_NEP || "",
-    DISABLED: serviceToEdit?.DISABLED || "N",
-    // entered_By: serviceToEdit?.ENTERED_BY || "",
-    // entered_Dt: serviceToEdit?.ENTERED_DT || "",
-    SERVICE_EVENT_TYPE: serviceToEdit?.SERVICE_EVENT_TYPE || "N",
-    SALARY_ADJUST: serviceToEdit?.IS_AUTO_SALARY_ADJUST || "N",
-    // updated_by: serviceToEdit?.LAST_UPDATED_BY || "",
-    // updated_on: serviceToEdit.LAST_UPDATED_ON || "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<TServiceEvent>({
+    resolver: zodResolver(serviceEvent),
   });
+
+  const [disabledVal, setDisabledValue] = useState(false);
+  const [salaryAdjustVal, setSalaryAdjustVal] = useState(false);
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
+        setServiceToEdit((prev: any) => {
+          return {
+            ...prev,
+            SERVICE_EVENT_CD: "",
+            SERVICE_EVENT_DESC: "",
+            SERVICE_EVENT_DESC_NEP: "",
+            SERVICE_EVENT_TYPE: "N",
+            SALARY_ADJUST: "N",
+            DISABLED: "N",
+          };
+        });
+
         console.log("i am inside the if block");
       }
     };
@@ -52,42 +69,45 @@ export default function AddEvent({
   }, [isModalOpen]);
 
   useEffect(() => {
-    const checkboxValue = localStorage.getItem("checkboxValue");
-    if (checkboxValue === "true") {
-      setServiceDesc((prev) => ({
-        ...prev,
-        disabled: "Y",
-      }));
-    }
+    let defaultValues: any = {};
+    defaultValues.SERVICE_EVENT_CD = serviceToEdit?.SERVICE_EVENT_CD || "";
+    defaultValues.SERVICE_EVENT_DESC = serviceToEdit?.SERVICE_EVENT_DESC || "";
+    defaultValues.SERVICE_EVENT_DESC_NEP =
+      serviceToEdit?.SERVICE_EVENT_DESC_NEP || "";
+    defaultValues.SERVICE_EVENT_TYPE = serviceToEdit?.SERVICE_EVENT_TYPE || "N";
+    defaultValues.DISABLED = serviceToEdit?.DISABLED === "Y" ? true : false;
+    defaultValues.SALARY_ADJUST =
+      serviceToEdit?.SALARY_ADJUST === "Y" ? true : false;
+
+    reset({ ...defaultValues });
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-    const newValue =
-      type === "checkbox" ? (checked ? "Y" : "N") : e.target.value;
-    setServiceDesc((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
-    if (name === "DISABLED" && type === "checkbox") {
-      localStorage.setItem("checkboxValue", newValue);
+  useEffect(() => {
+    if (isEdit && serviceToEdit?.DISABLED === "Y") {
+      setDisabledValue(true);
+    } else {
+      setDisabledValue(false);
     }
-  };
+    if (isEdit && serviceToEdit?.SALARY_ADJUST === "Y") {
+      setSalaryAdjustVal(true);
+    } else {
+      setSalaryAdjustVal(false);
+    }
+  }, [isEdit, serviceToEdit]);
 
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setServiceDesc((prev) => ({
-      ...prev,
-      [name]: value, // Update the SERVICE_EVENT_TYPE property
-    }));
-  };
+  const onSubmit = async (data: FieldValues) => {
+    console.log("datas before changed", data);
+    const serviceEventData = {
+      ...data,
+      DISABLED: data.DISABLED ? "Y" : "N",
+      SALARY_ADJUST: data.SALARY_ADJUST ? "Y" : "N",
+    };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    console.log("datas after changed", serviceEventData);
     try {
       if (!isEdit) {
-        const res = await Instance.post("/v1/service-event", serviceDesc);
+        const res = await Instance.post("/v1/service-event", serviceEventData);
+        console.log("addeventresponse", res.data);
         setServiceEvents((prev) => {
           if (!prev) {
             return [res.data.data];
@@ -95,43 +115,38 @@ export default function AddEvent({
             return [...prev, res.data.data];
           }
         });
-        toast.success("Event Added Successfully");
+        toast.success(res.data.message);
       } else {
-        await Instance.put(`/v1/service-event/${editID}`, serviceDesc);
+        const res = await Instance.put(
+          `v1/service-event/${editID}`,
+          serviceEventData
+        );
         setServiceEvents((prev) => {
           if (!prev) return [];
           return prev.map((item) => {
             if (item.SERVICE_EVENT_CD === editID) {
-              console.log("this is item", serviceDesc);
-              return { ...item, ...serviceDesc };
+              return { ...item, ...serviceEventData };
             }
             return item;
           });
         });
-
-        setServiceToEdit(null);
-        setIsEdit(false);
-        setEditID("");
+        toast.success(res.data.message);
       }
-
-      setServiceDesc((prev) => ({
-        ...prev,
-        SERVICE_EVENT_CD: "",
-        SERVICE_EVENT_DESC: "",
-        SERVICE_EVENT_DESC_NEP: "",
-        DISABLED: "N",
-        SERVICE_EVENT_TYPE: "",
-      }));
+      reset();
+      setEditID("");
+      setDisabledValue(false);
+      setSalaryAdjustVal(false);
       setIsModalOpen(false);
     } catch (error: any) {
-      console.log("this is error", error);
+      toast.error(error);
+      console.log("error", error);
     }
   };
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
         <div ref={modalRef} className="bg-white w-[28%] p-8 rounded-lg">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex justify-end mb-4">
               <RxCross2
                 onClick={() => {
@@ -143,8 +158,9 @@ export default function AddEvent({
                       SERVICE_EVENT_CD: "",
                       SERVICE_EVENT_DESC: "",
                       SERVICE_EVENT_DESC_NEP: "",
+                      SERVICE_EVENT_TYPE: "N",
+                      SALARY_ADJUST: "N",
                       DISABLED: "N",
-                      SERVICE_EVENT_TYPE: "",
                     };
                   });
                 }}
@@ -158,12 +174,13 @@ export default function AddEvent({
               >
                 Event CD
               </label>
-              <input
-                id="SERVICE_EVENT_CD"
-                name="SERVICE_EVENT_CD"
-                onChange={handleChange}
-                value={serviceDesc.SERVICE_EVENT_CD}
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+
+              <Input
+                fieldName="SERVICE_EVENT_CD"
+                register={register}
+                errors={errors}
+                type="number"
+                className="block p-2.5 w-full text-sm text-black outline-none rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div className="relative z-0 w-full mb-5 group">
@@ -173,13 +190,13 @@ export default function AddEvent({
               >
                 Description
               </label>
-              <input
-                id="SERVICE_EVENT_DESC"
-                name="SERVICE_EVENT_DESC"
-                onChange={handleChange}
-                value={serviceDesc.SERVICE_EVENT_DESC}
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Description..."
+
+              <Input
+                fieldName="SERVICE_EVENT_DESC"
+                register={register}
+                errors={errors}
+                type="text"
+                className="block p-2.5 w-full text-sm text-black outline-none rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div className="relative z-0 w-full mb-5 group">
@@ -190,24 +207,28 @@ export default function AddEvent({
                 Description (In Nepali)
               </label>
 
-              <input
-                id="SERVICE_EVENT_DESC_NEP"
-                name="SERVICE_EVENT_DESC_NEP"
-                onChange={handleChange}
-                value={serviceDesc.SERVICE_EVENT_DESC_NEP}
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Description In Nepali..."
+              <Input
+                fieldName="SERVICE_EVENT_DESC_NEP"
+                register={register}
+                errors={errors}
+                type="text"
+                className="block p-2.5 w-full text-sm outline-none text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div className="flex items-center mb-5">
-              <input
-                id="checkbox"
+              <Input
                 type="checkbox"
-                name="DISABLED"
-                checked={serviceDesc.DISABLED === "Y"}
-                onChange={handleChange}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                fieldName="DISABLED"
+                register={register}
+                errors={errors}
+                checked={disabledVal}
+                onChange={(e) => {
+                  setValue("DISABLED", e.target.checked ? "yes" : "no");
+                  setDisabledValue(!disabledVal);
+                }}
+                className="w-4 h-4 text-blue-600 outline-none bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
               />
+
               <label
                 htmlFor="checkbox"
                 className="ms-2 text-sm font-medium text-gray-900"
@@ -215,37 +236,6 @@ export default function AddEvent({
                 Disable
               </label>
             </div>
-            {/* <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              id="entered_By"
-              name="entered_By"
-              value={serviceDesc.entered_By}
-              onChange={handleChange}
-              aria-describedby="helper-text-explanation"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="Entered By"
-            />
-          </div> */}
-            {/* <div className="relative z-0 w-full mb-5 group">
-            <label
-              htmlFor="SERVICE_EVENT_TYPE"
-              className="block mb-2 text-sm font-medium text-gray-900 "
-            >
-              Event Type
-            </label>
-
-            <input
-              type="text"
-              id="SERVICE_EVENT_TYPE"
-              name="SERVICE_EVENT_TYPE"
-              value={serviceDesc.SERVICE_EVENT_TYPE}
-              onChange={handleChange}
-              aria-describedby="helper-text-explanation"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="Event Type"
-            />
-          </div> */}
 
             <label
               htmlFor="SERVICE_EVENT_TYPE"
@@ -253,12 +243,11 @@ export default function AddEvent({
             >
               Service Event Type
             </label>
+
             <select
+              {...register("SERVICE_EVENT_TYPE")}
               id="SERVICE_EVENT_TYPE"
-              name="SERVICE_EVENT_TYPE"
-              value={serviceDesc.SERVICE_EVENT_TYPE}
-              onChange={handleChangeSelect}
-              className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              className="bg-gray-50 border border-gray-300 outline-none text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
               <option value="N">Normal</option>
               <option value="P">Promotion</option>
@@ -267,13 +256,17 @@ export default function AddEvent({
             </select>
 
             <div className="flex items-center mb-5">
-              <input
-                id="checkbox"
+              <Input
+                fieldName="SALARY_ADJUST"
+                register={register}
+                errors={errors}
                 type="checkbox"
-                name="SALARY_ADJUST"
-                checked={serviceDesc.SALARY_ADJUST === "Y"}
-                onChange={handleChange}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                checked={salaryAdjustVal}
+                onChange={(e) => {
+                  setValue("SALARY_ADJUST", e.target.checked ? "yes" : "no");
+                  setSalaryAdjustVal(!salaryAdjustVal);
+                }}
+                className="w-4 h-4 text-blue-600 outline-none bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
               />
               <label
                 htmlFor="checkbox"
@@ -282,30 +275,6 @@ export default function AddEvent({
                 Salary Adjust
               </label>
             </div>
-            {/* <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              id="updated_by"
-              name="updated_by"
-              value={serviceDesc.updated_by}
-              onChange={handleChange}
-              aria-describedby="helper-text-explanation"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="Updated By"
-            />
-          </div> */}
-            {/* <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              id="updated_on"
-              name="updated_on"
-              value={serviceDesc.updated_on}
-              onChange={handleChange}
-              aria-describedby="helper-text-explanation"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="Updated On"
-            />
-          </div> */}
 
             <Button
               type="submit"

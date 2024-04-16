@@ -10,7 +10,6 @@ export const postAllowance = async (
 
     // const id = uuidv4();
     const enteredDt = new Date().toISOString().slice(0, 10);
-    console.log("allowances", allowance);
     const sql = `
     INSERT INTO ALLOWANCE (ALLOWANCE_CD, ALLOWANCE_FACILITY,ALLOWANCE_DESC,ALLOWANCE_DESC_NEP, TAXABLE, ALLOWANCE_TYPE,CIT_FLAG,SALARY_ALLOWANCE_FLAG, FACILITY_PERCENT, ACC_CD, DISABLED, ENTERED_BY, ENTERED_DT,   ORDER_SNO, IS_PF_RF_AS_SALARY)
     VALUES (:ALLOWANCE_CD, :ALLOWANCE_FACILITY, :ALLOWANCE_DESC, :ALLOWANCE_DESC_NEP,  :TAXABLE, :ALLOWANCE_TYPE, :CIT_FLAG,:SALARY_ALLOWANCE_FLAG,:FACILITY_PERCENT, :ACC_CD, :DISABLED, :ENTERED_BY, TO_DATE(:ENTERED_DT, 'YYYY-MM-DD'),  :ORDER_SNO, :IS_PF_RF_AS_SALARY  )
@@ -26,10 +25,10 @@ export const postAllowance = async (
       ALLOWANCE_DESC_NEP: allowance.allowance_nepali_desc,
       TAXABLE: allowance.allowance_taxable,
       ALLOWANCE_TYPE: allowance.allowance_type,
-      CIT_FLAG: allowance.allowance_cit,
+      CIT_FLAG: allowance.allowance_cit_flag,
       SALARY_ALLOWANCE_FLAG: allowance.salary_allowance_flag,
       FACILITY_PERCENT: allowance.allowance_facility_percent,
-      ACC_CD: allowance.allowance_acc,
+      ACC_CD: allowance.allowance_acc_cd,
       DISABLED: allowance.allowance_disabled,
       ENTERED_BY: allowance.entered_By,
       ENTERED_DT: enteredDt,
@@ -166,6 +165,7 @@ export const getAllowances = async (): Promise<{
           // LAST_UPDATED_ON: row[9],
         };
       });
+      console.log("allowance datas", allowance);
 
       return {
         status: 200,
@@ -213,7 +213,6 @@ export const updateAllowance = async (
 }> => {
   try {
     const connection = await connectToDB();
-    console.log("update service", service);
     // const
     // console.log("id", id);
     // const updatedOn = new Date().toISOString().slice(0, 10);
@@ -224,11 +223,11 @@ export const updateAllowance = async (
       ALLOWANCE_DESC_NEP: service.allowance_nepali_desc,
       TAXABLE: service.allowance_taxable,
       FACILITY_PERCENT: service.allowance_facility_percent,
-      CIT_FLAG: service.allowance_cit,
+      CIT_FLAG: service.allowance_cit_flag,
       ALLOWANCE_TYPE: service.allowance_type,
       ALLOWANCE_FACILITY: service.allowance_facility,
-      SALARY_ALLOWANCE_FLAG: service.allowance_flag,
-      ACC_CD: service.allowance_acc,
+      SALARY_ALLOWANCE_FLAG: service.salary_allowance_flag,
+      ACC_CD: service.allowance_acc_cd,
       DISABLED: service.allowance_disabled,
       id,
     });
