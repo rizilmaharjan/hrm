@@ -76,7 +76,6 @@ export default function AddAllowance({
     };
   }, [setIsModalOpen, setServiceToEdit]);
 
-
   //   const checkboxValue = localStorage.getItem("checkboxValue");
   //   if (checkboxValue === "true") {
   //     setServiceDesc((prev) => ({
@@ -197,7 +196,6 @@ export default function AddAllowance({
     reset({ ...defaultValues });
   }, [reset, serviceToEdit]);
 
-
   useEffect(() => {
     if (isEdit && serviceToEdit?.allowance_disabled === "Y") {
       setDisabledVal(true);
@@ -255,6 +253,22 @@ export default function AddAllowance({
         toast.success(res.data.message);
         setIsEdit(false);
         setEditID("");
+        setServiceToEdit((prev: any) => {
+          return {
+            ...prev,
+            allowance_CD: "",
+            allowance_description: "",
+            allowance_nepali_desc: "",
+            allowance_taxable: "N",
+            allowance_facility_percent: "",
+            allowance_facility: "",
+            allowance_cit_flag: "N",
+            allowance_type: "",
+            salary_allowance_flag: "N",
+            allowance_acc_cd: "",
+            allowance_disabled: "N",
+          };
+        });
       }
       reset();
       setCitVal(false);
