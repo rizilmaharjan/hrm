@@ -1,10 +1,10 @@
-import { userLogin } from "../models/authModel";
+import { userChangePassword, userLogin } from "../models/authModel";
 import jwt from "jsonwebtoken";
 import { env } from "../../../config/env";
 
 export const loginUser = async (
   username: string,
-  hashedPassword: string
+  password: string
 ): Promise<{
   status: number;
   message: string;
@@ -12,7 +12,7 @@ export const loginUser = async (
   userData?: any;
 }> => {
   try {
-    const response = await userLogin(username, hashedPassword);
+    const response = await userLogin(username, password);
     const {
       status = 500,
       userData,
@@ -41,5 +41,22 @@ export const loginUser = async (
   } catch (error: any) {
     throw new Error(error.message);
     // return { status: 500, message: error.message };
+  }
+};
+
+export const changeUserPassword = async (
+  oldPassword: string,
+  newPassword: string,
+  username: string
+) => {
+  try {
+    const { status, message } = await userChangePassword(
+      oldPassword,
+      newPassword,
+      username
+    );
+    return { status, message };
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
