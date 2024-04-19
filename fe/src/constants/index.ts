@@ -746,3 +746,41 @@ export const provincesData: Province[] = [
     ],
   },
 ];
+
+export const employeeTitle = [
+  {
+    id: 1,
+    title: "Code",
+    width: "w-1/12",
+  },
+  {
+    id: 2,
+    title: "Name",
+    width: "w-3/12",
+  },
+  {
+    id: 3,
+    title: "email",
+    width: "w-2/12",
+  },
+  {
+    id: 4,
+    title: "Date of Birth",
+    width: "w-2/12",
+  },
+  {
+    id: 5,
+    title: "Gender",
+    width: "w-1/12",
+  },
+  {
+    id: 6,
+    title: "Marital Status",
+    width: "w-1/12",
+  },
+  {
+    id: 7,
+    title: "Religion",
+    width: "w-1/12",
+  },
+];
