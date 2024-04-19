@@ -1,4 +1,7 @@
-import Profile from "../components/Profile";
+// import Profile from "../components/Profile";
+import AccountInfoSection from "../components/Profile/AccountInfoSection";
+import PayrollInfoSection from "../components/Profile/PayrollInfoSection";
+import PersonalInfoSection from "../components/Profile/PersonalInfoSection";
 import Allowance from "../pages/Allowance";
 import Attendence from "../pages/Attendence";
 import Dashboard from "../pages/Dashboard";
@@ -8,6 +11,13 @@ import Login from "../pages/Login";
 import Payroll from "../pages/Payroll";
 import Position from "../pages/Position";
 import ServiceEvent from "../pages/ServiceEvent";
+import UserProfile from "../pages/UserProfile";
+
+interface RouteConfig {
+  path: string;
+  element: JSX.Element;
+  children?: RouteConfig[];
+}
 
 export const publicRoutes = [
   {
@@ -16,7 +26,7 @@ export const publicRoutes = [
   },
 ];
 
-export const privateRoutes = [
+export const privateRoutes: RouteConfig[] = [
   {
     path: "/dashboard",
     element: <Dashboard />,
@@ -25,6 +35,10 @@ export const privateRoutes = [
     path: "/employee",
     element: <Employee />,
   },
+  // {
+  //   path: "/employee/:id",
+  //   element: <Profile />,
+  // },
   {
     path: "/payroll",
     element: <Payroll />,
@@ -50,7 +64,21 @@ export const privateRoutes = [
     element: <JobType />,
   },
   {
-    path: "/user/profile",
-    element: <Profile />,
+    path: "/employee/profile/:id",
+    element: <UserProfile />,
+    children: [
+      {
+        path: "", // Nested under /user/profile/personal-info
+        element: <PersonalInfoSection />,
+      },
+      {
+        path: "account-info",
+        element: <AccountInfoSection />,
+      },
+      {
+        path: "payroll-info",
+        element: <PayrollInfoSection />,
+      },
+    ],
   },
 ];

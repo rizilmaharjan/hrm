@@ -15,6 +15,7 @@ import accountRoutes from "./api/v1/routes/accountRoutes";
 import religionRoutes from "./api/v1/routes//religionRoutes";
 import relationRoutes from "./api/v1/routes/relationRoutes";
 import districtRoutes from "./api/v1/routes/districtRoutes";
+import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import { errorMiddleware } from "./api/v1/middlewares/error-handler";
 import { appError } from "./api/v1/helpers/appError";
 import { limiter } from "./api/v1/helpers/rateLimit";
@@ -42,6 +43,7 @@ app.use("/api", accountRoutes());
 app.use("/api", religionRoutes());
 app.use("/api", relationRoutes());
 app.use("/api", districtRoutes());
+app.use("/api", employeeRoutes());
 
 // Handling unhandled routes
 app.all("*", (req, res, next) => {
