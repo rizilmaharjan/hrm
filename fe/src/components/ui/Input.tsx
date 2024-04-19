@@ -3,6 +3,7 @@ import {
   UseFormRegister,
   FieldErrors,
   Path,
+  SubmitHandler,
 } from "react-hook-form";
 
 type InputProps<T extends FieldValues> = {

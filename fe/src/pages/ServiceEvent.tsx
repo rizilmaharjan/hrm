@@ -210,7 +210,13 @@ export default function ServiceEvent() {
                           {item.SERVICE_EVENT_CD}
                         </th>
                         <td className="px-6 py-4">{item.SERVICE_EVENT_DESC}</td>
-                        <td className="px-6 py-4 font-[Preeti] text-lg">
+                        <td
+                          className={`px-6 py-4 ${
+                            item.SERVICE_EVENT_DESC_NEP
+                              ? " font-[Preeti]"
+                              : "font-sans"
+                          } text-lg`}
+                        >
                           {item.SERVICE_EVENT_DESC_NEP
                             ? item.SERVICE_EVENT_DESC_NEP
                             : "_"}
