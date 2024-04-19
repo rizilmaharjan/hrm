@@ -10,12 +10,12 @@ export default function App() {
       <Routes>
         {/* <Relationship /> */}
         <Route element={<Private />}>
-          {publicRoutes.map((route) => (
-            <Route path={route.path} element={route.element} />
+          {publicRoutes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
           ))}
           <Route element={<MainLayout />}>
-            {privateRoutes.map((route) => (
-              <Route path={route.path} element={route.element} />
+            {privateRoutes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} />
             ))}
             {/* <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/service-events" element={<ServiceEvent />} />

@@ -193,38 +193,16 @@ export default function Allowance() {
                       <th
                         key={item.id}
                         scope="col"
-                        className={`px-6 py-3 ${item.width}`}
+                        className={`py-3 text-xs ${
+                          item.id === 2 ? "w-40" : ""
+                        } ${item.id === 9 ? "w-40" : ""} ${
+                          item.id === 8 ? "w-40" : ""
+                        } text-center`}
                       >
                         {item.title}
                       </th>
                     ))}
-                    {/* <th scope="col" className="px-6 py-3 w-2/12">
-                      Description
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12 ">
-                      Description (IN NEPALI)
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Taxable
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Facility(%)
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12 text-center">
-                      Deduct CIT
-                    </th>
-                    <th scope="col" className="px-6 py-3 ">
-                      Type
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      Salary + Allowance Flag
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-1/12">
-                      A/C
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Disabled
-                    </th> */}
+
                     <th scope="col" className="px-6 py-3">
                       Actions
                     </th>
@@ -241,44 +219,58 @@ export default function Allowance() {
                       >
                         <th
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          className=" py-4 font-medium text-center text-gray-900 whitespace-nowrap"
                         >
                           {item.allowance_CD}
                         </th>
-                        <td className="px-6 py-4">
+                        <td className=" py-4 text-center">
                           {item.allowance_description}
                         </td>
-                        <td className="px-6 py-4 font-[Preeti] text-lg">
+                        <td className=" py-4 font-[Preeti] text-center text-lg">
                           {item.allowance_nepali_desc
                             ? item.allowance_nepali_desc
                             : "_"}
                         </td>
-                        <td className="px-6 py-4">{item.allowance_taxable}</td>
-                        {/* <td className="px-6 py-4">{item.allowance_facility}</td> */}
-                        <td className="px-6 py-4">
+                        <td className=" py-4 text-center">
+                          {item.allowance_taxable}
+                        </td>
+                        {/* <td className=" py-4">{item.allowance_facility}</td> */}
+                        <td className=" py-4 text-center">
                           {item.allowance_facility_percent
                             ? item.allowance_facility_percent
                             : "_"}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className=" py-4 text-center">
                           {item.allowance_cit_flag
                             ? item.allowance_cit_flag
                             : "_"}
                         </td>
-                        <td className="px-6 py-4">{item.allowance_type}</td>
-                        <td className="px-6 py-4">
+                        <td className=" py-4 text-center">
+                          {item.allowance_type}
+                        </td>
+                        <td className=" py-4 text-center">
                           {item.salary_allowance_flag}
                         </td>
-                        <td className="px-6 py-4">
-                          {item.allowance_acc_cd ? item.allowance_acc_cd : "-"}
+                        <td className="py-4 px-4">
+                          <span className="flex  items-center gap-6">
+                            <span>
+                              {item.allowance_acc_cd
+                                ? item.allowance_acc_cd
+                                : "-"}
+                            </span>
+                            <span className="lowercase">
+                              {item.allowance_acc_desc
+                                ? item.allowance_acc_desc
+                                : "-"}
+                            </span>
+                          </span>
                         </td>
-                        <td className="px-6 py-4">
-                          {item.allowance_acc_desc
-                            ? item.allowance_acc_desc
-                            : "-"}
+                        {/* <td className=" py-4">
+                        </td> */}
+                        <td className=" py-4 text-center">
+                          {item.allowance_disabled}
                         </td>
-                        <td className="px-6 py-4">{item.allowance_disabled}</td>
-                        <td className="px-6 py-4">
+                        <td className=" py-4">
                           <span className="flex items-center gap-4">
                             <p
                               onClick={() => handleEdit(item.allowance_CD)}
