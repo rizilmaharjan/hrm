@@ -34,7 +34,7 @@ export default function Sidebar() {
             {sidebarItems.map((item) => (
               <li
                 key={item.title}
-                className=" text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className=" rounded-lg text-white hover:bg-gray-700 group"
               >
                 <NavLink
                   className={({ isActive }) =>
@@ -120,7 +120,7 @@ export default function Sidebar() {
             </li> */}
 
             <li
-              className="flex items-center p-2 text-gray-900 rounded-lg cursor-pointer dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              className="flex items-center p-2 rounded-lg cursor-pointer dark:text-white hover:bg-gray-700 group"
               onClick={handleLogout}
             >
               <LogoutIcon className="h-5 w-5" />
