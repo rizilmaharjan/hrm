@@ -11,8 +11,8 @@ export default function App() {
         {/* <Relationship /> */}
 
         <Route element={<Private />}>
-          {publicRoutes.map((route) => (
-            <Route path={route.path} element={route.element} />
+          {publicRoutes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
           ))}
           <Route element={<MainLayout />}>
             {privateRoutes.map((route) => (

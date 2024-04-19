@@ -14,7 +14,7 @@ import {
   logInStart,
   logInSuccess,
 } from "../redux/user/userSlice";
-import Input from "../components/ui/Input";
+// import Input from "../components/ui/Input";
 
 export default function Login() {
   const {
@@ -38,6 +38,8 @@ export default function Login() {
   const onSubmit = async (data: FieldValues) => {
     dispatch(logInStart());
 
+    console.log("these are the datas", data);
+
     try {
       const res = await Instance.post("/v1/auth/login", data);
       dispatch(logInSuccess(res.data.userData));
@@ -52,19 +54,35 @@ export default function Login() {
         <h1 className="text-3xl font-semibold mb-10">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-5">
-            <label
-              htmlFor="username"
-              className="block mb-2 font-medium text-gray-900 "
-            >
+            <label className="block mb-2 font-medium text-gray-900 ">
               Username
             </label>
-            <Input
+            {/* <Input
               fieldName="username"
               register={register}
               errors={errors}
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none   "
+            /> */}
+            <input
+              type="text"
+              {...register("username")}
+              className={` ${
+                errors.username
+                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                  : ""
+              } bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none   `}
             />
+            {typeof errors.username === "string" ? (
+              <p className="text-red-500 text-sm">{errors.username}</p>
+            ) : (
+              errors.username &&
+              typeof errors.username.message === "string" && (
+                <p className="text-red-500 text-sm">
+                  {errors.username.message}
+                </p>
+              )
+            )}
           </div>
           <div className="mb-5 relative">
             <label
@@ -73,13 +91,33 @@ export default function Login() {
             >
               Password
             </label>
-            <Input
-              fieldName="hashedPassword"
+            {/* <Input
+              fieldName="password"
               register={register}
               errors={errors}
               type={showPassword ? "text" : "password"}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none    "
+            /> */}
+
+            <input
+              type={showPassword ? "text" : "password"}
+              {...register("password")}
+              className={` ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                  : ""
+              } bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none   `}
             />
+            {typeof errors.username === "string" ? (
+              <p className="text-red-500 text-sm">{errors.username}</p>
+            ) : (
+              errors.username &&
+              typeof errors.username.message === "string" && (
+                <p className="text-red-500 text-sm">
+                  {errors.username.message}
+                </p>
+              )
+            )}
             {showPassword ? (
               <FiEyeOff
                 onClick={() => setShowPassword(false)}
@@ -95,7 +133,9 @@ export default function Login() {
           <Button
             type="submit"
             disabled={loading}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+            className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
+              loading ? "opacity-50" : ""
+            } `}
           >
             {loading ? (
               <>

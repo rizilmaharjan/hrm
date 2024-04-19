@@ -1,4 +1,4 @@
 export type TLogin = {
   username: string;
-  hashedPassword: string;
+  password: string;
 };

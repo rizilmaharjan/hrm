@@ -7,7 +7,7 @@ export const userLogin = async (
   try {
     const connection = await connectToDB();
     const result = await connection.execute(
-      `SELECT USER_CD, USER_PASSWORD FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = :hashedPassword`,
+      `SELECT USER_CD FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:hashedPassword, USER_PASSWORD)`,
       { username, hashedPassword }
     );
 
@@ -21,12 +21,9 @@ export const userLogin = async (
       const userData = users[0];
       return { status: 200, message: "User logged in successfully", userData };
     } else {
-      // throw { statusCode: 401, message: "Invalid username or password" };
-      // throw new appError(401, "Invalid username or password");
       return { status: 401, message: "Invalid username or password" };
     }
   } catch (error: any) {
     throw new Error(error.message);
-    // return { status: 500, message: error.message };
   }
 };
