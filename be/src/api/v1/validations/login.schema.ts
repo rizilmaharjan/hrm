@@ -7,7 +7,7 @@ export const loginSchema = z.object({
       .trim()
       .min(1, { message: "username is required" })
       .max(20, { message: "password cannot be more than 20 characters" }),
-    hashedPassword: z
+    password: z
       .string()
       .trim()
       .min(1, { message: "password is required" })
