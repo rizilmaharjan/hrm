@@ -4,6 +4,7 @@ import PayrollInfoSection from "../components/Profile/PayrollInfoSection";
 import PersonalInfoSection from "../components/Profile/PersonalInfoSection";
 import Allowance from "../pages/Allowance";
 import Attendence from "../pages/Attendence";
+import ChangePassword from "../pages/ChangePassword";
 import Dashboard from "../pages/Dashboard";
 import Employee from "../pages/Employee";
 import JobType from "../pages/JobType";
@@ -30,6 +31,10 @@ export const privateRoutes: RouteConfig[] = [
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/change-password",
+    element: <ChangePassword />,
   },
   {
     path: "/employee",
