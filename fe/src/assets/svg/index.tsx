@@ -1,3 +1,7 @@
+interface IconProps {
+  className?: string;
+}
+
 export const DashboardIcon = () => {
   return (
     <svg
@@ -71,14 +75,14 @@ export const JobTypeIcon = () => {
   );
 };
 
-export const LogoutIcon = () => {
+export const LogoutIcon: React.FC<IconProps> = ({ className }) => {
   return (
     <svg
-      className="w-5 h-5"
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 18 16"
+      className={className} // Set the className on the SVG element
     >
       <path
         stroke="currentColor"
@@ -288,6 +292,20 @@ export const HierarchyIcon = () => {
       viewBox="0 0 100 100"
     >
       <path d="M46.25,46.251H29.404c-0.999,0-1.875,0.875-1.875,1.875V62.5h-5.654c-1,0-1.875,0.875-1.875,1.875v13.75 c0,1,0.875,1.875,1.875,1.875h18.75c1,0,1.875-0.875,1.875-1.875v-13.75c0-1-0.875-1.875-1.875-1.875h-5.642v-8.749h30.035V62.5 h-5.613c-1.001,0-1.875,0.875-1.875,1.875v13.75c0,1,0.874,1.875,1.875,1.875h18.75c1,0,1.875-0.875,1.875-1.875v-13.75 c0-1-0.875-1.875-1.875-1.875H72.49V48.126c0-1-0.874-1.875-1.875-1.875H53.75V37.5h5.61c1,0,1.875-0.875,1.875-1.875v-13.75 c0-1-0.875-1.875-1.875-1.875H40.61c-1.001,0-1.875,0.875-1.875,1.875v13.75c0,1,0.874,1.875,1.875,1.875h5.64V46.251z"></path>
+    </svg>
+  );
+};
+
+export const IconKey: React.FC<IconProps> = ({ className }) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      height="1em"
+      width="1em"
+      className={className}
+    >
+      <path d="M7 17a5.007 5.007 0 004.898-4H14v2h2v-2h2v3h2v-3h1v-2h-9.102A5.007 5.007 0 007 7c-2.757 0-5 2.243-5 5s2.243 5 5 5zm0-8c1.654 0 3 1.346 3 3s-1.346 3-3 3-3-1.346-3-3 1.346-3 3-3z" />
     </svg>
   );
 };

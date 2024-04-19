@@ -1,37 +1,33 @@
-import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useFetchData } from "../api";
 import Loader from "./Loader";
+import { useEffect } from "react";
 
-type TOption = {
-  religion_cd: string;
-  religion_desc: string;
-  religion_desc_nep: string;
-  disabled: string;
-  entered_by: string;
-  entered_dt?: Date;
-};
+// type TOption = {
+//   religion_cd: string;
+//   religion_desc: string;
+//   religion_desc_nep: string;
+//   disabled: string;
+//   entered_by: string;
+//   entered_dt?: Date;
+// };
 
 export default function Profile() {
-  // const [options, setOptions] = useState<TOption[]>([]);
+  const { id } = useParams<{ id: string }>();
 
-  const { isPending, error, data: religionData } = useFetchData("/v1/religion");
+  const {
+    isPending,
+    error,
+    data: empData,
+    refetch,
+  } = useFetchData(`/v1/employee/${id}`);
+  const emp = empData?.data;
+  const employee = emp?.[0];
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []); // Empty dependency array means this effect runs once when the component mounts
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await Instance.get(
-  //       "http://localhost:8000/api/v1/religion"
-  //     );
-  //     const data = response.data.data;
-  //     console.log(data);
-  //     setOptions(data);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
   return (
     <>
       <div className="h-full w-full grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
@@ -56,6 +52,7 @@ export default function Profile() {
                       First Name<span className="text-red-500 ml-1">*</span>
                     </label>
                     <input
+                      defaultValue={employee?.first_name}
                       type="text"
                       id="firstName"
                       placeholder="Enter your first name"
@@ -66,6 +63,7 @@ export default function Profile() {
                     <label htmlFor="middleName">Middle Name</label>
                     <input
                       id="middleName"
+                      defaultValue={employee?.middle_name}
                       placeholder="Enter your middle name"
                       className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -75,6 +73,7 @@ export default function Profile() {
                       Last Name<span className="text-red-500 ml-1">*</span>
                     </label>
                     <input
+                      defaultValue={employee?.sur_name}
                       id="lastName"
                       placeholder="Enter your last name"
                       className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -88,6 +87,7 @@ export default function Profile() {
                       Personal ID<span className="text-red-500 ml-1">*</span>
                     </label>
                     <input
+                      defaultValue={employee?.employee_cd}
                       id="personalid"
                       placeholder="Enter your personal ID"
                       className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -99,6 +99,7 @@ export default function Profile() {
                     </label>
                     <input
                       id="phonenumber"
+                      defaultValue={employee?.mobile}
                       placeholder="Enter your phone number"
                       className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -200,7 +201,7 @@ export default function Profile() {
                       className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     >
                       <option value="">Select Religion</option>
-                      {religionData?.map((option: TOption) => (
+                      {/* {religionData?.map((option: TOption) => (
                         <option
                           key={option.religion_cd}
                           value={option.religion_cd}
@@ -208,7 +209,7 @@ export default function Profile() {
                         >
                           {option.religion_desc}
                         </option>
-                      ))}
+                      ))} */}
                     </select>
                   </div>
                 </div>
@@ -218,6 +219,7 @@ export default function Profile() {
                       Email<span className="text-red-500 ml-1">*</span>
                     </label>
                     <input
+                      defaultValue={employee?.email}
                       id="email"
                       placeholder="Enter your email"
                       className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
