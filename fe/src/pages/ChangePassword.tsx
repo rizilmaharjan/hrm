@@ -3,6 +3,8 @@ import Button from "../components/ui/Button";
 import { TChangePassword } from "../interfaces/types/changePassword.types";
 import { changePasswordSchema } from "../validations/changePassword.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Instance } from "../utils/Instance";
+import toast from "react-hot-toast";
 
 const ChangePassword = () => {
   const {
@@ -14,9 +16,15 @@ const ChangePassword = () => {
     resolver: zodResolver(changePasswordSchema),
   });
 
-  const onSubmit = (data: TChangePassword) => {
-    console.log(data);
-    reset;
+  const onSubmit = async (data: TChangePassword) => {
+    try {
+      const res = await Instance.post("/v1/auth/changePassword", data);
+      console.log(res);
+      toast.success(res.data.message);
+      reset();
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
   };
   return (
     <>
