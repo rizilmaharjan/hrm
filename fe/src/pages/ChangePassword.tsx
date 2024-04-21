@@ -5,6 +5,7 @@ import { changePasswordSchema } from "../validations/changePassword.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Instance } from "../utils/Instance";
 import toast from "react-hot-toast";
+import Input from "../components/ui/Input";
 
 const ChangePassword = () => {
   const {
@@ -38,7 +39,14 @@ const ChangePassword = () => {
             >
               Old Password
             </label>
-            <input
+            <Input
+              fieldName="oldPassword"
+              register={register}
+              errors={errors}
+              type="password"
+              className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {/* <input
               {...register("oldPassword")}
               type="password"
               className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -52,7 +60,7 @@ const ChangePassword = () => {
                   {errors.oldPassword.message}
                 </p>
               )
-            )}
+            )} */}
           </div>
           <div className="relative z-0 w-full mb-5 group col-start-1 ">
             <label
@@ -61,7 +69,14 @@ const ChangePassword = () => {
             >
               New Password
             </label>
-            <input
+            <Input
+              fieldName="newPassword"
+              register={register}
+              errors={errors}
+              type="password"
+              className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {/* <input
               {...register("newPassword")}
               type="password"
               className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -75,7 +90,7 @@ const ChangePassword = () => {
                   {errors.newPassword.message}
                 </p>
               )
-            )}
+            )} */}
           </div>
           <div className="relative z-0 w-full mb-5 group col-start-1 ">
             <label
@@ -84,7 +99,14 @@ const ChangePassword = () => {
             >
               Confirm Password
             </label>
-            <input
+            <Input
+              fieldName="confirmPassword"
+              register={register}
+              errors={errors}
+              type="password"
+              className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {/* <input
               {...register("confirmPassword")}
               type="password"
               className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -98,7 +120,7 @@ const ChangePassword = () => {
                   {errors.confirmPassword.message}
                 </p>
               )
-            )}
+            )} */}
           </div>
           <Button
             type="submit"
