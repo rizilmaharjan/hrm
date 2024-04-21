@@ -71,13 +71,13 @@ export default function AddJobType({
               job_type_desc: "",
               tax: "Y",
               tax_percent: "",
-              pf_allowed: "N",
-              cit: "N",
-              pay_generate: "N",
-              grade_allowed: "N",
+              pf_allowed: false,
+              cit: false,
+              pay_generate: false,
+              grade_allowed: false,
               single_rebate: "",
               married_rebate: "",
-              disabled: "N",
+              disabled: false,
             };
           }
         });
@@ -198,13 +198,13 @@ export default function AddJobType({
             job_type_desc: "",
             tax: "Y",
             tax_percent: "",
-            pf_allowed: "N",
-            cit: "N",
-            pay_generate: "N",
-            grade_allowed: "N",
+            pf_allowed: false,
+            cit: false,
+            pay_generate: false,
+            grade_allowed: false,
             single_rebate: "",
             married_rebate: "",
-            disabled: "N",
+            disabled: false,
           };
         }
       });
@@ -231,7 +231,6 @@ export default function AddJobType({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIsEdit(false);
                   setServiceToEdit((prev: any) => {
                     if (prev) {
                       return {
@@ -240,16 +239,19 @@ export default function AddJobType({
                         job_type_desc: "",
                         tax: "Y",
                         tax_percent: "",
-                        pf_allowed: "N",
-                        cit: "N",
-                        pay_generate: "N",
-                        grade_allowed: "N",
+                        pf_allowed: false,
+                        cit: false,
+                        pay_generate: false,
+                        grade_allowed: false,
                         single_rebate: "",
                         married_rebate: "",
-                        disabled: "N",
+                        disabled: false,
                       };
                     }
                   });
+                  if (isEdit) {
+                    setIsEdit(false);
+                  }
                 }}
                 className="cursor-pointer"
               />
@@ -329,7 +331,7 @@ export default function AddJobType({
                   type="checkbox"
                   checked={pfAllowedVal}
                   onChange={(e) => {
-                    setValue("pf_allowed", e.target.checked ? "yes" : "no");
+                    setValue("pf_allowed", e.target.checked);
                     setPfAllowedVal(!pfAllowedVal);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -349,7 +351,7 @@ export default function AddJobType({
                   type="checkbox"
                   checked={citVal}
                   onChange={(e) => {
-                    setValue("cit", e.target.checked ? "yes" : "no");
+                    setValue("cit", e.target.checked);
                     setCitVal(!citVal);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -369,7 +371,7 @@ export default function AddJobType({
                   type="checkbox"
                   checked={payGenerateVal}
                   onChange={(e) => {
-                    setValue("pay_generate", e.target.checked ? "yes" : "no");
+                    setValue("pay_generate", e.target.checked);
                     setPayGenerateVal(!payGenerateVal);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -389,7 +391,7 @@ export default function AddJobType({
                   type="checkbox"
                   checked={gradeAllowedVal}
                   onChange={(e) => {
-                    setValue("grade_allowed", e.target.checked ? "yes" : "no");
+                    setValue("grade_allowed", e.target.checked);
                     setGradeAllowedVal(!gradeAllowedVal);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -443,7 +445,7 @@ export default function AddJobType({
                 type="checkbox"
                 checked={disabledVal}
                 onChange={(e) => {
-                  setValue("disabled", e.target.checked ? "yes" : "no");
+                  setValue("disabled", e.target.checked);
                   setDisabledVal(!disabledVal);
                 }}
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"

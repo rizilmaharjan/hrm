@@ -54,10 +54,13 @@ export default function AddEvent({
             SERVICE_EVENT_DESC: "",
             SERVICE_EVENT_DESC_NEP: "",
             SERVICE_EVENT_TYPE: "N",
-            SALARY_ADJUST: "N",
-            DISABLED: "N",
+            SALARY_ADJUST: false,
+            DISABLED: false,
           };
         });
+        if (isEdit) {
+          setIsEdit(false);
+        }
 
         console.log("i am inside the if block");
       }
@@ -131,6 +134,7 @@ export default function AddEvent({
           });
         });
         toast.success(res.data.message);
+
         setServiceToEdit((prev: any) => {
           return {
             ...prev,
@@ -138,10 +142,13 @@ export default function AddEvent({
             SERVICE_EVENT_DESC: "",
             SERVICE_EVENT_DESC_NEP: "",
             SERVICE_EVENT_TYPE: "N",
-            SALARY_ADJUST: "N",
-            DISABLED: "N",
+            SALARY_ADJUST: false,
+            DISABLED: false,
           };
         });
+        if (isEdit) {
+          setIsEdit(false);
+        }
       }
       reset();
       setEditID("");
@@ -162,7 +169,6 @@ export default function AddEvent({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIsEdit(false);
                   setServiceToEdit((prev: any) => {
                     return {
                       ...prev,
@@ -170,10 +176,13 @@ export default function AddEvent({
                       SERVICE_EVENT_DESC: "",
                       SERVICE_EVENT_DESC_NEP: "",
                       SERVICE_EVENT_TYPE: "N",
-                      SALARY_ADJUST: "N",
-                      DISABLED: "N",
+                      SALARY_ADJUST: false,
+                      DISABLED: false,
                     };
                   });
+                  if (isEdit) {
+                    setIsEdit(false);
+                  }
                 }}
                 className="cursor-pointer"
               />
@@ -234,7 +243,7 @@ export default function AddEvent({
                 errors={errors}
                 checked={disabledVal}
                 onChange={(e) => {
-                  setValue("DISABLED", e.target.checked ? "yes" : "no");
+                  setValue("DISABLED", e.target.checked);
                   setDisabledValue(!disabledVal);
                 }}
                 className="w-4 h-4 text-blue-600 outline-none bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -274,7 +283,7 @@ export default function AddEvent({
                 type="checkbox"
                 checked={salaryAdjustVal}
                 onChange={(e) => {
-                  setValue("SALARY_ADJUST", e.target.checked ? "yes" : "no");
+                  setValue("SALARY_ADJUST", e.target.checked);
                   setSalaryAdjustVal(!salaryAdjustVal);
                 }}
                 className="w-4 h-4 text-blue-600 outline-none bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"

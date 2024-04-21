@@ -14,7 +14,7 @@ import {
   logInStart,
   logInSuccess,
 } from "../redux/user/userSlice";
-// import Input from "../components/ui/Input";
+import Input from "../components/ui/Input";
 
 export default function Login() {
   const {
@@ -57,14 +57,14 @@ export default function Login() {
             <label className="block mb-2 font-medium text-gray-900 ">
               Username
             </label>
-            {/* <Input
+            <Input
               fieldName="username"
               register={register}
               errors={errors}
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none   "
-            /> */}
-            <input
+            />
+            {/* <input
               type="text"
               {...register("username")}
               className={` ${
@@ -72,8 +72,8 @@ export default function Login() {
                   ? "border-red-500 focus:ring-red-500 focus:border-red-500"
                   : ""
               } bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none   `}
-            />
-            {typeof errors.username === "string" ? (
+            /> */}
+            {/* {typeof errors.username === "string" ? (
               <p className="text-red-500 text-sm">{errors.username}</p>
             ) : (
               errors.username &&
@@ -82,7 +82,7 @@ export default function Login() {
                   {errors.username.message}
                 </p>
               )
-            )}
+            )} */}
           </div>
           <div className="mb-5 relative">
             <label
@@ -91,15 +91,15 @@ export default function Login() {
             >
               Password
             </label>
-            {/* <Input
+            <Input
               fieldName="password"
               register={register}
               errors={errors}
               type={showPassword ? "text" : "password"}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none    "
-            /> */}
+            />
 
-            <input
+            {/* <input
               type={showPassword ? "text" : "password"}
               {...register("password")}
               className={` ${
@@ -107,8 +107,8 @@ export default function Login() {
                   ? "border-red-500 focus:ring-red-500 focus:border-red-500"
                   : ""
               } bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none   `}
-            />
-            {typeof errors.username === "string" ? (
+            /> */}
+            {/* {typeof errors.username === "string" ? (
               <p className="text-red-500 text-sm">{errors.username}</p>
             ) : (
               errors.username &&
@@ -117,7 +117,7 @@ export default function Login() {
                   {errors.username.message}
                 </p>
               )
-            )}
+            )} */}
             {showPassword ? (
               <FiEyeOff
                 onClick={() => setShowPassword(false)}

@@ -51,6 +51,7 @@ export default function AddAllowance({
     const handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
+
         setServiceToEdit((prev: any) => {
           return {
             ...prev,
@@ -60,13 +61,16 @@ export default function AddAllowance({
             allowance_taxable: "N",
             allowance_facility_percent: "",
             allowance_facility: "",
-            allowance_cit_flag: "N",
+            allowance_cit_flag: false,
             allowance_type: "",
-            salary_allowance_flag: "N",
+            salary_allowance_flag: false,
             allowance_acc_cd: "",
-            allowance_disabled: "N",
+            allowance_disabled: false,
           };
         });
+        if (isEdit) {
+          setIsEdit(false);
+        }
         console.log("i am inside the if block");
       }
     };
@@ -262,11 +266,11 @@ export default function AddAllowance({
             allowance_taxable: "N",
             allowance_facility_percent: "",
             allowance_facility: "",
-            allowance_cit_flag: "N",
+            allowance_cit_flag: false,
             allowance_type: "",
-            salary_allowance_flag: "N",
+            salary_allowance_flag: false,
             allowance_acc_cd: "",
-            allowance_disabled: "N",
+            allowance_disabled: false,
           };
         });
       }
@@ -295,7 +299,6 @@ export default function AddAllowance({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIsEdit(false);
                   setServiceToEdit((prev: any) => {
                     return {
                       ...prev,
@@ -305,13 +308,16 @@ export default function AddAllowance({
                       allowance_taxable: "N",
                       allowance_facility_percent: "",
                       allowance_facility: "",
-                      allowance_cit_flag: "N",
+                      allowance_cit_flag: false,
                       allowance_type: "",
-                      salary_allowance_flag: "N",
+                      salary_allowance_flag: false,
                       allowance_acc_cd: "",
-                      allowance_disabled: "N",
+                      allowance_disabled: false,
                     };
                   });
+                  if (isEdit) {
+                    setIsEdit(false);
+                  }
                 }}
                 className="cursor-pointer"
               />
@@ -438,10 +444,7 @@ export default function AddAllowance({
                   type="checkbox"
                   checked={citVal}
                   onChange={(e) => {
-                    setValue(
-                      "allowance_cit_flag",
-                      e.target.checked ? "yes" : "no"
-                    );
+                    setValue("allowance_cit_flag", e.target.checked);
                     setCitVal(!citVal);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -461,10 +464,7 @@ export default function AddAllowance({
                   type="checkbox"
                   checked={salaryAllowanceFlag}
                   onChange={(e) => {
-                    setValue(
-                      "salary_allowance_flag",
-                      e.target.checked ? "yes" : "no"
-                    );
+                    setValue("salary_allowance_flag", e.target.checked);
                     setSalaryALlowanceFlag(!salaryAllowanceFlag);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -518,10 +518,7 @@ export default function AddAllowance({
                 errors={errors}
                 checked={disabledVal}
                 onChange={(e) => {
-                  setValue(
-                    "allowance_disabled",
-                    e.target.checked ? "yes" : "no"
-                  );
+                  setValue("allowance_disabled", e.target.checked);
                   setDisabledVal(!disabledVal);
                 }}
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"

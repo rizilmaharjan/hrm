@@ -3,7 +3,6 @@ import {
   UseFormRegister,
   FieldErrors,
   Path,
-  SubmitHandler,
 } from "react-hook-form";
 
 type InputProps<T extends FieldValues> = {
@@ -30,6 +29,7 @@ export default function Input<T extends FieldValues>({
   checked,
   maxLength,
 }: InputProps<T>) {
+  const isCheckbox = type === "checkbox";
   return (
     <>
       <input
@@ -44,9 +44,9 @@ export default function Input<T extends FieldValues>({
         {...register(fieldName as Path<T>, {
           setValueAs: setValueAs,
         })}
-        onChange={onChange}
-        checked={checked}
+        {...(isCheckbox ? { onChange: onChange, checked: checked } : {})}
       />
+
       {errors[fieldName]?.message && (
         <p className="text-red-500 text-sm">{`${errors[fieldName]?.message}`}</p>
       )}
