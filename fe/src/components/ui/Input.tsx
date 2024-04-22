@@ -16,6 +16,7 @@ type InputProps<T extends FieldValues> = {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   checked?: boolean;
   maxLength?: number;
+  isEdit?: boolean;
 };
 export default function Input<T extends FieldValues>({
   fieldName,
@@ -28,6 +29,7 @@ export default function Input<T extends FieldValues>({
   onChange,
   checked,
   maxLength,
+  isEdit,
 }: InputProps<T>) {
   const isCheckbox = type === "checkbox";
   return (
@@ -36,6 +38,7 @@ export default function Input<T extends FieldValues>({
         type={type}
         placeholder={placeHolder}
         maxLength={maxLength}
+        disabled={isEdit}
         className={` ${
           errors[fieldName]
             ? "border-red-500 focus:ring-red-500 focus:border-red-500"

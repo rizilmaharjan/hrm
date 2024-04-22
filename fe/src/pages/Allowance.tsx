@@ -232,10 +232,16 @@ export default function Allowance() {
                         >
                           {item.allowance_CD}
                         </th>
-                        <td className=" py-4 text-center">
-                          {item.allowance_description}
+                        <td className=" py-4 text-center capitalize">
+                          {item.allowance_description.toLowerCase()}
                         </td>
-                        <td className=" py-4 font-[Preeti] text-center text-lg">
+                        <td
+                          className={`px-6 py-4 ${
+                            item.allowance_nepali_desc
+                              ? " font-[Preeti]"
+                              : "font-sans"
+                          } text-lg`}
+                        >
                           {item.allowance_nepali_desc
                             ? item.allowance_nepali_desc
                             : "_"}
