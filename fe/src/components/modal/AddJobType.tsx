@@ -75,28 +75,30 @@ export default function AddJobType({
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-        dispatch(
-          setServiceToEdit((prev: any) => {
-            if (prev) {
-              return {
-                ...prev,
-                job_type_cd: "",
-                job_type_desc: "",
-                tax: "Y",
-                tax_percent: "",
-                pf_allowed: false,
-                cit: false,
-                pay_generate: false,
-                grade_allowed: false,
-                single_rebate: "",
-                married_rebate: "",
-                disabled: false,
-              };
-            }
-          })
-        );
+
         if (isEdit) {
           dispatch(setIsEdit(false));
+          dispatch(
+            setServiceToEdit((prev: any) => {
+              if (prev) {
+                return {
+                  ...prev,
+                  job_type_cd: "",
+                  job_type_desc: "",
+                  tax: "Y",
+                  tax_percent: "",
+                  pf_allowed: false,
+                  cit: false,
+                  pay_generate: false,
+                  grade_allowed: false,
+                  single_rebate: "",
+                  married_rebate: "",
+                  disabled: false,
+                };
+              }
+            })
+          );
+          dispatch(setEditID(""));
         }
         console.log("i am inside the if block");
       }
@@ -163,8 +165,6 @@ export default function AddJobType({
   }, [isEdit, serviceToEdit]);
 
   const onSubmit = async (data: any) => {
-    console.log("i am clicked");
-    console.log("add job type datas", data);
     const jobTypeData = {
       ...data,
       job_type_cd: data.job_type_cd.toUpperCase(),
@@ -175,11 +175,10 @@ export default function AddJobType({
       disabled: data.disabled ? "Y" : "N",
     };
 
-    if (!isEdit) {
-      const res = await Instance.post("/v1/job-type", jobTypeData);
-      console.log(res);
-      if (res.status === 201) {
-        toast.success(res.data.message);
+    try {
+      if (!isEdit) {
+        const res = await Instance.post("/v1/job-type", jobTypeData);
+        console.log(res);
         setJobType((prev) => {
           if (!prev) {
             return [res.data.data];
@@ -187,11 +186,9 @@ export default function AddJobType({
             return [...prev, jobTypeData];
           }
         });
-      }
-    } else {
-      const res = await Instance.put(`/v1/job-type/${editID}`, jobTypeData);
-      if (res.status === 200) {
         toast.success(res.data.message);
+      } else {
+        const res = await Instance.put(`/v1/job-type/${editID}`, jobTypeData);
         setJobType((prev) => {
           if (!prev) return [];
           return prev.map((item) => {
@@ -201,40 +198,43 @@ export default function AddJobType({
             return item;
           });
         });
-      }
-      dispatch(setIsEdit(false));
-      dispatch(setEditID(""));
-      dispatch(
-        setServiceToEdit((prev: any) => {
-          if (prev) {
-            return {
-              ...prev,
-              job_type_cd: "",
-              job_type_desc: "",
-              tax: "Y",
-              tax_percent: "",
-              pf_allowed: false,
-              cit: false,
-              pay_generate: false,
-              grade_allowed: false,
-              single_rebate: "",
-              married_rebate: "",
-              disabled: false,
-            };
-          }
-        })
-      );
-    }
-    reset();
-    setGradeAllowedVal(false);
-    setPayGenerateVal(false);
-    setCitVal(false);
-    setDisabledVal(false);
-    setPfAllowedVal(false);
-    setIsModalOpen(false);
+        toast.success(res.data.message);
+        dispatch(setIsEdit(false));
+        dispatch(setEditID(""));
 
-    console.log("modified data", jobTypeData);
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            if (prev) {
+              return {
+                ...prev,
+                job_type_cd: "",
+                job_type_desc: "",
+                tax: "Y",
+                tax_percent: "",
+                pf_allowed: false,
+                cit: false,
+                pay_generate: false,
+                grade_allowed: false,
+                single_rebate: "",
+                married_rebate: "",
+                disabled: false,
+              };
+            }
+          })
+        );
+      }
+      reset();
+      setGradeAllowedVal(false);
+      setPayGenerateVal(false);
+      setCitVal(false);
+      setDisabledVal(false);
+      setPfAllowedVal(false);
+      setIsModalOpen(false);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
   };
+
   return (
     <>
       <div className="flex z-20 items-center justify-center fixed inset-0 w-full bg-black/60">
@@ -247,28 +247,30 @@ export default function AddJobType({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  dispatch(
-                    setServiceToEdit((prev: any) => {
-                      if (prev) {
-                        return {
-                          ...prev,
-                          job_type_cd: "",
-                          job_type_desc: "",
-                          tax: "Y",
-                          tax_percent: "",
-                          pf_allowed: false,
-                          cit: false,
-                          pay_generate: false,
-                          grade_allowed: false,
-                          single_rebate: "",
-                          married_rebate: "",
-                          disabled: false,
-                        };
-                      }
-                    })
-                  );
+
                   if (isEdit) {
                     dispatch(setIsEdit(false));
+                    dispatch(
+                      setServiceToEdit((prev: any) => {
+                        if (prev) {
+                          return {
+                            ...prev,
+                            job_type_cd: "",
+                            job_type_desc: "",
+                            tax: "Y",
+                            tax_percent: "",
+                            pf_allowed: false,
+                            cit: false,
+                            pay_generate: false,
+                            grade_allowed: false,
+                            single_rebate: "",
+                            married_rebate: "",
+                            disabled: false,
+                          };
+                        }
+                      })
+                    );
+                    dispatch(setEditID(""));
                   }
                 }}
                 className="cursor-pointer"
