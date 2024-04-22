@@ -219,7 +219,10 @@ export default function AddEvent({
                 register={register}
                 errors={errors}
                 type="number"
-                className="block p-2.5 w-full text-sm text-black outline-none rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                isEdit={isEdit}
+                className={`block p-2.5 w-full ${
+                  isEdit ? "opacity-50" : ""
+                } text-sm text-black rounded-lg border uppercase border-gray-300 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
             <div className="relative z-0 w-full mb-5 group">

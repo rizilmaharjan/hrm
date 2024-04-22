@@ -355,6 +355,7 @@ export default function AddAllowance({
                   errors={errors}
                   type="text"
                   maxLength={3}
+                  isEdit={isEdit}
                   className={`block p-2.5 w-full ${
                     isEdit ? "opacity-50" : ""
                   } text-sm text-black rounded-lg border uppercase border-gray-300 focus:ring-blue-500 focus:border-blue-500`}

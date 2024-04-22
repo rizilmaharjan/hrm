@@ -96,7 +96,7 @@ export default function AddJobType({
           })
         );
         if (isEdit) {
-          setIsEdit(false);
+          dispatch(setIsEdit(false));
         }
         console.log("i am inside the if block");
       }
@@ -202,8 +202,8 @@ export default function AddJobType({
           });
         });
       }
-      setIsEdit(false);
-      setEditID("");
+      dispatch(setIsEdit(false));
+      dispatch(setEditID(""));
       dispatch(
         setServiceToEdit((prev: any) => {
           if (prev) {
@@ -288,7 +288,10 @@ export default function AddJobType({
                   errors={errors}
                   maxLength={2}
                   type="text"
-                  className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  isEdit={isEdit}
+                  className={`block p-2.5 w-full ${
+                    isEdit ? "opacity-50" : ""
+                  } text-sm text-black rounded-lg border uppercase border-gray-300 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
               <div className="relative z-0 w-full mb-5 group col-start-2 col-span-4">
