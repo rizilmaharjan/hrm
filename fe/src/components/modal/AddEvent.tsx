@@ -60,21 +60,23 @@ export default function AddEvent({
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-        dispatch(
-          setServiceToEdit((prev: any) => {
-            return {
-              ...prev,
-              SERVICE_EVENT_CD: "",
-              SERVICE_EVENT_DESC: "",
-              SERVICE_EVENT_DESC_NEP: "",
-              SERVICE_EVENT_TYPE: "N",
-              SALARY_ADJUST: false,
-              DISABLED: false,
-            };
-          })
-        );
+
         if (isEdit) {
           dispatch(setIsEdit(false));
+          dispatch(
+            setServiceToEdit((prev: any) => {
+              return {
+                ...prev,
+                SERVICE_EVENT_CD: "",
+                SERVICE_EVENT_DESC: "",
+                SERVICE_EVENT_DESC_NEP: "",
+                SERVICE_EVENT_TYPE: "N",
+                SALARY_ADJUST: false,
+                DISABLED: false,
+              };
+            })
+          );
+          dispatch(setEditID(""));
         }
 
         console.log("i am inside the if block");
@@ -163,17 +165,15 @@ export default function AddEvent({
             };
           })
         );
-        if (isEdit) {
-          setIsEdit(false);
-        }
+        dispatch(setIsEdit(false));
+        dispatch(setEditID(""));
       }
       reset();
-      setEditID("");
       setDisabledValue(false);
       setSalaryAdjustVal(false);
       setIsModalOpen(false);
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.response.data.message);
       console.log("error", error);
     }
   };
@@ -186,21 +186,23 @@ export default function AddEvent({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  dispatch(
-                    setServiceToEdit((prev: any) => {
-                      return {
-                        ...prev,
-                        SERVICE_EVENT_CD: "",
-                        SERVICE_EVENT_DESC: "",
-                        SERVICE_EVENT_DESC_NEP: "",
-                        SERVICE_EVENT_TYPE: "N",
-                        SALARY_ADJUST: false,
-                        DISABLED: false,
-                      };
-                    })
-                  );
+
                   if (isEdit) {
-                    setIsEdit(false);
+                    dispatch(setIsEdit(false));
+                    dispatch(
+                      setServiceToEdit((prev: any) => {
+                        return {
+                          ...prev,
+                          SERVICE_EVENT_CD: "",
+                          SERVICE_EVENT_DESC: "",
+                          SERVICE_EVENT_DESC_NEP: "",
+                          SERVICE_EVENT_TYPE: "N",
+                          SALARY_ADJUST: false,
+                          DISABLED: false,
+                        };
+                      })
+                    );
+                    dispatch(setEditID(""));
                   }
                 }}
                 className="cursor-pointer"

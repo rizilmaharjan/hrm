@@ -65,26 +65,27 @@ export default function AddAllowance({
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
 
-        dispatch(
-          setServiceToEdit((prev: any) => {
-            return {
-              ...prev,
-              allowance_CD: "",
-              allowance_description: "",
-              allowance_nepali_desc: "",
-              allowance_taxable: "N",
-              allowance_facility_percent: "",
-              allowance_facility: "",
-              allowance_cit_flag: false,
-              allowance_type: "",
-              salary_allowance_flag: false,
-              allowance_acc_cd: "",
-              allowance_disabled: false,
-            };
-          })
-        );
         if (isEdit) {
           dispatch(setIsEdit(false));
+          dispatch(
+            setServiceToEdit((prev: any) => {
+              return {
+                ...prev,
+                allowance_CD: "",
+                allowance_description: "",
+                allowance_nepali_desc: "",
+                allowance_taxable: "N",
+                allowance_facility_percent: "",
+                allowance_facility: "",
+                allowance_cit_flag: false,
+                allowance_type: "",
+                salary_allowance_flag: false,
+                allowance_acc_cd: "",
+                allowance_disabled: false,
+              };
+            })
+          );
+          dispatch(setEditID(""));
         }
         console.log("i am inside the if block");
       }
@@ -270,8 +271,8 @@ export default function AddAllowance({
           });
         });
         toast.success(res.data.message);
-        setIsEdit(false);
-        setEditID("");
+        dispatch(setIsEdit(false));
+        dispatch(setEditID(""));
         dispatch(
           setServiceToEdit((prev: any) => {
             return {
@@ -297,7 +298,7 @@ export default function AddAllowance({
       setDisabledVal(false);
       setIsModalOpen(false);
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.response.data.message);
       console.log("allowance errors", error);
     }
     console.log(
@@ -316,26 +317,28 @@ export default function AddAllowance({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  dispatch(
-                    setServiceToEdit((prev: any) => {
-                      return {
-                        ...prev,
-                        allowance_CD: "",
-                        allowance_description: "",
-                        allowance_nepali_desc: "",
-                        allowance_taxable: "N",
-                        allowance_facility_percent: "",
-                        allowance_facility: "",
-                        allowance_cit_flag: false,
-                        allowance_type: "",
-                        salary_allowance_flag: false,
-                        allowance_acc_cd: "",
-                        allowance_disabled: false,
-                      };
-                    })
-                  );
+
                   if (isEdit) {
-                    setIsEdit(false);
+                    dispatch(setIsEdit(false));
+                    dispatch(
+                      setServiceToEdit((prev: any) => {
+                        return {
+                          ...prev,
+                          allowance_CD: "",
+                          allowance_description: "",
+                          allowance_nepali_desc: "",
+                          allowance_taxable: "N",
+                          allowance_facility_percent: "",
+                          allowance_facility: "",
+                          allowance_cit_flag: false,
+                          allowance_type: "",
+                          salary_allowance_flag: false,
+                          allowance_acc_cd: "",
+                          allowance_disabled: false,
+                        };
+                      })
+                    );
+                    dispatch(setEditID(""));
                   }
                 }}
                 className="cursor-pointer"
