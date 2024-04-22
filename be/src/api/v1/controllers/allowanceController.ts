@@ -8,12 +8,18 @@ import {
 import { catchAsync } from "../helpers/catchAsync";
 import { appError } from "../helpers/appError";
 
-export const postAllowance = catchAsync(async (req: Request, res: Response) => {
-  const { username } = res.locals.user;
-  const body = { ...req.body, entered_By: username };
-  const { status, message, data } = await createAllowance(body);
-  return res.status(status).json({ message, data });
-});
+export const postAllowance = catchAsync(
+  async (req: any, res: any, next: NextFunction) => {
+    const { username } = res.locals.user;
+    const body = { ...req.body, entered_By: username };
+    const { status, message, data } = await createAllowance(body);
+    if (status === 400) {
+      next(new appError(status, message));
+      return;
+    }
+    return res.status(status).json({ message, data });
+  }
+);
 
 export const getAllowance = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

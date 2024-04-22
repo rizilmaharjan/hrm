@@ -5,12 +5,18 @@ import { catchAsync } from "../helpers/catchAsync";
 import * as JobTypeService from "../services/jobType";
 import { appError } from "../helpers/appError";
 
-export const postJobType = catchAsync(async (req: Request, res: Response) => {
-  const { username } = res.locals.user;
-  const body = { ...req.body, entered_by: username };
-  const { status, message, data } = await JobTypeService.postJobType(body);
-  return res.status(status).json({ message, data });
-});
+export const postJobType = catchAsync(
+  async (req: any, res: any, next: NextFunction) => {
+    const { username } = res.locals.user;
+    const body = { ...req.body, entered_by: username };
+    const { status, message, data } = await JobTypeService.postJobType(body);
+    if (status === 400) {
+      next(new appError(status, message));
+      return;
+    }
+    return res.status(status).json({ message, data });
+  }
+);
 
 export const getJobType = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

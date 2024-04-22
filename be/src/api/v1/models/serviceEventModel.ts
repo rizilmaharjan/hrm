@@ -73,7 +73,12 @@ export const postService = async (
       data: insertedData,
     };
   } catch (error: any) {
-    throw new Error(error.message);
+    if (error.message.includes("ORA-00001")) {
+      return { status: 400, message: "Record with this ID already exists" };
+      // throw new Error("Record with this ID already exists");
+    } else {
+      throw new Error(error.message);
+    }
     // return { status: 500, message: error.message };
   }
 };
