@@ -209,7 +209,9 @@ export default function ServiceEvent() {
                         >
                           {item.SERVICE_EVENT_CD}
                         </th>
-                        <td className="px-6 py-4">{item.SERVICE_EVENT_DESC}</td>
+                        <td className="px-6 py-4 capitalize">
+                          {item.SERVICE_EVENT_DESC.toLowerCase()}
+                        </td>
                         <td
                           className={`px-6 py-4 ${
                             item.SERVICE_EVENT_DESC_NEP
