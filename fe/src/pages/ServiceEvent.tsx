@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 import { Instance } from "../utils/Instance";
 import AddEvent from "../components/modal/AddEvent";
-import { useCustomContext } from "../context/DataContext";
-import { useLocation } from "react-router-dom";
+// import { useCustomContext } from "../context/DataContext";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import { mapServiceEventType } from "../utils/serviceEventType";
@@ -11,16 +12,24 @@ import { serviceEventTitle } from "../constants";
 import { FileExport } from "../assets/svg";
 import "jspdf-autotable";
 import jsPDF from "jspdf";
+import { useAppDispatch } from "../redux/hooks";
+import {
+  setServiceToEdit,
+  setEditID,
+  setIsEdit,
+} from "../redux/edit/editSlice";
 
 export default function ServiceEvent() {
   const [serviceEvents, setServiceEvents] = useState<TServiceEvent[]>([]);
-  const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
+  // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
+
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const getServiceEvents = async () => {
       setIsLoading(true);
@@ -63,10 +72,13 @@ export default function ServiceEvent() {
       const updateService = await serviceEvents.find(
         (item) => item.SERVICE_EVENT_CD === id
       );
-      setEditID(id);
-      setIsEdit(true);
+
+      dispatch(setEditID(id));
+
+      // setEditID(id);
+      dispatch(setIsEdit(true));
       if (updateService) {
-        setServiceToEdit(updateService);
+        dispatch(setServiceToEdit(updateService));
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
@@ -76,9 +88,9 @@ export default function ServiceEvent() {
   };
 
   useEffect(() => {
-    setIsEdit(false);
-    setServiceToEdit(null);
-    setEditID("");
+    dispatch(setIsEdit(false));
+    dispatch(setServiceToEdit(null));
+    dispatch(setEditID(""));
   }, [location.pathname, setEditID, setIsEdit, setServiceToEdit]);
 
   const exportToPDF = () => {

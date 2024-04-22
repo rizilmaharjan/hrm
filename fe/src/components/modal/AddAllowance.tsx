@@ -1,11 +1,17 @@
-import { useCustomContext } from "../../context/DataContext";
+// import { useCustomContext } from "../../context/DataContext";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setServiceToEdit,
+  setIsEdit,
+  setEditID,
+} from "../../redux/edit/editSlice";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TAllowance } from "../../interfaces/types/allowance.types";
-import AccountList from "./AccountList";
+// import AccountList from "./AccountList";
 import { allowanceSchema } from "../../validations/allowance.schema";
 
 import Input from "../ui/Input";
@@ -22,14 +28,14 @@ export default function AddAllowance({
   isModalOpen,
   setAllowanceDatas,
 }: TProps) {
-  const {
-    serviceToEdit,
-    isEdit,
-    editID,
-    setServiceToEdit,
-    setEditID,
-    setIsEdit,
-  } = useCustomContext();
+  // const {
+  //   serviceToEdit,
+  //   isEdit,
+  //   editID,
+  //   setServiceToEdit,
+  //   setEditID,
+  //   setIsEdit,
+  // } = useCustomContext();
   const {
     register,
     handleSubmit,
@@ -39,6 +45,13 @@ export default function AddAllowance({
   } = useForm<TAllowance>({
     resolver: zodResolver(allowanceSchema),
   });
+
+  const dispatch = useAppDispatch();
+
+  const isEdit = useAppSelector((state) => state.edit.isEdit);
+  const serviceToEdit = useAppSelector((state) => state.edit.serviceToEdit);
+  const editID = useAppSelector((state) => state.edit.editID);
+
   const [citVal, setCitVal] = useState(false);
   const [salaryAllowanceFlag, setSalaryALlowanceFlag] = useState(false);
   const [disabledVal, setDisabledVal] = useState(false);
@@ -52,24 +65,26 @@ export default function AddAllowance({
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
 
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            allowance_CD: "",
-            allowance_description: "",
-            allowance_nepali_desc: "",
-            allowance_taxable: "N",
-            allowance_facility_percent: "",
-            allowance_facility: "",
-            allowance_cit_flag: false,
-            allowance_type: "",
-            salary_allowance_flag: false,
-            allowance_acc_cd: "",
-            allowance_disabled: false,
-          };
-        });
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            return {
+              ...prev,
+              allowance_CD: "",
+              allowance_description: "",
+              allowance_nepali_desc: "",
+              allowance_taxable: "N",
+              allowance_facility_percent: "",
+              allowance_facility: "",
+              allowance_cit_flag: false,
+              allowance_type: "",
+              salary_allowance_flag: false,
+              allowance_acc_cd: "",
+              allowance_disabled: false,
+            };
+          })
+        );
         if (isEdit) {
-          setIsEdit(false);
+          dispatch(setIsEdit(false));
         }
         console.log("i am inside the if block");
       }
@@ -78,7 +93,7 @@ export default function AddAllowance({
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  }, [setIsModalOpen, setServiceToEdit]);
+  }, [isModalOpen]);
 
   //   const checkboxValue = localStorage.getItem("checkboxValue");
   //   if (checkboxValue === "true") {
@@ -257,22 +272,24 @@ export default function AddAllowance({
         toast.success(res.data.message);
         setIsEdit(false);
         setEditID("");
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            allowance_CD: "",
-            allowance_description: "",
-            allowance_nepali_desc: "",
-            allowance_taxable: "N",
-            allowance_facility_percent: "",
-            allowance_facility: "",
-            allowance_cit_flag: false,
-            allowance_type: "",
-            salary_allowance_flag: false,
-            allowance_acc_cd: "",
-            allowance_disabled: false,
-          };
-        });
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            return {
+              ...prev,
+              allowance_CD: "",
+              allowance_description: "",
+              allowance_nepali_desc: "",
+              allowance_taxable: "N",
+              allowance_facility_percent: "",
+              allowance_facility: "",
+              allowance_cit_flag: false,
+              allowance_type: "",
+              salary_allowance_flag: false,
+              allowance_acc_cd: "",
+              allowance_disabled: false,
+            };
+          })
+        );
       }
       reset();
       setCitVal(false);
@@ -299,22 +316,24 @@ export default function AddAllowance({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setServiceToEdit((prev: any) => {
-                    return {
-                      ...prev,
-                      allowance_CD: "",
-                      allowance_description: "",
-                      allowance_nepali_desc: "",
-                      allowance_taxable: "N",
-                      allowance_facility_percent: "",
-                      allowance_facility: "",
-                      allowance_cit_flag: false,
-                      allowance_type: "",
-                      salary_allowance_flag: false,
-                      allowance_acc_cd: "",
-                      allowance_disabled: false,
-                    };
-                  });
+                  dispatch(
+                    setServiceToEdit((prev: any) => {
+                      return {
+                        ...prev,
+                        allowance_CD: "",
+                        allowance_description: "",
+                        allowance_nepali_desc: "",
+                        allowance_taxable: "N",
+                        allowance_facility_percent: "",
+                        allowance_facility: "",
+                        allowance_cit_flag: false,
+                        allowance_type: "",
+                        salary_allowance_flag: false,
+                        allowance_acc_cd: "",
+                        allowance_disabled: false,
+                      };
+                    })
+                  );
                   if (isEdit) {
                     setIsEdit(false);
                   }

@@ -4,12 +4,18 @@ import { RefObject, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 
-import { useCustomContext } from "../../context/DataContext";
+// import { useCustomContext } from "../../context/DataContext";
 import { Instance } from "../../utils/Instance";
 import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import { serviceEvent } from "../../validations/serviceEvent.schema";
+import {
+  setServiceToEdit,
+  setIsEdit,
+  setEditID,
+} from "../../redux/edit/editSlice";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,14 +27,14 @@ export default function AddEvent({
   setServiceEvents,
   isModalOpen,
 }: TProps) {
-  const {
-    serviceToEdit,
-    isEdit,
-    editID,
-    setServiceToEdit,
-    setEditID,
-    setIsEdit,
-  } = useCustomContext();
+  // const {
+  //   serviceToEdit,
+  //   isEdit,
+  //   editID,
+  //   setServiceToEdit,
+  //   setEditID,
+  //   setIsEdit,
+  // } = useCustomContext();
   const {
     register,
     handleSubmit,
@@ -39,27 +45,36 @@ export default function AddEvent({
     resolver: zodResolver(serviceEvent),
   });
 
+  const dispatch = useAppDispatch();
+
+  const isEdit = useAppSelector((state) => state.edit.isEdit);
+  const serviceToEdit = useAppSelector((state) => state.edit.serviceToEdit);
+  const editID = useAppSelector((state) => state.edit.editID);
+
   const [disabledVal, setDisabledValue] = useState(false);
   const [salaryAdjustVal, setSalaryAdjustVal] = useState(false);
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            SERVICE_EVENT_CD: "",
-            SERVICE_EVENT_DESC: "",
-            SERVICE_EVENT_DESC_NEP: "",
-            SERVICE_EVENT_TYPE: "N",
-            SALARY_ADJUST: false,
-            DISABLED: false,
-          };
-        });
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            return {
+              ...prev,
+              SERVICE_EVENT_CD: "",
+              SERVICE_EVENT_DESC: "",
+              SERVICE_EVENT_DESC_NEP: "",
+              SERVICE_EVENT_TYPE: "N",
+              SALARY_ADJUST: false,
+              DISABLED: false,
+            };
+          })
+        );
         if (isEdit) {
-          setIsEdit(false);
+          dispatch(setIsEdit(false));
         }
 
         console.log("i am inside the if block");
@@ -135,17 +150,19 @@ export default function AddEvent({
         });
         toast.success(res.data.message);
 
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            SERVICE_EVENT_CD: "",
-            SERVICE_EVENT_DESC: "",
-            SERVICE_EVENT_DESC_NEP: "",
-            SERVICE_EVENT_TYPE: "N",
-            SALARY_ADJUST: false,
-            DISABLED: false,
-          };
-        });
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            return {
+              ...prev,
+              SERVICE_EVENT_CD: "",
+              SERVICE_EVENT_DESC: "",
+              SERVICE_EVENT_DESC_NEP: "",
+              SERVICE_EVENT_TYPE: "N",
+              SALARY_ADJUST: false,
+              DISABLED: false,
+            };
+          })
+        );
         if (isEdit) {
           setIsEdit(false);
         }
@@ -169,17 +186,19 @@ export default function AddEvent({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setServiceToEdit((prev: any) => {
-                    return {
-                      ...prev,
-                      SERVICE_EVENT_CD: "",
-                      SERVICE_EVENT_DESC: "",
-                      SERVICE_EVENT_DESC_NEP: "",
-                      SERVICE_EVENT_TYPE: "N",
-                      SALARY_ADJUST: false,
-                      DISABLED: false,
-                    };
-                  });
+                  dispatch(
+                    setServiceToEdit((prev: any) => {
+                      return {
+                        ...prev,
+                        SERVICE_EVENT_CD: "",
+                        SERVICE_EVENT_DESC: "",
+                        SERVICE_EVENT_DESC_NEP: "",
+                        SERVICE_EVENT_TYPE: "N",
+                        SALARY_ADJUST: false,
+                        DISABLED: false,
+                      };
+                    })
+                  );
                   if (isEdit) {
                     setIsEdit(false);
                   }

@@ -8,17 +8,25 @@ import "jspdf-autotable";
 import jsPDF from "jspdf";
 import { FileExport } from "../assets/svg";
 import { jobTypeTitle } from "../constants";
-import { useCustomContext } from "../context/DataContext";
+// import { useCustomContext } from "../context/DataContext";
+import { useAppDispatch } from "../redux/hooks";
+import {
+  setServiceToEdit,
+  setEditID,
+  setIsEdit,
+} from "../redux/edit/editSlice";
 
 export default function JobType() {
   const [jobType, setJobType] = useState<TJobType[]>([]);
-  const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
+  // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
   // const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
+
+  const dispatch = useAppDispatch();
 
   //Get all Job type data
   useEffect(() => {
@@ -60,11 +68,11 @@ export default function JobType() {
   const handleEdit = (id: string) => {
     const update = jobType.find((item) => item.job_type_cd === id);
 
-    setEditID(id);
-    setIsEdit(true);
+    dispatch(setEditID(id));
+    dispatch(setIsEdit(true));
 
     if (update) {
-      setServiceToEdit(update);
+      dispatch(setServiceToEdit(update));
       // setJobTypeToEdit(update);
       setIsModalOpen(true);
     }
