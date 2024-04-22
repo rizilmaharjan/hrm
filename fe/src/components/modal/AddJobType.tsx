@@ -8,7 +8,13 @@ import Button from "../ui/Button";
 import { TJobType } from "../../interfaces/types/jobType.type";
 import { jobTypeSchema } from "../../validations/jobType.schema";
 import Input from "../ui/Input";
-import { useCustomContext } from "../../context/DataContext";
+// import { useCustomContext } from "../../context/DataContext";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setServiceToEdit,
+  setEditID,
+  setIsEdit,
+} from "../../redux/edit/editSlice";
 import { Instance } from "../../utils/Instance";
 
 type TProps = {
@@ -35,14 +41,14 @@ export default function AddJobType({
   //   married_rebate: "",
   //   disabled: "N",
   // });
-  const {
-    serviceToEdit,
-    isEdit,
-    editID,
-    setServiceToEdit,
-    setEditID,
-    setIsEdit,
-  } = useCustomContext();
+  // const {
+  //   serviceToEdit,
+  //   isEdit,
+  //   editID,
+  //   setServiceToEdit,
+  //   setEditID,
+  //   setIsEdit,
+  // } = useCustomContext();
   const {
     register,
     handleSubmit,
@@ -58,29 +64,37 @@ export default function AddJobType({
   const [payGenerateVal, setPayGenerateVal] = useState(false);
   const [gradeAllowedVal, setGradeAllowedVal] = useState(false);
 
+  const dispatch = useAppDispatch();
+
+  const isEdit = useAppSelector((state) => state.edit.isEdit);
+  const serviceToEdit = useAppSelector((state) => state.edit.serviceToEdit);
+  const editID = useAppSelector((state) => state.edit.editID);
+
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-        setServiceToEdit((prev: any) => {
-          if (prev) {
-            return {
-              ...prev,
-              job_type_cd: "",
-              job_type_desc: "",
-              tax: "Y",
-              tax_percent: "",
-              pf_allowed: false,
-              cit: false,
-              pay_generate: false,
-              grade_allowed: false,
-              single_rebate: "",
-              married_rebate: "",
-              disabled: false,
-            };
-          }
-        });
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            if (prev) {
+              return {
+                ...prev,
+                job_type_cd: "",
+                job_type_desc: "",
+                tax: "Y",
+                tax_percent: "",
+                pf_allowed: false,
+                cit: false,
+                pay_generate: false,
+                grade_allowed: false,
+                single_rebate: "",
+                married_rebate: "",
+                disabled: false,
+              };
+            }
+          })
+        );
         if (isEdit) {
           setIsEdit(false);
         }
@@ -190,24 +204,26 @@ export default function AddJobType({
       }
       setIsEdit(false);
       setEditID("");
-      setServiceToEdit((prev: any) => {
-        if (prev) {
-          return {
-            ...prev,
-            job_type_cd: "",
-            job_type_desc: "",
-            tax: "Y",
-            tax_percent: "",
-            pf_allowed: false,
-            cit: false,
-            pay_generate: false,
-            grade_allowed: false,
-            single_rebate: "",
-            married_rebate: "",
-            disabled: false,
-          };
-        }
-      });
+      dispatch(
+        setServiceToEdit((prev: any) => {
+          if (prev) {
+            return {
+              ...prev,
+              job_type_cd: "",
+              job_type_desc: "",
+              tax: "Y",
+              tax_percent: "",
+              pf_allowed: false,
+              cit: false,
+              pay_generate: false,
+              grade_allowed: false,
+              single_rebate: "",
+              married_rebate: "",
+              disabled: false,
+            };
+          }
+        })
+      );
     }
     reset();
     setGradeAllowedVal(false);
@@ -231,26 +247,28 @@ export default function AddJobType({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setServiceToEdit((prev: any) => {
-                    if (prev) {
-                      return {
-                        ...prev,
-                        job_type_cd: "",
-                        job_type_desc: "",
-                        tax: "Y",
-                        tax_percent: "",
-                        pf_allowed: false,
-                        cit: false,
-                        pay_generate: false,
-                        grade_allowed: false,
-                        single_rebate: "",
-                        married_rebate: "",
-                        disabled: false,
-                      };
-                    }
-                  });
+                  dispatch(
+                    setServiceToEdit((prev: any) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          job_type_cd: "",
+                          job_type_desc: "",
+                          tax: "Y",
+                          tax_percent: "",
+                          pf_allowed: false,
+                          cit: false,
+                          pay_generate: false,
+                          grade_allowed: false,
+                          single_rebate: "",
+                          married_rebate: "",
+                          disabled: false,
+                        };
+                      }
+                    })
+                  );
                   if (isEdit) {
-                    setIsEdit(false);
+                    dispatch(setIsEdit(false));
                   }
                 }}
                 className="cursor-pointer"

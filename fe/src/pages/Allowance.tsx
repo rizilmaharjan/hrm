@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
+
+import { useAppDispatch } from "../redux/hooks";
+import {
+  setServiceToEdit,
+  setEditID,
+  setIsEdit,
+} from "../redux/edit/editSlice";
 import { Instance } from "../utils/Instance";
 // import { useNavigate } from "react-router-dom";
 // import AddEvent from "../modal/AddEvent";
-import { useCustomContext } from "../context/DataContext";
+// import { useCustomContext } from "../context/DataContext";
 // import { useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
@@ -16,7 +23,7 @@ import jsPDF from "jspdf";
 
 export default function Allowance() {
   const [allowanceDatas, setAllowanceDatas] = useState<TAllowance[]>([]);
-  const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
+  // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   // const location = useLocation();
@@ -24,6 +31,8 @@ export default function Allowance() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
   // const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   // to fetch the allowance datas
   useEffect(() => {
@@ -60,12 +69,12 @@ export default function Allowance() {
       const updateAllowance = await allowanceDatas.find(
         (item) => item.allowance_CD === id
       );
-      setEditID(id);
-      setIsEdit(true);
+      dispatch(setEditID(id));
+      dispatch(setIsEdit(true));
       console.log("updateAllowance clicked", updateAllowance);
 
       if (updateAllowance) {
-        setServiceToEdit(updateAllowance);
+        dispatch(setServiceToEdit(updateAllowance));
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
