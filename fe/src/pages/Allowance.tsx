@@ -202,11 +202,9 @@ export default function Allowance() {
                       <th
                         key={item.id}
                         scope="col"
-                        className={`py-3 text-xs ${
-                          item.id === 2 ? "w-40" : ""
-                        } ${item.id === 9 ? "w-40" : ""} ${
-                          item.id === 8 ? "w-40" : ""
-                        } text-center`}
+                        className={`px-6 py-3 ${item.width} ${
+                          item.id === 9 ? "text-center" : ""
+                        }`}
                       >
                         {item.title}
                       </th>
@@ -228,11 +226,11 @@ export default function Allowance() {
                       >
                         <th
                           scope="row"
-                          className=" py-4 font-medium text-center text-gray-900 whitespace-nowrap"
+                          className=" py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
                         >
                           {item.allowance_CD}
                         </th>
-                        <td className=" py-4 text-center capitalize">
+                        <td className=" py-4 px-6 capitalize">
                           {item.allowance_description.toLowerCase()}
                         </td>
                         <td
@@ -246,27 +244,23 @@ export default function Allowance() {
                             ? item.allowance_nepali_desc
                             : "_"}
                         </td>
-                        <td className=" py-4 text-center">
-                          {item.allowance_taxable}
-                        </td>
-                        {/* <td className=" py-4">{item.allowance_facility}</td> */}
-                        <td className=" py-4 text-center">
+                        <td className=" py-4 px-6">{item.allowance_taxable}</td>
+                        {/* <td className=" py-4 px-6">{item.allowance_facility}</td> */}
+                        <td className=" py-4 px-6">
                           {item.allowance_facility_percent
                             ? item.allowance_facility_percent
                             : "_"}
                         </td>
-                        <td className=" py-4 text-center">
+                        <td className=" py-4 px-6">
                           {item.allowance_cit_flag
                             ? item.allowance_cit_flag
                             : "_"}
                         </td>
-                        <td className=" py-4 text-center">
-                          {item.allowance_type}
-                        </td>
-                        <td className=" py-4 text-center">
+                        <td className=" py-4 px-6">{item.allowance_type}</td>
+                        <td className=" py-4 px-6">
                           {item.salary_allowance_flag}
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-4 px-6">
                           <span className="flex  items-center gap-6">
                             <span>
                               {item.allowance_acc_cd
@@ -280,12 +274,12 @@ export default function Allowance() {
                             </span>
                           </span>
                         </td>
-                        {/* <td className=" py-4">
+                        {/* <td className=" py-4 px-6">
                         </td> */}
-                        <td className=" py-4 text-center">
+                        <td className=" py-4 px-6">
                           {item.allowance_disabled}
                         </td>
-                        <td className=" py-4">
+                        <td className=" py-4 px-6">
                           <span className="flex items-center gap-4">
                             <p
                               onClick={() => handleEdit(item.allowance_CD)}
