@@ -159,16 +159,16 @@ export const jobTypeTitle = [
   {
     id: 1,
     title: "Code",
-    width: "w-1/12",
+    width: "w-[4%]",
   },
   {
     id: 2,
     title: "Description",
-    width: "w-1/12",
+    width: "w-[18%]",
   },
   {
     id: 3,
-    title: "Tax Applicable?",
+    title: "Taxable",
     width: "w-1/12",
   },
   {
@@ -179,22 +179,22 @@ export const jobTypeTitle = [
   {
     id: 5,
     title: "PF",
-    width: "w-1/12",
+    width: "w-[6%]",
   },
   {
     id: 6,
     title: "CIT",
-    width: "w-1/12",
+    width: "w-[6%]",
   },
   {
     id: 7,
     title: "Pay Gen.",
-    width: "w-1/12",
+    width: "w-[6%]",
   },
   {
     id: 8,
     title: "Is Grade",
-    width: "w-1/12",
+    width: "w-[6%]",
   },
   {
     id: 9,
