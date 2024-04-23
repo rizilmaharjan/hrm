@@ -114,44 +114,53 @@ export const allowanceTitle = [
   {
     id: 1,
     title: "Code",
+    width: "w-[4%]",
   },
   {
     id: 2,
     title: "Description",
+    width: "w-[15%]",
   },
   {
     id: 3,
     title: "Description (in Nepali)",
+    width: "w-[10%]",
   },
   {
     id: 4,
     title: "Taxable",
+    width: "w-[6%]",
   },
   {
     id: 5,
     title: "Facility(%)",
+    width: "w-[8%]",
   },
   {
     id: 6,
     title: "Deduct CIT",
+    width: "w-[10%]",
   },
   {
     id: 7,
     title: "Type",
+    width: "w-[6%]",
   },
   {
     id: 8,
-    title: "Salary + Allowance Flag",
+    title: "Sal + Allw Flag",
+    width: "w-[10%]",
   },
   {
     id: 9,
     title: "A/C",
+    width: "w-[14%]",
   },
 
   {
     id: 10,
     title: "Disabled",
-    width: "w-1/12",
+    width: "w-[6%]",
   },
 ];
 
