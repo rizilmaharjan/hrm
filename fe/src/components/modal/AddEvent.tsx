@@ -16,6 +16,7 @@ import {
   setEditID,
 } from "../../redux/edit/editSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import Loader from "../Loader";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,6 +54,8 @@ export default function AddEvent({
 
   const [disabledVal, setDisabledValue] = useState(false);
   const [salaryAdjustVal, setSalaryAdjustVal] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
@@ -125,6 +128,7 @@ export default function AddEvent({
 
     console.log("datas after changed", serviceEventData);
     try {
+      setIsLoading(true);
       if (!isEdit) {
         const res = await Instance.post("/v1/service-event", serviceEventData);
         console.log("addeventresponse", res.data);
@@ -175,6 +179,8 @@ export default function AddEvent({
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.log("error", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -322,13 +328,29 @@ export default function AddEvent({
 
             <Button
               type="submit"
-              className={`text-white ${
-                isEdit ? "bg-green-500" : "bg-blue-700"
-              }  ${
-                isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
-              }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+              disabled={isLoading}
+              className={`
+    text-white
+    ${
+      isEdit
+        ? "bg-green-500 hover:bg-green-600"
+        : "bg-blue-700 hover:bg-blue-800"
+    }
+    ${isLoading ? "opacity-70" : ""}
+    focus:ring-4 focus:outline-none focus:ring-blue-300
+    font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
+  `}
             >
-              {isEdit ? "Edit" : "Submit"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader color="text-white" height="h-4" width="w-4" />
+                  {isEdit ? "Editing..." : "Submitting"}
+                </div>
+              ) : isEdit ? (
+                "Edit"
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </div>
