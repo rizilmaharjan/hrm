@@ -17,6 +17,7 @@ import { allowanceSchema } from "../../validations/allowance.schema";
 import Input from "../ui/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Loader from "../Loader";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,6 +56,8 @@ export default function AddAllowance({
   const [citVal, setCitVal] = useState(false);
   const [salaryAllowanceFlag, setSalaryALlowanceFlag] = useState(false);
   const [disabledVal, setDisabledVal] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // const [isOpen, setIsOpen] = useState(false);
   // const [selectedAccount, setSelectedAccount] = useState<string>("");
@@ -244,6 +247,7 @@ export default function AddAllowance({
       salary_allowance_flag: data.salary_allowance_flag ? "Y" : "N",
     };
     try {
+      setIsLoading(true);
       if (!isEdit) {
         const res = await Instance.post("/v1/allowance", allowanceDatas);
         console.log("allowance datas response", res);
@@ -300,6 +304,8 @@ export default function AddAllowance({
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.log("allowance errors", error);
+    } finally {
+      setIsLoading(false);
     }
     console.log(
       "these are the allowances datas after conversion",
@@ -648,13 +654,29 @@ export default function AddAllowance({
 
             <Button
               type="submit"
-              className={`text-white ${
-                isEdit ? "bg-green-500" : "bg-blue-700"
-              }  ${
-                isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
-              }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+              disabled={isLoading}
+              className={`
+    text-white
+    ${
+      isEdit
+        ? "bg-green-500 hover:bg-green-600"
+        : "bg-blue-700 hover:bg-blue-800"
+    }
+    ${isLoading ? "opacity-70" : ""}
+    focus:ring-4 focus:outline-none focus:ring-blue-300
+    font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
+  `}
             >
-              {isEdit ? "Edit" : "Submit"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader color="text-white" height="h-4" width="w-4" />
+                  {isEdit ? "Editing..." : "Submitting"}
+                </div>
+              ) : isEdit ? (
+                "Edit"
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </div>

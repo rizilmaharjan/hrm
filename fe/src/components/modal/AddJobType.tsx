@@ -16,6 +16,7 @@ import {
   setIsEdit,
 } from "../../redux/edit/editSlice";
 import { Instance } from "../../utils/Instance";
+import Loader from "../Loader";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -69,6 +70,8 @@ export default function AddJobType({
   const isEdit = useAppSelector((state) => state.edit.isEdit);
   const serviceToEdit = useAppSelector((state) => state.edit.serviceToEdit);
   const editID = useAppSelector((state) => state.edit.editID);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -176,6 +179,7 @@ export default function AddJobType({
     };
 
     try {
+      setIsLoading(true);
       if (!isEdit) {
         const res = await Instance.post("/v1/job-type", jobTypeData);
         console.log(res);
@@ -232,6 +236,8 @@ export default function AddJobType({
       setIsModalOpen(false);
     } catch (error: any) {
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -483,13 +489,29 @@ export default function AddJobType({
 
             <Button
               type="submit"
-              className={`text-white ${
-                isEdit ? "bg-green-500" : "bg-blue-700"
-              }  ${
-                isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
-              }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+              disabled={isLoading}
+              className={`
+    text-white
+    ${
+      isEdit
+        ? "bg-green-500 hover:bg-green-600"
+        : "bg-blue-700 hover:bg-blue-800"
+    }
+    ${isLoading ? "opacity-70" : ""}
+    focus:ring-4 focus:outline-none focus:ring-blue-300
+    font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
+  `}
             >
-              {isEdit ? "Edit" : "Submit"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader color="text-white" height="h-4" width="w-4" />
+                  {isEdit ? "Editing..." : "Submitting"}
+                </div>
+              ) : isEdit ? (
+                "Edit"
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </div>
