@@ -95,76 +95,85 @@ const Position: React.FC = () => {
       ))}
     </ul>
   );
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader color="text-blue-800" width="w-6" height="h-6" />
+      </div>
+    );
+  }
 
   return (
-    <div className="relative top-0 bottom-0 h-full sm:rounded-lg w-full">
-      {isLoading ? (
+    <>
+      <div className="relative top-0 bottom-0 h-full sm:rounded-lg w-full">
+        {/* {isLoading ? (
         <div className="min-h-screen flex items-center justify-center w-full">
           <Loader color="text-blue-800" width="w-6" height="h-6" />
         </div>
-      ) : (
-        <>
-          <div className="flex justify-between p-3">
-            <h1 className="font-semibold text-xl">Position</h1>
+      ) : ( */}
+        {/* <> */}
+        <div className="flex justify-between p-3">
+          <h1 className="font-semibold text-xl">Position</h1>
 
-            <button
-              //   onClick={exportToPDF}
-              className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
-              type="button"
-            >
-              <FileExport />
-            </button>
+          <button
+            //   onClick={exportToPDF}
+            className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
+            type="button"
+          >
+            <FileExport />
+          </button>
+        </div>
+        {/* <div className="h-full w-full bg-red-700"> */}
+        <div className="w-full flex justify-around">
+          <div className="p-4 w-1/2 h-[40rem] shadow-md overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100">
+            {renderTree(treeData)}
           </div>
-          {/* <div className="h-full w-full bg-red-700"> */}
-          <div className="w-full flex justify-around">
-            <div className="p-4 w-1/2 h-[40rem] shadow-md overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100">
-              {renderTree(treeData)}
-            </div>
-            <div className="w-1/2 shadow-md p-4">
-              <h3 className="text-lg font-bold">Add Position</h3>
-              <form>
-                <div className="grid grid-cols-4 gap-4">
-                  <div className="relative z-0 w-full mb-5 col-start-1">
-                    <label
-                      htmlFor="position-cd"
-                      className="block mb-2 text-sm font-medium text-gray-900"
-                    >
-                      Code
-                    </label>
-                    <input
-                      id="position_cd"
-                      name="position_cd"
-                      className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Code"
-                      required
-                    />
-                  </div>
-                  <div className="relative z-0 w-full mb-5 col-start-2 col-span-4">
-                    <label
-                      htmlFor="position-desc"
-                      className="block mb-2 text-sm font-medium text-gray-900"
-                    >
-                      Description
-                    </label>
-                    <input
-                      id="position_desc"
-                      name="position_desc"
-                      className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Code"
-                      required
-                    />
-                  </div>
+          <div className="w-1/2 shadow-md p-4">
+            <h3 className="text-lg font-bold">Add Position</h3>
+            <form>
+              <div className="grid grid-cols-4 gap-4">
+                <div className="relative z-0 w-full mb-5 col-start-1">
+                  <label
+                    htmlFor="position-cd"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Code
+                  </label>
+                  <input
+                    id="position_cd"
+                    name="position_cd"
+                    className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Code"
+                    required
+                  />
                 </div>
-                <div className="relative z-0 w-full mb-5">
-                  <label htmlFor="position_desc_nep" className="block"></label>
+                <div className="relative z-0 w-full mb-5 col-start-2 col-span-4">
+                  <label
+                    htmlFor="position-desc"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Description
+                  </label>
+                  <input
+                    id="position_desc"
+                    name="position_desc"
+                    className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Code"
+                    required
+                  />
                 </div>
-              </form>
-            </div>
+              </div>
+              <div className="relative z-0 w-full mb-5">
+                <label htmlFor="position_desc_nep" className="block"></label>
+              </div>
+            </form>
           </div>
-          {/* </div> */}
-        </>
-      )}
-    </div>
+        </div>
+        {/* </div> */}
+        {/* </>
+      )} */}
+      </div>
+    </>
   );
 };
 
