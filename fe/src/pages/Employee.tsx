@@ -4,6 +4,8 @@ import Loader from "../components/Loader";
 import { employeeTitle } from "../constants";
 import { dateConversion } from "../utils/dateConversion";
 import { Link } from "react-router-dom";
+import { generatePDF } from "../utils/matrixPdf";
+import { Instance } from "../utils/Instance";
 
 type TEmployee = {
   employee_cd: string;
@@ -19,6 +21,8 @@ type TEmployee = {
 
 const Employee = () => {
   const [page, setPage] = useState<number>(1);
+  // const [payrollData, setPayrollData] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const limit = 20;
   const {
     isPending,
@@ -33,6 +37,20 @@ const Employee = () => {
   useEffect(() => {
     refetch(); // Call refetch whenever page changes
   }, [page, refetch]);
+
+  const handleButtonClick = async () => {
+    try {
+      setIsLoading(true);
+      const response = await Instance.get("/v1/payroll");
+      // console.log("Data:", response?.data?.data);
+      // setPayrollData(response?.data?.data);
+      setIsLoading(false);
+      generatePDF(response?.data?.data); // Call generatePDF after setting the data
+      console.log("Data fetched successfully:", response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handlePrev = () => {
     if (page > 1) {
@@ -127,11 +145,22 @@ const Employee = () => {
               </div>
               <div className="flex gap-4">
                 <button
-                  // onClick={() => setIsModalOpen(true)}
-                  className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
+                  onClick={handleButtonClick}
+                  disabled={isLoading}
+                  className={`bg-green-500 text-white w-24 py-1 rounded-lg font-semibold ${
+                    isLoading ? "opacity-50" : ""
+                  }`}
                   type="button"
                 >
-                  Add
+                  {isLoading ? (
+                    <>
+                      <div className="flex items-center justify-center gap-2">
+                        <Loader color="text-white" height="h-4" width="w-4" />
+                      </div>
+                    </>
+                  ) : (
+                    "Export"
+                  )}
                 </button>
               </div>
             </div>
@@ -167,9 +196,7 @@ const Employee = () => {
                           scope="row"
                           className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                         >
-                          <Link to={`/employee/profile/${item.employee_cd}`}>
-                            {item.employee_cd}
-                          </Link>
+                          {item.employee_cd}
                         </th>
                         <td className="text-sm px-6 py-4">
                           {item.first_name} {item.middle_name} {item.sur_name}
@@ -190,7 +217,11 @@ const Employee = () => {
                               // onClick={() => handleEdit(item.allowance_CD)}
                               className="font-medium text-blue-600 cursor-pointer hover:underline"
                             >
-                              Edit
+                              <Link
+                                to={`/employee/profile/${item.employee_cd}`}
+                              >
+                                View
+                              </Link>
                             </p>
                             <p
                               // onClick={() => handleDelete(item.allowance_CD)}

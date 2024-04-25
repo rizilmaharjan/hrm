@@ -120,7 +120,7 @@ export default function Sidebar() {
             </li> */}
 
             <li
-              className="flex items-center p-2 rounded-lg cursor-pointer dark:text-white hover:bg-gray-700 group"
+              className="flex items-center p-2 rounded-lg cursor-pointer text-white hover:bg-gray-700 group"
               onClick={handleLogout}
             >
               <LogoutIcon className="h-5 w-5" />

@@ -73,15 +73,15 @@ export const privateRoutes: RouteConfig[] = [
     element: <UserProfile />,
     children: [
       {
-        path: "", // Nested under /user/profile/personal-info
+        path: "", // Relative path
         element: <PersonalInfoSection />,
       },
       {
-        path: "account-info",
+        path: "account-info/:id", // Relative path
         element: <AccountInfoSection />,
       },
       {
-        path: "payroll-info",
+        path: "payroll-info/:id", // Relative path
         element: <PayrollInfoSection />,
       },
     ],

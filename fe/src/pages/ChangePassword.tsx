@@ -1,10 +1,10 @@
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../components/ui/Button";
 import { TChangePassword } from "../interfaces/types/changePassword.types";
 import { changePasswordSchema } from "../validations/changePassword.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Instance } from "../utils/Instance";
-import toast from "react-hot-toast";
 
 const ChangePassword = () => {
   const {
@@ -23,7 +23,7 @@ const ChangePassword = () => {
       toast.success(res.data.message);
       reset();
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
   return (

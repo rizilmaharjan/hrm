@@ -1,10 +1,13 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 const ProfileMenu = () => {
+  // const { id } = useParams<{ id: string }>();
+
   return (
     <>
       <div className="w-full bg-gray-100 rounded-md mb-2 md:mb-4 lg:mb-6">
-        <ul className="flex gap-8 p-4">
+        <ul className="flex gap-8 p-2">
           <li>
             <NavLink
               className={({ isActive }) =>
@@ -41,7 +44,7 @@ const ProfileMenu = () => {
               Payroll
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <Link to="/">Family/Nominee</Link>
           </li>
           <li>
@@ -49,7 +52,7 @@ const ProfileMenu = () => {
           </li>
           <li>
             <Link to="/">Signature</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </>

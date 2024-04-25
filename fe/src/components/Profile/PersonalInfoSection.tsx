@@ -43,7 +43,7 @@ const PersonalInfoSection = () => {
   } else {
     return (
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-7 gap-6 mb-6 w-full">
+        <div className="grid lg:grid-cols-7 gap-6 mb-6 w-full grid-cols-1">
           <div>
             <label
               htmlFor="personal_id"
