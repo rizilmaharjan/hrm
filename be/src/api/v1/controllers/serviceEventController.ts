@@ -8,13 +8,19 @@ import {
 import { catchAsync } from "../helpers/catchAsync";
 import { appError } from "../helpers/appError";
 
-export const postService = catchAsync(async (req: Request, res: Response) => {
-  const { username } = res.locals.user;
-  const body = { ...req.body, entered_By: username };
-  console.log("service event values", body);
-  const { status, message, data } = await createService(body);
-  return res.status(status).json({ message, data });
-});
+export const postService = catchAsync(
+  async (req: any, res: any, next: NextFunction) => {
+    const { username } = res.locals.user;
+    const body = { ...req.body, entered_By: username };
+    console.log("service event values", body);
+    const { status, message, data } = await createService(body);
+    if (status === 400) {
+      next(new appError(status, message));
+      return;
+    }
+    return res.status(status).json({ message, data });
+  }
+);
 export const getService = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { status, message, serviceEvents } = await getAllServiceEvents();

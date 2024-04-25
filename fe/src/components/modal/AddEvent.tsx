@@ -4,12 +4,19 @@ import { RefObject, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 
-import { useCustomContext } from "../../context/DataContext";
+// import { useCustomContext } from "../../context/DataContext";
 import { Instance } from "../../utils/Instance";
 import { TServiceEvent } from "../../interfaces/types/serviceEvent.types";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import { serviceEvent } from "../../validations/serviceEvent.schema";
+import {
+  setServiceToEdit,
+  setIsEdit,
+  setEditID,
+} from "../../redux/edit/editSlice";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import Loader from "../Loader";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,14 +28,14 @@ export default function AddEvent({
   setServiceEvents,
   isModalOpen,
 }: TProps) {
-  const {
-    serviceToEdit,
-    isEdit,
-    editID,
-    setServiceToEdit,
-    setEditID,
-    setIsEdit,
-  } = useCustomContext();
+  // const {
+  //   serviceToEdit,
+  //   isEdit,
+  //   editID,
+  //   setServiceToEdit,
+  //   setEditID,
+  //   setIsEdit,
+  // } = useCustomContext();
   const {
     register,
     handleSubmit,
@@ -39,25 +46,41 @@ export default function AddEvent({
     resolver: zodResolver(serviceEvent),
   });
 
+  const dispatch = useAppDispatch();
+
+  const isEdit = useAppSelector((state) => state.edit.isEdit);
+  const serviceToEdit = useAppSelector((state) => state.edit.serviceToEdit);
+  const editID = useAppSelector((state) => state.edit.editID);
+
   const [disabledVal, setDisabledValue] = useState(false);
   const [salaryAdjustVal, setSalaryAdjustVal] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     let handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            SERVICE_EVENT_CD: "",
-            SERVICE_EVENT_DESC: "",
-            SERVICE_EVENT_DESC_NEP: "",
-            SERVICE_EVENT_TYPE: "N",
-            SALARY_ADJUST: "N",
-            DISABLED: "N",
-          };
-        });
+
+        if (isEdit) {
+          dispatch(setIsEdit(false));
+          dispatch(
+            setServiceToEdit((prev: any) => {
+              return {
+                ...prev,
+                SERVICE_EVENT_CD: "",
+                SERVICE_EVENT_DESC: "",
+                SERVICE_EVENT_DESC_NEP: "",
+                SERVICE_EVENT_TYPE: "N",
+                SALARY_ADJUST: false,
+                DISABLED: false,
+              };
+            })
+          );
+          dispatch(setEditID(""));
+        }
 
         console.log("i am inside the if block");
       }
@@ -105,6 +128,7 @@ export default function AddEvent({
 
     console.log("datas after changed", serviceEventData);
     try {
+      setIsLoading(true);
       if (!isEdit) {
         const res = await Instance.post("/v1/service-event", serviceEventData);
         console.log("addeventresponse", res.data);
@@ -131,26 +155,32 @@ export default function AddEvent({
           });
         });
         toast.success(res.data.message);
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            SERVICE_EVENT_CD: "",
-            SERVICE_EVENT_DESC: "",
-            SERVICE_EVENT_DESC_NEP: "",
-            SERVICE_EVENT_TYPE: "N",
-            SALARY_ADJUST: "N",
-            DISABLED: "N",
-          };
-        });
+
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            return {
+              ...prev,
+              SERVICE_EVENT_CD: "",
+              SERVICE_EVENT_DESC: "",
+              SERVICE_EVENT_DESC_NEP: "",
+              SERVICE_EVENT_TYPE: "N",
+              SALARY_ADJUST: false,
+              DISABLED: false,
+            };
+          })
+        );
+        dispatch(setIsEdit(false));
+        dispatch(setEditID(""));
       }
       reset();
-      setEditID("");
       setDisabledValue(false);
       setSalaryAdjustVal(false);
       setIsModalOpen(false);
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.response.data.message);
       console.log("error", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -162,18 +192,24 @@ export default function AddEvent({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIsEdit(false);
-                  setServiceToEdit((prev: any) => {
-                    return {
-                      ...prev,
-                      SERVICE_EVENT_CD: "",
-                      SERVICE_EVENT_DESC: "",
-                      SERVICE_EVENT_DESC_NEP: "",
-                      SERVICE_EVENT_TYPE: "N",
-                      SALARY_ADJUST: "N",
-                      DISABLED: "N",
-                    };
-                  });
+
+                  if (isEdit) {
+                    dispatch(setIsEdit(false));
+                    dispatch(
+                      setServiceToEdit((prev: any) => {
+                        return {
+                          ...prev,
+                          SERVICE_EVENT_CD: "",
+                          SERVICE_EVENT_DESC: "",
+                          SERVICE_EVENT_DESC_NEP: "",
+                          SERVICE_EVENT_TYPE: "N",
+                          SALARY_ADJUST: false,
+                          DISABLED: false,
+                        };
+                      })
+                    );
+                    dispatch(setEditID(""));
+                  }
                 }}
                 className="cursor-pointer"
               />
@@ -191,7 +227,10 @@ export default function AddEvent({
                 register={register}
                 errors={errors}
                 type="number"
-                className="block p-2.5 w-full text-sm text-black outline-none rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                isEdit={isEdit}
+                className={`block p-2.5 w-full ${
+                  isEdit ? "opacity-50" : ""
+                } text-sm text-black rounded-lg border uppercase border-gray-300 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
             <div className="relative z-0 w-full mb-5 group">
@@ -234,7 +273,7 @@ export default function AddEvent({
                 errors={errors}
                 checked={disabledVal}
                 onChange={(e) => {
-                  setValue("DISABLED", e.target.checked ? "yes" : "no");
+                  setValue("DISABLED", e.target.checked);
                   setDisabledValue(!disabledVal);
                 }}
                 className="w-4 h-4 text-blue-600 outline-none bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -274,7 +313,7 @@ export default function AddEvent({
                 type="checkbox"
                 checked={salaryAdjustVal}
                 onChange={(e) => {
-                  setValue("SALARY_ADJUST", e.target.checked ? "yes" : "no");
+                  setValue("SALARY_ADJUST", e.target.checked);
                   setSalaryAdjustVal(!salaryAdjustVal);
                 }}
                 className="w-4 h-4 text-blue-600 outline-none bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -289,13 +328,29 @@ export default function AddEvent({
 
             <Button
               type="submit"
-              className={`text-white ${
-                isEdit ? "bg-green-500" : "bg-blue-700"
-              }  ${
-                isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
-              }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+              disabled={isLoading}
+              className={`
+    text-white
+    ${
+      isEdit
+        ? "bg-green-500 hover:bg-green-600"
+        : "bg-blue-700 hover:bg-blue-800"
+    }
+    ${isLoading ? "opacity-70" : ""}
+    focus:ring-4 focus:outline-none focus:ring-blue-300
+    font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
+  `}
             >
-              {isEdit ? "Edit" : "Submit"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader color="text-white" height="h-4" width="w-4" />
+                  {isEdit ? "Editing..." : "Submitting"}
+                </div>
+              ) : isEdit ? (
+                "Edit"
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </div>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 import { Instance } from "../utils/Instance";
 import AddEvent from "../components/modal/AddEvent";
-import { useCustomContext } from "../context/DataContext";
-import { useLocation } from "react-router-dom";
+// import { useCustomContext } from "../context/DataContext";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import { mapServiceEventType } from "../utils/serviceEventType";
@@ -11,16 +12,24 @@ import { serviceEventTitle } from "../constants";
 import { FileExport } from "../assets/svg";
 import "jspdf-autotable";
 import jsPDF from "jspdf";
+import { useAppDispatch } from "../redux/hooks";
+import {
+  setServiceToEdit,
+  setEditID,
+  setIsEdit,
+} from "../redux/edit/editSlice";
 
 export default function ServiceEvent() {
   const [serviceEvents, setServiceEvents] = useState<TServiceEvent[]>([]);
-  const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
+  // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
+
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const getServiceEvents = async () => {
       setIsLoading(true);
@@ -63,10 +72,13 @@ export default function ServiceEvent() {
       const updateService = await serviceEvents.find(
         (item) => item.SERVICE_EVENT_CD === id
       );
-      setEditID(id);
-      setIsEdit(true);
+
+      dispatch(setEditID(id));
+
+      // setEditID(id);
+      dispatch(setIsEdit(true));
       if (updateService) {
-        setServiceToEdit(updateService);
+        dispatch(setServiceToEdit(updateService));
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
@@ -76,9 +88,9 @@ export default function ServiceEvent() {
   };
 
   useEffect(() => {
-    setIsEdit(false);
-    setServiceToEdit(null);
-    setEditID("");
+    dispatch(setIsEdit(false));
+    dispatch(setServiceToEdit(null));
+    dispatch(setEditID(""));
   }, [location.pathname, setEditID, setIsEdit, setServiceToEdit]);
 
   const exportToPDF = () => {
@@ -133,140 +145,145 @@ export default function ServiceEvent() {
   if (error) {
     return <div>{error}</div>;
   }
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader color="text-blue-800" width="w-6" height="h-6" />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
-        {isLoading ? (
-          <div className="min-h-screen flex items-center justify-center w-full">
+        {/* {isLoading ? (
+          <div className="h-screen flex items-center justify-center w-full">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
           </div>
-        ) : (
-          <>
-            {isDeleteModalOpen && (
-              <Delete
-                setIsDeleteModalOpen={setIsDeleteModalOpen}
-                onDeleteSuccess={onDeleteSuccess}
-                deleteUrl={`/v1/service/${selectDeleteId}`}
-              />
-            )}
-            {isModalOpen && (
-              <AddEvent
-                setServiceEvents={setServiceEvents}
-                setIsModalOpen={setIsModalOpen}
-                isModalOpen={isModalOpen}
-              />
-            )}
-            <div className="flex justify-between p-3">
-              <h1 className="font-semibold text-xl">Service Event</h1>
-              <div className="flex gap-4">
-                <button
-                  onClick={exportToPDF}
-                  className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
-                  type="button"
-                >
-                  <FileExport />
-                </button>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
-                  type="button"
-                >
-                  Add Event
-                </button>
-              </div>
-            </div>
-            <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
-                  <tr>
-                    {serviceEventTitle.map((item) => (
-                      <th
-                        key={item.id}
-                        scope="col"
-                        className={`px-6 py-3 ${item.width}`}
-                      >
-                        {item.title}
-                      </th>
-                    ))}
-                    <th scope="col" className="px-6 py-3 w-2/12">
-                      Actions
+        ) : ( */}
+        {/* <> */}
+        {isDeleteModalOpen && (
+          <Delete
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+            onDeleteSuccess={onDeleteSuccess}
+            deleteUrl={`/v1/service/${selectDeleteId}`}
+          />
+        )}
+        {isModalOpen && (
+          <AddEvent
+            setServiceEvents={setServiceEvents}
+            setIsModalOpen={setIsModalOpen}
+            isModalOpen={isModalOpen}
+          />
+        )}
+        <div className="flex justify-between p-3">
+          <h1 className="font-semibold text-xl">Service Event</h1>
+          <div className="flex gap-4">
+            <button
+              onClick={exportToPDF}
+              className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
+              type="button"
+            >
+              <FileExport />
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
+              type="button"
+            >
+              Add Event
+            </button>
+          </div>
+        </div>
+        <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+              <tr>
+                {serviceEventTitle.map((item) => (
+                  <th
+                    key={item.id}
+                    scope="col"
+                    className={`px-6 py-3 ${item.width}`}
+                  >
+                    {item.title}
+                  </th>
+                ))}
+                <th scope="col" className="px-6 py-3 w-2/12">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {serviceEvents &&
+                serviceEvents.length > 0 &&
+                serviceEvents.map((item) => (
+                  <tr
+                    key={item.SERVICE_EVENT_CD}
+                    className="odd:bg-white even:bg-gray-50  border-b "
+                  >
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    >
+                      {item.SERVICE_EVENT_CD}
                     </th>
-                  </tr>
-                </thead>
+                    <td className="px-6 py-4 capitalize">
+                      {item.SERVICE_EVENT_DESC.toLowerCase()}
+                    </td>
+                    <td
+                      className={`px-6 py-4 ${
+                        item.SERVICE_EVENT_DESC_NEP
+                          ? " font-[Preeti]"
+                          : "font-sans"
+                      } text-lg`}
+                    >
+                      {item.SERVICE_EVENT_DESC_NEP
+                        ? item.SERVICE_EVENT_DESC_NEP
+                        : "_"}
+                    </td>
+                    <td className="px-6 py-4">
+                      {mapServiceEventType(item.SERVICE_EVENT_TYPE) || "_"}
+                    </td>
+                    <td className="px-6 py-4">{item.SALARY_ADJUST || "_"}</td>
 
-                <tbody>
-                  {serviceEvents &&
-                    serviceEvents.length > 0 &&
-                    serviceEvents.map((item) => (
-                      <tr
-                        key={item.SERVICE_EVENT_CD}
-                        className="odd:bg-white even:bg-gray-50  border-b "
-                      >
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          {item.SERVICE_EVENT_CD}
-                        </th>
-                        <td className="px-6 py-4">{item.SERVICE_EVENT_DESC}</td>
-                        <td
-                          className={`px-6 py-4 ${
-                            item.SERVICE_EVENT_DESC_NEP
-                              ? " font-[Preeti]"
-                              : "font-sans"
-                          } text-lg`}
-                        >
-                          {item.SERVICE_EVENT_DESC_NEP
-                            ? item.SERVICE_EVENT_DESC_NEP
-                            : "_"}
-                        </td>
-                        <td className="px-6 py-4">
-                          {mapServiceEventType(item.SERVICE_EVENT_TYPE) || "_"}
-                        </td>
-                        <td className="px-6 py-4">
-                          {item.SALARY_ADJUST || "_"}
-                        </td>
-
-                        <td className="px-6 py-4">{item.DISABLED}</td>
-                        {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
+                    <td className="px-6 py-4">{item.DISABLED}</td>
+                    {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
                     <td className="px-6 py-4">
                       {dateConversion(item.ENTERED_DT)}
                     </td> */}
-                        {/* <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       {item.IS_AUTO_SALARY_ADJUST || "_"}
                     </td> */}
-                        {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
+                    {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
                     <td className="px-6 py-4">
                       {(item.LAST_UPDATED_ON &&
                         dateConversion(item.LAST_UPDATED_ON)) ||
                         "_"}
                     </td> */}
-                        <td className="px-6 py-4">
-                          <span className="flex items-center gap-4">
-                            <p
-                              onClick={() => handleEdit(item.SERVICE_EVENT_CD)}
-                              className="font-medium text-blue-600 cursor-pointer hover:underline"
-                            >
-                              Edit
-                            </p>
-                            <p
-                              onClick={() =>
-                                handleDelete(item.SERVICE_EVENT_CD)
-                              }
-                              className="font-medium cursor-pointer text-red-600 hover:underline"
-                            >
-                              Delete
-                            </p>
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
+                    <td className="px-6 py-4">
+                      <span className="flex items-center gap-4">
+                        <p
+                          onClick={() => handleEdit(item.SERVICE_EVENT_CD)}
+                          className="font-medium text-blue-600 cursor-pointer hover:underline"
+                        >
+                          Edit
+                        </p>
+                        <p
+                          onClick={() => handleDelete(item.SERVICE_EVENT_CD)}
+                          className="font-medium cursor-pointer text-red-600 hover:underline"
+                        >
+                          Delete
+                        </p>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        {/* </> */}
+        {/* )} */}
       </div>
     </>
   );

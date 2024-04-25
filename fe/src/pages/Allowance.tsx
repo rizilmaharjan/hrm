@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
+
+import { useAppDispatch } from "../redux/hooks";
+import {
+  setServiceToEdit,
+  setEditID,
+  setIsEdit,
+} from "../redux/edit/editSlice";
 import { Instance } from "../utils/Instance";
 // import { useNavigate } from "react-router-dom";
 // import AddEvent from "../modal/AddEvent";
-import { useCustomContext } from "../context/DataContext";
+// import { useCustomContext } from "../context/DataContext";
 // import { useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
@@ -16,7 +23,7 @@ import jsPDF from "jspdf";
 
 export default function Allowance() {
   const [allowanceDatas, setAllowanceDatas] = useState<TAllowance[]>([]);
-  const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
+  // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   // const location = useLocation();
@@ -24,6 +31,8 @@ export default function Allowance() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
   // const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   // to fetch the allowance datas
   useEffect(() => {
@@ -60,12 +69,12 @@ export default function Allowance() {
       const updateAllowance = await allowanceDatas.find(
         (item) => item.allowance_CD === id
       );
-      setEditID(id);
-      setIsEdit(true);
+      dispatch(setEditID(id));
+      dispatch(setIsEdit(true));
       console.log("updateAllowance clicked", updateAllowance);
 
       if (updateAllowance) {
-        setServiceToEdit(updateAllowance);
+        dispatch(setServiceToEdit(updateAllowance));
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
@@ -141,159 +150,159 @@ export default function Allowance() {
   //     return <div>{error}</div>;
   //   }
 
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader color="text-blue-800" width="w-6" height="h-6" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="min-h-screen flex items-center justify-center w-full">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
           </div>
-        ) : (
-          <>
-            {isDeleteModalOpen && (
-              <Delete
-                setIsDeleteModalOpen={setIsDeleteModalOpen}
-                // selectDeleteId={selectDeleteId}
-                onDeleteSuccess={onDeleteSuccess}
-                deleteUrl={`/v1/allowance/${selectDeleteId}`}
-              />
-            )}
-            {isModalOpen && (
-              <AddAllowance
-                setAllowanceDatas={setAllowanceDatas}
-                setIsModalOpen={setIsModalOpen}
-                isModalOpen={isModalOpen}
-              />
-            )}
-            <div className="flex justify-between p-3">
-              <h1 className="font-semibold text-xl">Allowance</h1>
-              <div className="flex gap-4">
-                <button
-                  onClick={exportToPDF}
-                  className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
-                  type="button"
-                >
-                  <FileExport />
-                </button>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
-                  type="button"
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-            {/* <div className="h-full w-full bg-red-700"> */}
-            <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
-                  <tr>
-                    {allowanceTitle.map((item) => (
-                      <th
-                        key={item.id}
-                        scope="col"
-                        className={`py-3 text-xs ${
-                          item.id === 2 ? "w-40" : ""
-                        } ${item.id === 9 ? "w-40" : ""} ${
-                          item.id === 8 ? "w-40" : ""
-                        } text-center`}
-                      >
-                        {item.title}
-                      </th>
-                    ))}
-
-                    <th scope="col" className="px-6 py-3">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {allowanceDatas &&
-                    allowanceDatas.length > 0 &&
-                    allowanceDatas.map((item) => (
-                      <tr
-                        key={item.allowance_CD}
-                        className="odd:bg-white even:bg-gray-50  border-b "
-                      >
-                        <th
-                          scope="row"
-                          className=" py-4 font-medium text-center text-gray-900 whitespace-nowrap"
-                        >
-                          {item.allowance_CD}
-                        </th>
-                        <td className=" py-4 text-center">
-                          {item.allowance_description}
-                        </td>
-                        <td className=" py-4 font-[Preeti] text-center text-lg">
-                          {item.allowance_nepali_desc
-                            ? item.allowance_nepali_desc
-                            : "_"}
-                        </td>
-                        <td className=" py-4 text-center">
-                          {item.allowance_taxable}
-                        </td>
-                        {/* <td className=" py-4">{item.allowance_facility}</td> */}
-                        <td className=" py-4 text-center">
-                          {item.allowance_facility_percent
-                            ? item.allowance_facility_percent
-                            : "_"}
-                        </td>
-                        <td className=" py-4 text-center">
-                          {item.allowance_cit_flag
-                            ? item.allowance_cit_flag
-                            : "_"}
-                        </td>
-                        <td className=" py-4 text-center">
-                          {item.allowance_type}
-                        </td>
-                        <td className=" py-4 text-center">
-                          {item.salary_allowance_flag}
-                        </td>
-                        <td className="py-4 px-4">
-                          <span className="flex  items-center gap-6">
-                            <span>
-                              {item.allowance_acc_cd
-                                ? item.allowance_acc_cd
-                                : "-"}
-                            </span>
-                            <span className="lowercase">
-                              {item.allowance_acc_desc
-                                ? item.allowance_acc_desc
-                                : "-"}
-                            </span>
-                          </span>
-                        </td>
-                        {/* <td className=" py-4">
-                        </td> */}
-                        <td className=" py-4 text-center">
-                          {item.allowance_disabled}
-                        </td>
-                        <td className=" py-4">
-                          <span className="flex items-center gap-4">
-                            <p
-                              onClick={() => handleEdit(item.allowance_CD)}
-                              className="font-medium text-blue-600 cursor-pointer hover:underline"
-                            >
-                              Edit
-                            </p>
-                            <p
-                              onClick={() => handleDelete(item.allowance_CD)}
-                              className="font-medium cursor-pointer text-red-600 hover:underline"
-                            >
-                              Delete
-                            </p>
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-            {/* </div> */}
-          </>
+        ) : ( */}
+        {/* <> */}
+        {isDeleteModalOpen && (
+          <Delete
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+            // selectDeleteId={selectDeleteId}
+            onDeleteSuccess={onDeleteSuccess}
+            deleteUrl={`/v1/allowance/${selectDeleteId}`}
+          />
         )}
+        {isModalOpen && (
+          <AddAllowance
+            setAllowanceDatas={setAllowanceDatas}
+            setIsModalOpen={setIsModalOpen}
+            isModalOpen={isModalOpen}
+          />
+        )}
+        <div className="flex justify-between p-3">
+          <h1 className="font-semibold text-xl">Allowance</h1>
+          <div className="flex gap-4">
+            <button
+              onClick={exportToPDF}
+              className="bg-green-500 text-white py-1 px-2 rounded-lg font-semibold"
+              type="button"
+            >
+              <FileExport />
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-green-500 text-white w-24 py-1 rounded-lg font-semibold"
+              type="button"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+        {/* <div className="h-full w-full bg-red-700"> */}
+        <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+              <tr>
+                {allowanceTitle.map((item) => (
+                  <th
+                    key={item.id}
+                    scope="col"
+                    className={`px-6 py-3 ${item.width} ${
+                      item.id === 9 ? "text-center" : ""
+                    }`}
+                  >
+                    {item.title}
+                  </th>
+                ))}
+
+                <th scope="col" className="px-6 py-3">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {allowanceDatas &&
+                allowanceDatas.length > 0 &&
+                allowanceDatas.map((item) => (
+                  <tr
+                    key={item.allowance_CD}
+                    className="odd:bg-white even:bg-gray-50  border-b "
+                  >
+                    <th
+                      scope="row"
+                      className=" py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+                    >
+                      {item.allowance_CD}
+                    </th>
+                    <td className=" py-4 px-6 capitalize">
+                      {item.allowance_description.toLowerCase()}
+                    </td>
+                    <td
+                      className={`px-6 py-4 ${
+                        item.allowance_nepali_desc
+                          ? " font-[Preeti]"
+                          : "font-sans"
+                      } text-lg`}
+                    >
+                      {item.allowance_nepali_desc
+                        ? item.allowance_nepali_desc
+                        : "_"}
+                    </td>
+                    <td className=" py-4 px-6">{item.allowance_taxable}</td>
+                    {/* <td className=" py-4 px-6">{item.allowance_facility}</td> */}
+                    <td className=" py-4 px-6">
+                      {item.allowance_facility_percent
+                        ? item.allowance_facility_percent
+                        : "_"}
+                    </td>
+                    <td className=" py-4 px-6">
+                      {item.allowance_cit_flag ? item.allowance_cit_flag : "_"}
+                    </td>
+                    <td className=" py-4 px-6">{item.allowance_type}</td>
+                    <td className=" py-4 px-6">{item.salary_allowance_flag}</td>
+                    <td className="py-4 px-6">
+                      <span className="flex  items-center gap-6">
+                        <span>
+                          {item.allowance_acc_cd ? item.allowance_acc_cd : "-"}
+                        </span>
+                        <span className="lowercase">
+                          {item.allowance_acc_desc
+                            ? item.allowance_acc_desc
+                            : "-"}
+                        </span>
+                      </span>
+                    </td>
+                    {/* <td className=" py-4 px-6">
+                        </td> */}
+                    <td className=" py-4 px-6">{item.allowance_disabled}</td>
+                    <td className=" py-4 px-6">
+                      <span className="flex items-center gap-4">
+                        <p
+                          onClick={() => handleEdit(item.allowance_CD)}
+                          className="font-medium text-blue-600 cursor-pointer hover:underline"
+                        >
+                          Edit
+                        </p>
+                        <p
+                          onClick={() => handleDelete(item.allowance_CD)}
+                          className="font-medium cursor-pointer text-red-600 hover:underline"
+                        >
+                          Delete
+                        </p>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        {/* </div> */}
+        {/* </> */}
+        {/* )} */}
       </div>
     </>
   );

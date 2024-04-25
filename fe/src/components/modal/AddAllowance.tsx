@@ -1,16 +1,23 @@
-import { useCustomContext } from "../../context/DataContext";
+// import { useCustomContext } from "../../context/DataContext";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setServiceToEdit,
+  setIsEdit,
+  setEditID,
+} from "../../redux/edit/editSlice";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { Instance } from "../../utils/Instance";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../ui/Button";
 import { TAllowance } from "../../interfaces/types/allowance.types";
-import AccountList from "./AccountList";
+// import AccountList from "./AccountList";
 import { allowanceSchema } from "../../validations/allowance.schema";
 
 import Input from "../ui/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Loader from "../Loader";
 
 type TProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,14 +29,14 @@ export default function AddAllowance({
   isModalOpen,
   setAllowanceDatas,
 }: TProps) {
-  const {
-    serviceToEdit,
-    isEdit,
-    editID,
-    setServiceToEdit,
-    setEditID,
-    setIsEdit,
-  } = useCustomContext();
+  // const {
+  //   serviceToEdit,
+  //   isEdit,
+  //   editID,
+  //   setServiceToEdit,
+  //   setEditID,
+  //   setIsEdit,
+  // } = useCustomContext();
   const {
     register,
     handleSubmit,
@@ -39,9 +46,18 @@ export default function AddAllowance({
   } = useForm<TAllowance>({
     resolver: zodResolver(allowanceSchema),
   });
+
+  const dispatch = useAppDispatch();
+
+  const isEdit = useAppSelector((state) => state.edit.isEdit);
+  const serviceToEdit = useAppSelector((state) => state.edit.serviceToEdit);
+  const editID = useAppSelector((state) => state.edit.editID);
+
   const [citVal, setCitVal] = useState(false);
   const [salaryAllowanceFlag, setSalaryALlowanceFlag] = useState(false);
   const [disabledVal, setDisabledVal] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // const [isOpen, setIsOpen] = useState(false);
   // const [selectedAccount, setSelectedAccount] = useState<string>("");
@@ -51,22 +67,29 @@ export default function AddAllowance({
     const handler = (e: any) => {
       if (!modalRef.current?.contains(e.target)) {
         setIsModalOpen(false);
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            allowance_CD: "",
-            allowance_description: "",
-            allowance_nepali_desc: "",
-            allowance_taxable: "N",
-            allowance_facility_percent: "",
-            allowance_facility: "",
-            allowance_cit_flag: "N",
-            allowance_type: "",
-            salary_allowance_flag: "N",
-            allowance_acc_cd: "",
-            allowance_disabled: "N",
-          };
-        });
+
+        if (isEdit) {
+          dispatch(setIsEdit(false));
+          dispatch(
+            setServiceToEdit((prev: any) => {
+              return {
+                ...prev,
+                allowance_CD: "",
+                allowance_description: "",
+                allowance_nepali_desc: "",
+                allowance_taxable: "N",
+                allowance_facility_percent: "",
+                allowance_facility: "",
+                allowance_cit_flag: false,
+                allowance_type: "",
+                salary_allowance_flag: false,
+                allowance_acc_cd: "",
+                allowance_disabled: false,
+              };
+            })
+          );
+          dispatch(setEditID(""));
+        }
         console.log("i am inside the if block");
       }
     };
@@ -74,7 +97,7 @@ export default function AddAllowance({
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  }, [setIsModalOpen, setServiceToEdit]);
+  }, [isModalOpen]);
 
   //   const checkboxValue = localStorage.getItem("checkboxValue");
   //   if (checkboxValue === "true") {
@@ -224,6 +247,7 @@ export default function AddAllowance({
       salary_allowance_flag: data.salary_allowance_flag ? "Y" : "N",
     };
     try {
+      setIsLoading(true);
       if (!isEdit) {
         const res = await Instance.post("/v1/allowance", allowanceDatas);
         console.log("allowance datas response", res);
@@ -251,24 +275,26 @@ export default function AddAllowance({
           });
         });
         toast.success(res.data.message);
-        setIsEdit(false);
-        setEditID("");
-        setServiceToEdit((prev: any) => {
-          return {
-            ...prev,
-            allowance_CD: "",
-            allowance_description: "",
-            allowance_nepali_desc: "",
-            allowance_taxable: "N",
-            allowance_facility_percent: "",
-            allowance_facility: "",
-            allowance_cit_flag: "N",
-            allowance_type: "",
-            salary_allowance_flag: "N",
-            allowance_acc_cd: "",
-            allowance_disabled: "N",
-          };
-        });
+        dispatch(setIsEdit(false));
+        dispatch(setEditID(""));
+        dispatch(
+          setServiceToEdit((prev: any) => {
+            return {
+              ...prev,
+              allowance_CD: "",
+              allowance_description: "",
+              allowance_nepali_desc: "",
+              allowance_taxable: "N",
+              allowance_facility_percent: "",
+              allowance_facility: "",
+              allowance_cit_flag: false,
+              allowance_type: "",
+              salary_allowance_flag: false,
+              allowance_acc_cd: "",
+              allowance_disabled: false,
+            };
+          })
+        );
       }
       reset();
       setCitVal(false);
@@ -276,8 +302,10 @@ export default function AddAllowance({
       setDisabledVal(false);
       setIsModalOpen(false);
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.response.data.message);
       console.log("allowance errors", error);
+    } finally {
+      setIsLoading(false);
     }
     console.log(
       "these are the allowances datas after conversion",
@@ -295,23 +323,29 @@ export default function AddAllowance({
               <RxCross2
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIsEdit(false);
-                  setServiceToEdit((prev: any) => {
-                    return {
-                      ...prev,
-                      allowance_CD: "",
-                      allowance_description: "",
-                      allowance_nepali_desc: "",
-                      allowance_taxable: "N",
-                      allowance_facility_percent: "",
-                      allowance_facility: "",
-                      allowance_cit_flag: "N",
-                      allowance_type: "",
-                      salary_allowance_flag: "N",
-                      allowance_acc_cd: "",
-                      allowance_disabled: "N",
-                    };
-                  });
+
+                  if (isEdit) {
+                    dispatch(setIsEdit(false));
+                    dispatch(
+                      setServiceToEdit((prev: any) => {
+                        return {
+                          ...prev,
+                          allowance_CD: "",
+                          allowance_description: "",
+                          allowance_nepali_desc: "",
+                          allowance_taxable: "N",
+                          allowance_facility_percent: "",
+                          allowance_facility: "",
+                          allowance_cit_flag: false,
+                          allowance_type: "",
+                          salary_allowance_flag: false,
+                          allowance_acc_cd: "",
+                          allowance_disabled: false,
+                        };
+                      })
+                    );
+                    dispatch(setEditID(""));
+                  }
                 }}
                 className="cursor-pointer"
               />
@@ -330,6 +364,7 @@ export default function AddAllowance({
                   errors={errors}
                   type="text"
                   maxLength={3}
+                  isEdit={isEdit}
                   className={`block p-2.5 w-full ${
                     isEdit ? "opacity-50" : ""
                   } text-sm text-black rounded-lg border uppercase border-gray-300 focus:ring-blue-500 focus:border-blue-500`}
@@ -438,10 +473,7 @@ export default function AddAllowance({
                   type="checkbox"
                   checked={citVal}
                   onChange={(e) => {
-                    setValue(
-                      "allowance_cit_flag",
-                      e.target.checked ? "yes" : "no"
-                    );
+                    setValue("allowance_cit_flag", e.target.checked);
                     setCitVal(!citVal);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -461,10 +493,7 @@ export default function AddAllowance({
                   type="checkbox"
                   checked={salaryAllowanceFlag}
                   onChange={(e) => {
-                    setValue(
-                      "salary_allowance_flag",
-                      e.target.checked ? "yes" : "no"
-                    );
+                    setValue("salary_allowance_flag", e.target.checked);
                     setSalaryALlowanceFlag(!salaryAllowanceFlag);
                   }}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -518,10 +547,7 @@ export default function AddAllowance({
                 errors={errors}
                 checked={disabledVal}
                 onChange={(e) => {
-                  setValue(
-                    "allowance_disabled",
-                    e.target.checked ? "yes" : "no"
-                  );
+                  setValue("allowance_disabled", e.target.checked);
                   setDisabledVal(!disabledVal);
                 }}
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
@@ -628,13 +654,29 @@ export default function AddAllowance({
 
             <Button
               type="submit"
-              className={`text-white ${
-                isEdit ? "bg-green-500" : "bg-blue-700"
-              }  ${
-                isEdit ? "hover:bg-green-600" : "hover:bg-blue-800"
-              }  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+              disabled={isLoading}
+              className={`
+    text-white
+    ${
+      isEdit
+        ? "bg-green-500 hover:bg-green-600"
+        : "bg-blue-700 hover:bg-blue-800"
+    }
+    ${isLoading ? "opacity-70" : ""}
+    focus:ring-4 focus:outline-none focus:ring-blue-300
+    font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
+  `}
             >
-              {isEdit ? "Edit" : "Submit"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader color="text-white" height="h-4" width="w-4" />
+                  {isEdit ? "Editing..." : "Submitting"}
+                </div>
+              ) : isEdit ? (
+                "Edit"
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </div>
