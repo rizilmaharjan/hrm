@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Instance } from "../utils/Instance";
+// import { Instance } from "../utils/Instance";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import AddJobType from "../components/modal/AddJobType";
@@ -11,6 +11,7 @@ import { FileExport } from "../assets/svg";
 import { jobTypeTitle } from "../constants";
 // import { useCustomContext } from "../context/DataContext";
 import { useAppDispatch } from "../redux/hooks";
+import { useFetchData } from "../api";
 import {
   setServiceToEdit,
   setEditID,
@@ -20,31 +21,41 @@ import {
 export default function JobType() {
   const [jobType, setJobType] = useState<TJobType[]>([]);
   // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
   // const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
+  const {
+    isPending,
+    error: jobTypeError,
+    data: jobTypeData,
+  } = useFetchData("/v1/job-type");
 
   const dispatch = useAppDispatch();
 
-  //Get all Job type data
   useEffect(() => {
-    const getJobType = async () => {
-      setIsLoading(true);
-      try {
-        const res = await Instance.get("/v1/job-type");
-        setJobType(res.data.data);
-        setError("");
-      } catch (error: any) {
-        setError("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getJobType();
-  }, []);
+    setJobType(jobTypeData?.data);
+    // console.log("job type data", jobTypeData);
+  }, [jobTypeData]);
+
+  //Get all Job type data
+  // useEffect(() => {
+  //   const getJobType = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const res = await Instance.get("/v1/job-type");
+  //       setJobType(res.data.data);
+  //       setError("");
+  //     } catch (error: any) {
+  //       setError("Something went wrong");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getJobType();
+  // }, []);
 
   const handleDelete = async (id: string) => {
     setIsDeleteModalOpen(true);
@@ -133,10 +144,10 @@ export default function JobType() {
     }
   };
 
-  if (error) {
-    return <div>{error}</div>;
+  if (jobTypeError) {
+    return <div>{jobTypeError.message}</div>;
   }
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="h-full flex items-center justify-center">
         <Loader color="text-blue-800" width="w-6" height="h-6" />

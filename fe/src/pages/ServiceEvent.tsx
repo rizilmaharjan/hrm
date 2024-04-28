@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Instance } from "../utils/Instance";
+// import { Instance } from "../utils/Instance";
 import AddEvent from "../components/modal/AddEvent";
+import { useFetchData } from "../api";
 // import { useCustomContext } from "../context/DataContext";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
@@ -22,30 +23,40 @@ import {
 export default function ServiceEvent() {
   const [serviceEvents, setServiceEvents] = useState<TServiceEvent[]>([]);
   // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
 
-  const dispatch = useAppDispatch();
+  const {
+    isPending,
+    error: serviceEventError,
+    data: serviceEventData,
+  } = useFetchData("/v1/service-event");
+
   useEffect(() => {
-    const getServiceEvents = async () => {
-      setIsLoading(true);
-      try {
-        const res = await Instance.get("/v1/service-event");
-        setServiceEvents(res.data.serviceEvents);
-        setError("");
-        console.log("service-events", res);
-      } catch (error: any) {
-        setError("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getServiceEvents();
-  }, []);
+    setServiceEvents(serviceEventData?.serviceEvents);
+  }, [serviceEventData]);
+
+  const dispatch = useAppDispatch();
+  // useEffect(() => {
+  //   const getServiceEvents = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const res = await Instance.get("/v1/service-event");
+  //       setServiceEvents(res.data.serviceEvents);
+  //       setError("");
+  //       console.log("service-events", res);
+  //     } catch (error:serviceEventError: any) {
+  //       setError("Something went wrong");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getServiceEvents();
+  // }, []);
 
   const handleDelete = async (id: string) => {
     setIsDeleteModalOpen(true);
@@ -58,7 +69,7 @@ export default function ServiceEvent() {
     //     );
     //     return filteredService;
     //   });
-    // } catch (error) {}
+    // } catch (error:serviceEventError) {}
   };
 
   const onDeleteSuccess = () => {
@@ -82,7 +93,7 @@ export default function ServiceEvent() {
         // navigate("/service-event/create");
         setIsModalOpen(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
     }
   };
@@ -142,10 +153,10 @@ export default function ServiceEvent() {
     }
   };
 
-  if (error) {
-    return <div>{error}</div>;
+  if (serviceEventError) {
+    return <div>{serviceEventError.message}</div>;
   }
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="h-full flex items-center justify-center">
         <Loader color="text-blue-800" width="w-6" height="h-6" />
