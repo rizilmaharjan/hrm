@@ -15,8 +15,8 @@ export default function App() {
             <Route key={index} path={route.path} element={route.element} />
           ))}
           <Route element={<MainLayout />}>
-            {privateRoutes.map((route) => (
-              <Route path={route.path} element={route.element}>
+            {privateRoutes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element}>
                 {route.children &&
                   route.children.map((childRoute) => (
                     <Route

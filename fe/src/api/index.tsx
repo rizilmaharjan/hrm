@@ -2,11 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Instance } from "../utils/Instance";
 import { GenericFormData } from "axios";
 
-export const useFetchData = (
-  url: string,
-  page: number = 1,
-  limit: number = 20
-) => {
+export const useFetchData = (url: string, page = 1, limit = 20) => {
   const { isPending, error, data, refetch } = useQuery({
     queryKey: [url, page, limit],
     queryFn: () =>
