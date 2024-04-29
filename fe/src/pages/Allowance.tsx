@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { useAppDispatch } from "../redux/hooks";
+import { useFetchData } from "../api";
 import {
   setServiceToEdit,
   setEditID,
   setIsEdit,
 } from "../redux/edit/editSlice";
-import { Instance } from "../utils/Instance";
+// import { Instance } from "../utils/Instance";
 // import { useNavigate } from "react-router-dom";
 // import AddEvent from "../modal/AddEvent";
 // import { useCustomContext } from "../context/DataContext";
@@ -24,34 +25,45 @@ import jsPDF from "jspdf";
 export default function Allowance() {
   const [allowanceDatas, setAllowanceDatas] = useState<TAllowance[]>([]);
   // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
   // const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
   // const navigate = useNavigate();
 
+  const {
+    isPending,
+    error: allowanceError,
+    data: allowanceData,
+  } = useFetchData("/v1/allowance");
+
   const dispatch = useAppDispatch();
 
   // to fetch the allowance datas
+  // useEffect(() => {
+  //   const getAllowanceDatas = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const res = await Instance.get("/v1/allowance");
+  //       console.log("allowance response", res);
+  //       setAllowanceDatas(res.data.allowance);
+  //       setError("");
+  //       console.log("service-events", res);
+  //     } catch (error: any) {
+  //       setError("Something went wrong");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getAllowanceDatas();
+  // }, []);
+
   useEffect(() => {
-    const getAllowanceDatas = async () => {
-      setIsLoading(true);
-      try {
-        const res = await Instance.get("/v1/allowance");
-        console.log("allowance response", res);
-        setAllowanceDatas(res.data.allowance);
-        setError("");
-        console.log("service-events", res);
-      } catch (error: any) {
-        setError("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getAllowanceDatas();
-  }, []);
+    setAllowanceDatas(allowanceData?.allowance);
+    // console.log("allowance datas", allowanceData);
+  }, [allowanceData]);
 
   const handleDelete = async (id: string) => {
     setIsDeleteModalOpen(true);
@@ -150,12 +162,16 @@ export default function Allowance() {
   //     return <div>{error}</div>;
   //   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="h-full flex items-center justify-center">
         <Loader color="text-blue-800" width="w-6" height="h-6" />
       </div>
     );
+  }
+
+  if (allowanceError) {
+    return <div>{allowanceError.message}</div>;
   }
 
   return (
