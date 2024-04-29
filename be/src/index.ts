@@ -17,6 +17,7 @@ import relationRoutes from "./api/v1/routes/relationRoutes";
 import districtRoutes from "./api/v1/routes/districtRoutes";
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import payrollRoutes from "./api/v1/routes/payrollRoutes";
+import reportRoutes from "./api/v1/routes/reportRoutes";
 
 import { errorMiddleware } from "./api/v1/middlewares/error-handler";
 import { appError } from "./api/v1/helpers/appError";
@@ -47,6 +48,7 @@ app.use("/api", relationRoutes());
 app.use("/api", districtRoutes());
 app.use("/api", employeeRoutes());
 app.use("/api", payrollRoutes());
+app.use("/api", reportRoutes());
 
 // Handling unhandled routes
 app.all("*", (req, res, next) => {

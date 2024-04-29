@@ -3,7 +3,10 @@ import "jspdf-autotable";
 import { TPayroll } from "../interfaces/types/payroll.types";
 import { addFooter } from "../utils/pdfFooter";
 
-export const generatePDF = (payrollData: TPayroll[]) => {
+export const generatePDF = (
+  fiscal_yr: string | undefined,
+  payrollData: TPayroll[]
+) => {
   if (!payrollData) return;
 
   const uniqueEmployeePairs = [
@@ -39,14 +42,19 @@ export const generatePDF = (payrollData: TPayroll[]) => {
     chunks.push(chunk);
   }
 
-  const generateTableData = (descriptions: string[], empPairs: string[]) => {
+  const generateTableData = (
+    descriptions: string[],
+    empPairs: string[],
+    pageNum: number
+  ) => {
     const tableData = [];
     tableData.push(["SN", "Employee", ...descriptions]);
     empPairs.forEach((empPair, index) => {
       const empCode = empPair.split(" - ")[0];
       const empName = empPair.split(" - ")[1];
 
-      const rowData = [index + 1, empPair];
+      const serialNumber = pageNum * numRowsPerPage + index + 1;
+      const rowData = [serialNumber, empPair];
       descriptions.forEach((desc) => {
         const matchingEntry = payrollData.find(
           (item) =>
@@ -67,7 +75,7 @@ export const generatePDF = (payrollData: TPayroll[]) => {
     const pageEmployees = filterEmp.slice(startIndex, endIndex);
 
     chunks.forEach((chunk, index) => {
-      const tableData = generateTableData(chunk, pageEmployees);
+      const tableData = generateTableData(chunk, pageEmployees, pageNum);
       if (tableData.length > 1) {
         if (index > 0 || pageNum > 0) {
           doc.addPage();
@@ -75,14 +83,34 @@ export const generatePDF = (payrollData: TPayroll[]) => {
         (doc as any).autoTable({
           head: [tableData[0]],
           body: tableData.slice(1),
-          startY: 10,
-          margin: { top: 10 },
+          startY: 30,
+          margin: 10,
           theme: "grid",
           styles: {
             fontSize: 6,
           },
           // Remove columnStyles option
-          didDrawPage: (data: any) => {
+          didDrawPage: () => {
+            doc.setFontSize(12);
+            doc.text(
+              `B.P. Koirala Institute of Health Science`,
+              doc.internal.pageSize.width / 2,
+              10,
+              {
+                align: "center",
+              }
+            );
+            doc.text(`Ghopa, Dharan`, doc.internal.pageSize.width / 2, 15, {
+              align: "center",
+            });
+            doc.setFontSize(10);
+            doc.text("Payroll Report", 10, 28);
+            doc.text(
+              `Fiscal Year: ${fiscal_yr}`,
+              doc.internal.pageSize.width - 10,
+              28,
+              { align: "right" }
+            );
             addFooter(doc, pageNum + 1, numPages);
           },
         });

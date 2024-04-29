@@ -97,7 +97,7 @@ export const getServices = async (): Promise<{
 
     if (result.rows) {
       const rows: any[] = result.rows;
-      console.log("service events datas", rows);
+      // console.log("service events datas", rows);
 
       const serviceEvents = rows.map((row: any[]) => {
         return {

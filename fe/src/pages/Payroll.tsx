@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Instance } from "../utils/Instance";
 import { TPayroll } from "../interfaces/types/payroll.types";
@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { payrollSchema } from "../validations/payroll.schema";
 import { generatePDF } from "../utils/generatePdf";
 import Loader from "../components/Loader";
+import { useFetchData } from "../api";
 
 type TPayrollForm = {
   fiscalYr: string;
@@ -13,28 +14,85 @@ type TPayrollForm = {
   processMonth: string;
 };
 
+type TReport = {
+  fiscal_yr?: string;
+  status?: string;
+  month_no?: number;
+  month_cd?: number;
+  pay_month_desc?: string;
+};
+
 const Payroll: React.FC = () => {
   const [payrollData, setPayrollData] = useState<TPayroll[] | null>(null);
+  const [fiscalYr, setFiscalYr] = useState<string | undefined>();
+  const [month, setMonth] = useState<string | undefined>();
+  const [voucherNo, setVoucherNo] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { data: reportData } = useFetchData("/v1/fiscal-yr");
+  const { data: monthData } = useFetchData("/v1/pay-month");
+
+  const fiscalYearData = reportData?.data;
+  const payMonthData = monthData?.data;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TPayrollForm>({ resolver: zodResolver(payrollSchema) });
+  } = useForm<TPayrollForm>({
+    resolver: zodResolver(payrollSchema),
+    // defaultValues: {
+    //   fiscalYr:
+    //     fiscalYearData?.find((option: TReport) => option.status === "R")
+    //       ?.fiscal_yr || "",
+    //   voucherNo: "",
+    //   processMonth: payMonthData?.[0]?.month_cd?.toString() || "",
+    // },
+  });
+
+  useEffect(() => {
+    const getVoucherNo = async () => {
+      try {
+        if (fiscalYr && month) {
+          const res = await Instance.get(
+            `/v1/voucher-no?fiscal_yr=${fiscalYr}&process_month=${month}`
+          );
+          const voucherNumbers = res.data.data.map(
+            (voucher: any) => voucher.pay_vch_no
+          );
+          setVoucherNo(voucherNumbers);
+          console.log(voucherNumbers);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getVoucherNo();
+  }, [fiscalYr, month]); // Watch for changes in both fiscalYr and month
 
   const onSubmit = async (data: TPayrollForm) => {
-    console.log(data);
     try {
+      console.log(data);
       setIsLoading(true);
-      const response = await Instance.get("/v1/payroll");
+      const response = await Instance.get(
+        `/v1/payroll?fiscal_yr=${data.fiscalYr}&process_month=${data.processMonth}&pay_vch_no=${voucherNo}`
+      );
       setPayrollData(response?.data?.data);
       setIsLoading(false);
-      generatePDF(response?.data?.data);
-      console.log(response?.data?.data); // Log API response data
+      generatePDF(fiscalYr, response?.data?.data);
     } catch (error) {
       console.error("Error fetching payroll data:", error);
     }
   };
+
+  // Render loading state if data is still being fetched
+  if (!fiscalYearData || !payMonthData) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader color="text-blue-800" width="w-6" height="h-6" />
+      </div>
+    );
+  }
 
   return (
     <div id="payroll-table">
@@ -47,11 +105,26 @@ const Payroll: React.FC = () => {
           >
             Fiscal Year
           </label>
-          <input
+          <select
+            id="fiscalYr"
+            className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("fiscalYr")}
-            type="string"
-            className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-          />
+            onChange={(e) => setFiscalYr(e.target.value)}
+            defaultValue={
+              fiscalYearData?.find((opt) => opt.status === "R")?.fiscal_yr
+            }
+          >
+            {fiscalYearData?.map((option: TReport, index: number) => (
+              <option
+                key={index}
+                value={option.fiscal_yr}
+                className="capitalize"
+              >
+                {option.fiscal_yr}
+              </option>
+            ))}
+          </select>
+
           {typeof errors.fiscalYr === "string" ? (
             <p className="text-red-500 text-xs">{errors.fiscalYr}</p>
           ) : (
@@ -69,11 +142,23 @@ const Payroll: React.FC = () => {
           >
             Month
           </label>
-          <input
+          <select
+            id="processMonth"
+            className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("processMonth")}
-            type="string"
-            className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-          />
+            defaultValue={payMonthData?.[0]?.month_cd?.toString() || ""}
+            onChange={(e) => setMonth(e.target.value)}
+          >
+            {payMonthData?.map((option: TReport, index: number) => (
+              <option
+                key={index}
+                value={option.month_cd?.toString()}
+                className="capitalize"
+              >
+                {option.pay_month_desc}
+              </option>
+            ))}
+          </select>
           {typeof errors.processMonth === "string" ? (
             <p className="text-red-500 text-xs">{errors.processMonth}</p>
           ) : (
@@ -95,9 +180,16 @@ const Payroll: React.FC = () => {
             Voucher Number
           </label>
           <input
-            {...register("voucherNo")}
-            type="number"
+            {...register("voucherNo", {
+              required: "Voucher Number is required",
+              pattern: {
+                value: /^[0-9]+$/,
+                message: "Voucher Number must be a number",
+              },
+            })}
+            type="text"
             className="block p-2.5 w-full text-sm uppercase text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            value={voucherNo.join(", ")}
           />
           {typeof errors.voucherNo === "number" ? (
             <p className="text-red-500 text-xs">{errors.voucherNo}</p>

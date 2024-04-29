@@ -5,7 +5,6 @@ import Button from "../components/ui/Button";
 import { TChangePassword } from "../interfaces/types/changePassword.types";
 import { changePasswordSchema } from "../validations/changePassword.schema";
 import { Instance } from "../utils/Instance";
-import toast from "react-hot-toast";
 import Input from "../components/ui/Input";
 
 const ChangePassword = () => {

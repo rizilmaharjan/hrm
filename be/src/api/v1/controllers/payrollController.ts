@@ -6,10 +6,16 @@ import { appError } from "../helpers/appError";
 
 export const getPayroll = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const fiscal_yr = req.query.fiscalYr;
-    // const pay_vch_no = req.query.voucherNo;
-    // const processs_month = req.query.processMonth;
-    const { status, message, data } = await PayrollService.getPayroll();
+    console.log("controller");
+    const fiscal_yr: string = (req.query.fiscal_yr as string) || "";
+    const process_month = (req.query.process_month as string) || "";
+    const pay_vch_no = Number(req.query.pay_vch_no);
+    // console.log("PayrollformData", fiscal_yr, process_month, pay_vch_no);
+    const { status, message, data } = await PayrollService.getPayroll(
+      fiscal_yr,
+      process_month,
+      pay_vch_no
+    );
     if (status === 404) {
       next(new appError(status, message));
     }
