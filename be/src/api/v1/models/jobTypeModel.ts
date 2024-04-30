@@ -61,10 +61,15 @@ export const postJobType = async (body: TJobType) => {
   }
 };
 
-export const getJobType = async () => {
+export const getJobType = async (search?: string) => {
   try {
     const connection = await connectToDB();
-    const sql = `SELECT * FROM job_type`;
+    let sql = `SELECT * FROM job_type`;
+    if (search) {
+      // Add WHERE clause to filter based on search term
+      sql += ` WHERE UPPER(JOB_TYPE_DESC) LIKE UPPER('%${search}%')`;
+    }
+
     const result = await connection.execute(sql);
     await connection.close();
     if (result.rows) {

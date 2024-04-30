@@ -23,7 +23,18 @@ export const postService = catchAsync(
 );
 export const getService = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { status, message, serviceEvents } = await getAllServiceEvents();
+    // console.log("this is request query", req.query);
+
+    // const { search } = req.query;
+    // console.log("search", req.query);
+    // console.log("search again", req.query.search);
+    // const { search } = req.query;
+    const search = req.query.search as string | undefined;
+    // console.log("search again", typeof search);
+    // const searchServices = search ? search : undefined
+    const { status, message, serviceEvents } = await getAllServiceEvents(
+      search
+    );
     if (status === 404) {
       next(new appError(status, message));
     }

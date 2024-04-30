@@ -23,7 +23,9 @@ export const postAllowance = catchAsync(
 
 export const getAllowance = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { status, message, allowance } = await getAllAllowances();
+    const search = req.query.search as string | undefined;
+
+    const { status, message, allowance } = await getAllAllowances(search);
     if (status === 404) {
       next(new appError(status, message));
     }

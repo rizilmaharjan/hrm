@@ -20,7 +20,9 @@ export const postJobType = catchAsync(
 
 export const getJobType = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { status, message, data } = await JobTypeService.getJobType();
+    const search = req.query.search as string | undefined;
+
+    const { status, message, data } = await JobTypeService.getJobType(search);
     if (status === 404) {
       next(new appError(status, message));
     }

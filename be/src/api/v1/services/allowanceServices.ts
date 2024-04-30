@@ -18,13 +18,15 @@ export const createAllowance = async (
   }
 };
 
-export const getAllAllowances = async (): Promise<{
+export const getAllAllowances = async (
+  search?: string
+): Promise<{
   status: number;
   message: string;
   allowance?: any;
 }> => {
   try {
-    const response = await getAllowances();
+    const response = await getAllowances(search);
     return response;
   } catch (error: any) {
     throw new Error(error.message);

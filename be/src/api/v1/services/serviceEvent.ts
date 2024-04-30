@@ -17,13 +17,15 @@ export const createService = async (
   }
 };
 
-export const getAllServiceEvents = async (): Promise<{
+export const getAllServiceEvents = async (
+  search?: string
+): Promise<{
   status: number;
   message: string;
   serviceEvents?: any;
 }> => {
   try {
-    const response = await getServices();
+    const response = await getServices(search);
     return response;
   } catch (error: any) {
     throw new Error(error.message);
