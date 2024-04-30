@@ -13,9 +13,9 @@ export const postJobType = async (body: TJobType) => {
   }
 };
 
-export const getJobType = async () => {
+export const getJobType = async (search?: string) => {
   try {
-    const resopnse = await JobTypeRepository.getJobType();
+    const resopnse = await JobTypeRepository.getJobType(search);
     return resopnse;
   } catch (error: any) {
     throw new Error(error.message);

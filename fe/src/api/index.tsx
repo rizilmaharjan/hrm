@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Instance } from "../utils/Instance";
-import { GenericFormData } from "axios";
 
 export const useFetchData = (url: string, page = 1, limit = 20) => {
   const { isPending, error, data, refetch } = useQuery({
@@ -26,14 +25,20 @@ export const useFetchData = (url: string, page = 1, limit = 20) => {
 //   return { isPending, error, data };
 // };
 
-export const usePostData = (url: string, body: GenericFormData) => {
-  const { isPending, error, data } = useQuery({
-    queryKey: ["repoData"],
-    queryFn: () =>
-      Instance.post(url, body).then((res) => {
-        return res.data.data;
-      }),
+export const useCreateServices = (url: string) => {
+  return useMutation({
+    mutationFn: (data: any) => Instance.post(url, data),
+    onMutate: () => {
+      console.log("mutate");
+    },
+    onError: () => {
+      console.log("Something went wrong");
+    },
+    onSuccess: () => {
+      console.log("Service created successfully");
+    },
+    onSettled: () => {
+      console.log("settled");
+    },
   });
-
-  return { isPending, error, data };
 };

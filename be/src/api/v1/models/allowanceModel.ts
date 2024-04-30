@@ -131,15 +131,22 @@ export const postAllowance = async (
   }
 };
 
-export const getAllowances = async (): Promise<{
+export const getAllowances = async (
+  search?: string
+): Promise<{
   status: number;
   message: string;
   allowance?: any;
 }> => {
   try {
     const connection = await connectToDB();
-    const sql = `SELECT a.*, m.acc_desc FROM allowance a LEFT JOIN acc_mst m ON a.acc_cd = m.acc_cd`;
+    let sql = `SELECT a.*, m.acc_desc FROM allowance a LEFT JOIN acc_mst m ON a.acc_cd = m.acc_cd`;
     // const sql = `SELECT * FROM allowance WHERE allowance_facility = 'A'`;
+    if (search) {
+      // Add WHERE clause to filter based on search term
+      sql += ` WHERE UPPER(a.ALLOWANCE_DESC) LIKE UPPER('%${search}%')`;
+    }
+
     const result = await connection.execute(sql);
 
     await connection.close();
