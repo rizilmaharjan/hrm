@@ -4,13 +4,15 @@ import Sidebar from "../components/Sidebar";
 export default function MainLayout() {
   return (
     <>
-      <Navbar />
-      <div className="flex">
-        <div className="h-[90vh]">
-          <Sidebar />
-        </div>
-        <div className="h-[80vh] w-full">
-          <Outlet />
+      <div className="fixed inset-0">
+        <Navbar />
+        <div className="flex h-full">
+          <div className="">
+            <Sidebar />
+          </div>
+          <div className="w-full">
+            <Outlet />
+          </div>
         </div>
       </div>
     </>
