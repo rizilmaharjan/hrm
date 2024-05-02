@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDebounce } from "../hooks/useDebounce";
 
 import { useAppDispatch } from "../redux/hooks";
 import { useFetchData } from "../api";
@@ -28,16 +29,26 @@ export default function Allowance() {
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState("");
   // const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
   // const navigate = useNavigate();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const debounceSearchTerm = useDebounce(searchTerm, 500);
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  });
 
   const {
     isPending,
     error: allowanceError,
     data: allowanceData,
-  } = useFetchData("/v1/allowance");
+  } = useFetchData(`/v1/allowance?search=${debounceSearchTerm}`);
 
   const dispatch = useAppDispatch();
 
@@ -200,6 +211,16 @@ export default function Allowance() {
         )}
         <div className="flex justify-between p-3">
           <h1 className="font-semibold text-xl">Allowance</h1>
+          <div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search..."
+              className="px-2 py-1 rounded-lg border border-gray-400 outline-none"
+            />
+          </div>
           <div className="flex gap-4">
             <button
               onClick={exportToPDF}
@@ -241,8 +262,7 @@ export default function Allowance() {
             </thead>
 
             <tbody>
-              {allowanceDatas &&
-                allowanceDatas.length > 0 &&
+              {allowanceDatas && allowanceDatas.length > 0 ? (
                 allowanceDatas.map((item) => (
                   <tr
                     key={item.allowance_CD}
@@ -312,7 +332,16 @@ export default function Allowance() {
                       </span>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr className="">
+                  <td className="px-6 py-4 h-96" colSpan={12}>
+                    <p className="text-center text-gray-500 text-bold text-3xl">
+                      No Data Found
+                    </p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

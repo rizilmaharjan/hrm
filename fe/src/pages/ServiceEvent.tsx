@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useDebounce } from "../hooks/useDebounce";
 
 // import { Instance } from "../utils/Instance";
 import AddEvent from "../components/modal/AddEvent";
 import { useFetchData } from "../api";
 // import { useCustomContext } from "../context/DataContext";
-import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import { mapServiceEventType } from "../utils/serviceEventType";
 import { TServiceEvent } from "../interfaces/types/serviceEvent.types";
@@ -19,22 +19,32 @@ import {
   setEditID,
   setIsEdit,
 } from "../redux/edit/editSlice";
+import Loader from "../components/Loader";
 
 export default function ServiceEvent() {
   const [serviceEvents, setServiceEvents] = useState<TServiceEvent[]>([]);
   // const { setEditID, setIsEdit, setServiceToEdit } = useCustomContext();
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const debounceSearchTerm = useDebounce(searchTerm, 500);
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  });
+  console.log("i am flickering");
   const {
     isPending,
     error: serviceEventError,
     data: serviceEventData,
-  } = useFetchData("/v1/service-event");
+  } = useFetchData(`/v1/service-event?search=${debounceSearchTerm}`);
 
   useEffect(() => {
     setServiceEvents(serviceEventData?.serviceEvents);
@@ -166,7 +176,7 @@ export default function ServiceEvent() {
 
   return (
     <>
-      <div className="relative top-0 bottom-0 h-full shadow-md sm:rounded-lg w-full">
+      <div className="h-full shadow-md sm:rounded-lg">
         {/* {isLoading ? (
           <div className="h-screen flex items-center justify-center w-full">
             <Loader color="text-blue-800" width="w-6" height="h-6" />
@@ -187,8 +197,18 @@ export default function ServiceEvent() {
             isModalOpen={isModalOpen}
           />
         )}
-        <div className="flex justify-between p-3">
+        <div className="flex justify-between px-3 mt-5">
           <h1 className="font-semibold text-xl">Service Event</h1>
+          <div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search..."
+              className="px-2 py-1 rounded-lg border border-gray-400 outline-none"
+            />
+          </div>
           <div className="flex gap-4">
             <button
               onClick={exportToPDF}
@@ -206,8 +226,8 @@ export default function ServiceEvent() {
             </button>
           </div>
         </div>
-        <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+        <div className="overflow-y-scroll scrollbar-thin mt-7 scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full w-full">
+          <table className="w-full text-sm  text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
               <tr>
                 {serviceEventTitle.map((item) => (
@@ -226,8 +246,7 @@ export default function ServiceEvent() {
             </thead>
 
             <tbody>
-              {serviceEvents &&
-                serviceEvents.length > 0 &&
+              {serviceEvents && serviceEvents.length > 0 ? (
                 serviceEvents.map((item) => (
                   <tr
                     key={item.SERVICE_EVENT_CD}
@@ -260,18 +279,18 @@ export default function ServiceEvent() {
 
                     <td className="px-6 py-4">{item.DISABLED}</td>
                     {/* <td className="px-6 py-4">{item.ENTERED_BY}</td>
-                    <td className="px-6 py-4">
-                      {dateConversion(item.ENTERED_DT)}
-                    </td> */}
+                      <td className="px-6 py-4">
+                        {dateConversion(item.ENTERED_DT)}
+                      </td> */}
                     {/* <td className="px-6 py-4">
-                      {item.IS_AUTO_SALARY_ADJUST || "_"}
-                    </td> */}
+                        {item.IS_AUTO_SALARY_ADJUST || "_"}
+                      </td> */}
                     {/* <td className="px-6 py-4">{item.LAST_UPDATED_BY || "_"}</td>
-                    <td className="px-6 py-4">
-                      {(item.LAST_UPDATED_ON &&
-                        dateConversion(item.LAST_UPDATED_ON)) ||
-                        "_"}
-                    </td> */}
+                      <td className="px-6 py-4">
+                        {(item.LAST_UPDATED_ON &&
+                          dateConversion(item.LAST_UPDATED_ON)) ||
+                          "_"}
+                      </td> */}
                     <td className="px-6 py-4">
                       <span className="flex items-center gap-4">
                         <p
@@ -289,7 +308,16 @@ export default function ServiceEvent() {
                       </span>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr className="">
+                  <td className="px-6 py-4 h-96" colSpan={12}>
+                    <p className="text-center text-gray-500 text-bold text-3xl">
+                      No Data Found
+                    </p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
