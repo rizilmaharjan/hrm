@@ -234,7 +234,7 @@ export default function ServiceEvent() {
                   <th
                     key={item.id}
                     scope="col"
-                    className={`px-6 py-3 ${item.width}`}
+                    className={`px-6 py-3 text-left ${item.width}`}
                   >
                     {item.title}
                   </th>
