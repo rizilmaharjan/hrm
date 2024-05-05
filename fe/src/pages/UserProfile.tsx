@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
 import ProfileSummary from "../components/Profile/ProfileSummary";
 import ProfileMenu from "../components/Profile/ProfileMenu";
+import { useParams } from "react-router-dom";
 
 const UserProfile = () => {
+  const { id } = useParams();
   return (
     <>
       <div className="w-full p-2 md:p-2 lg:p-4">
@@ -13,7 +15,7 @@ const UserProfile = () => {
           <ProfileSummary />
         </div>
         <div className="mt-4">
-          <ProfileMenu />
+          <ProfileMenu id={id} />
         </div>
         <Outlet />
       </div>
