@@ -174,7 +174,9 @@ const Employee = () => {
                       {item.employee_cd}
                     </th>
                     <td className="text-sm px-6 py-4 capitalize">
-                      {`${item.first_name} ${item.middle_name} ${item.sur_name}`.toLowerCase()}
+                      {`${item.first_name} ${
+                        item.middle_name ? item.middle_name : ""
+                      } ${item.sur_name}`.toLowerCase()}
                     </td>
                     <td className="text-sm px-6 py-4">{item.email}</td>
                     <td className="px-6 py-4">
