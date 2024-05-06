@@ -9,12 +9,12 @@ export const addFooter = (
   doc.text(
     `Page ${pageNumber} of ${totalPages}`,
     doc.internal.pageSize.width / 2,
-    doc.internal.pageSize.height - 10,
+    doc.internal.pageSize.height - 5,
     { align: "center" }
   );
   doc.text(
     new Date().toLocaleDateString(),
     10,
-    doc.internal.pageSize.height - 10
+    doc.internal.pageSize.height - 5
   );
 };

@@ -29,3 +29,12 @@ export const getVoucherNo = async (
     throw new Error(error.message);
   }
 };
+
+export const getOffice = async () => {
+  try {
+    const res = await ReportModel.getOffice();
+    return res;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

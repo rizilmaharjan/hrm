@@ -793,3 +793,41 @@ export const employeeTitle = [
     width: "w-1/12",
   },
 ];
+
+export const departmentData = [
+  {
+    department_cd: "0",
+    department_desc: "DEPARTMENT",
+  },
+  {
+    department_cd: "ACA",
+    department_desc: "ACADEMIC",
+  },
+  {
+    department_cd: "ANA",
+    department_desc: "Anaesthesiology & Critical Care",
+  },
+  {
+    department_cd: "ATM",
+    department_desc: "Anatomy",
+  },
+];
+
+export const positionData = [
+  {
+    position_cd: "0",
+    position_desc: "POSITION",
+  },
+  {
+    position_cd: "ACA",
+    position_desc: "ACADEMIC",
+  },
+  {
+    position_cd: "ANA",
+    position_desc: "Anaesthesiology & Critical Care",
+  },
+  {
+    position_cd: "ATM",
+    position_desc: "Anatomy",
+  },
+];

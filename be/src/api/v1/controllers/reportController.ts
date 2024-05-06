@@ -38,3 +38,13 @@ export const getVoucherNo = catchAsync(
     return res.status(status).json({ message, data });
   }
 );
+
+export const getOffice = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { status, message, data } = await ReportService.getOffice();
+    if (status === 404) {
+      next(new appError(status, message));
+    }
+    return res.status(status).json({ message, data });
+  }
+);

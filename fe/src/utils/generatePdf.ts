@@ -5,6 +5,7 @@ import { addFooter } from "../utils/pdfFooter";
 
 export const generatePDF = (
   fiscal_yr: string | undefined,
+  month: string | undefined,
   payrollData: TPayroll[]
 ) => {
   if (!payrollData) return;
@@ -33,7 +34,7 @@ export const generatePDF = (
   let chunk: string[] = [];
   descriptions.forEach((desc) => {
     chunk.push(desc);
-    if (chunk.length === 10) {
+    if (chunk.length === 12) {
       chunks.push(chunk);
       chunk = [];
     }
@@ -84,13 +85,23 @@ export const generatePDF = (
           head: [tableData[0]],
           body: tableData.slice(1),
           startY: 30,
-          margin: 10,
+          margin: 5,
           theme: "grid",
           styles: {
             fontSize: 6,
           },
-          // Remove columnStyles option
+          tableWidth: "wrap",
+          columnStyles: {
+            0: {
+              cellWidth: 10,
+            },
+            1: {
+              cellWidth: 35,
+            },
+          },
+          bodyStyles: { cellWidth: 20 },
           didDrawPage: () => {
+            // doc.setFont("times-bold");
             doc.setFontSize(12);
             doc.text(
               `B.P. Koirala Institute of Health Science`,
@@ -100,14 +111,17 @@ export const generatePDF = (
                 align: "center",
               }
             );
+            doc.setFontSize(10);
             doc.text(`Ghopa, Dharan`, doc.internal.pageSize.width / 2, 15, {
               align: "center",
             });
-            doc.setFontSize(10);
-            doc.text("Payroll Report", 10, 28);
+            doc.text(`Month: ${month}`, 5, 28);
+            doc.text(`Payroll Report`, doc.internal.pageSize.width / 2, 20, {
+              align: "center",
+            });
             doc.text(
               `Fiscal Year: ${fiscal_yr}`,
-              doc.internal.pageSize.width - 10,
+              doc.internal.pageSize.width - 5,
               28,
               { align: "right" }
             );

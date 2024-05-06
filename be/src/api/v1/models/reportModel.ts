@@ -88,3 +88,30 @@ export const getVoucherNo = async (
     throw new Error(error.message);
   }
 };
+
+export const getOffice = async () => {
+  try {
+    const connection = await connectToDB();
+    const sql = `SELECT office_cd, office_desc FROM office_mst`;
+    const result = await connection.execute(sql);
+    await connection.close();
+    if (result.rows) {
+      const rows: any[] = result.rows;
+      const office = rows.map((row: any[]) => {
+        return {
+          office_cd: row[0],
+          office_desc: row[1],
+        };
+      });
+      return {
+        status: 200,
+        message: "Office fetched successfully",
+        data: office,
+      };
+    } else {
+      return { status: 404, message: "Data not found" };
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

@@ -8,6 +8,8 @@ const routes = () => {
   router.get("/v1/fiscal-yr", verifyToken, ReportController.getFiscalYr);
   router.get("/v1/pay-month", verifyToken, ReportController.getPayMonth);
   router.get("/v1/voucher-no", verifyToken, ReportController.getVoucherNo);
+  router.get("/v1/office", verifyToken, ReportController.getOffice);
+
   return router;
 };
 
