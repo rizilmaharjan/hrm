@@ -69,19 +69,19 @@ export const privateRoutes: RouteConfig[] = [
     element: <JobType />,
   },
   {
-    path: "/employee/profile/:id",
+    path: "/employee",
     element: <UserProfile />,
     children: [
       {
-        path: "", // Relative path
+        path: "profile/:id", // Nested under /user/profile/personal-info
         element: <PersonalInfoSection />,
       },
       {
-        path: "account-info/:id", // Relative path
+        path: "account-info/:id",
         element: <AccountInfoSection />,
       },
       {
-        path: "payroll-info/:id", // Relative path
+        path: "payroll-info/:id",
         element: <PayrollInfoSection />,
       },
     ],

@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 
-const ProfileMenu = () => {
-  // const { id } = useParams<{ id: string }>();
-
+type TProps = {
+  id?: string;
+};
+const ProfileMenu = ({ id }: TProps) => {
   return (
     <>
       <div className="w-full bg-gray-100 rounded-md mb-2 md:mb-4 lg:mb-6">
@@ -15,7 +16,7 @@ const ProfileMenu = () => {
                   ? " flex items-center font-bold p-1"
                   : "flex items-center p-1"
               }
-              to=""
+              to={`profile/${id}`}
             >
               Personal Information
             </NavLink>
@@ -27,7 +28,7 @@ const ProfileMenu = () => {
                   ? " flex items-center font-bold p-1"
                   : "flex items-center p-1"
               }
-              to="account-info"
+              to={`account-info/${id}`}
             >
               Account Information
             </NavLink>
@@ -39,7 +40,7 @@ const ProfileMenu = () => {
                   ? " flex items-center font-bold p-1"
                   : "flex items-center p-1"
               }
-              to="payroll-info"
+              to={`payroll-info/${id}`}
             >
               Payroll
             </NavLink>

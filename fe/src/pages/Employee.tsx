@@ -189,12 +189,12 @@ const Employee = () => {
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                     >
-                      <Link to={`/employee/profile/${item.employee_cd}`}>
-                        {item.employee_cd}
-                      </Link>
+                      {item.employee_cd}
                     </th>
                     <td className="text-sm px-6 py-4 capitalize">
-                      {`${item.first_name} ${item.middle_name} ${item.sur_name}`.toLowerCase()}
+                      {`${item.first_name} ${
+                        item.middle_name ? item.middle_name : ""
+                      } ${item.sur_name}`.toLowerCase()}
                     </td>
                     <td className="text-sm px-6 py-4">{item.email}</td>
                     <td className="px-6 py-4">
@@ -212,7 +212,9 @@ const Employee = () => {
                           // onClick={() => handleEdit(item.allowance_CD)}
                           className="font-medium text-blue-600 cursor-pointer hover:underline"
                         >
-                          Edit
+                          <Link to={`/employee/profile/${item.employee_cd}`}>
+                            View
+                          </Link>
                         </p>
                         <p
                           // onClick={() => handleDelete(item.allowance_CD)}

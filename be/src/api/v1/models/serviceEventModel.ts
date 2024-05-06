@@ -83,14 +83,20 @@ export const postService = async (
   }
 };
 
-export const getServices = async (): Promise<{
+export const getServices = async (
+  search?: string
+): Promise<{
   status: number;
   message: string;
   serviceEvents?: any;
 }> => {
   try {
     const connection = await connectToDB();
-    const sql = `SELECT * FROM service_event`;
+    let sql = `SELECT * FROM service_event`;
+    if (search) {
+      // Add WHERE clause to filter based on search term
+      sql += ` WHERE UPPER(SERVICE_EVENT_DESC) LIKE UPPER('%${search}%')`;
+    }
     const result = await connection.execute(sql);
 
     await connection.close();

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { Instance } from "../utils/Instance";
 import Loader from "../components/Loader";
 import Delete from "../components/modal/Delete";
 import AddJobType from "../components/modal/AddJobType";
+import { useDebounce } from "../hooks/useDebounce";
 
 import { TJobType } from "../interfaces/types/jobType.type";
 import "jspdf-autotable";
@@ -26,12 +27,22 @@ export default function JobType() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   // const [jobTypeToEdit, setJobTypeToEdit] = useState<TJobType>();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debounceSearchTerm = useDebounce(searchTerm, 500);
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  });
+
   const {
     isPending,
     error: jobTypeError,
     data: jobTypeData,
-  } = useFetchData("/v1/job-type");
+  } = useFetchData(`/v1/job-type?search=${debounceSearchTerm}`);
 
   const dispatch = useAppDispatch();
 
@@ -166,6 +177,17 @@ export default function JobType() {
         )}
         <div className="flex justify-between p-3">
           <h1 className="font-semibold text-xl">Job Type</h1>
+          <div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search..."
+              className="px-2 py-1 rounded-lg border border-gray-400 outline-none"
+            />
+          </div>
+
           <div className="flex gap-4">
             <button
               onClick={exportToPDF}
@@ -203,8 +225,7 @@ export default function JobType() {
             </thead>
 
             <tbody>
-              {jobType &&
-                jobType.length > 0 &&
+              {jobType && jobType.length > 0 ? (
                 jobType.map((item) => (
                   <tr
                     key={item.job_type_cd}
@@ -265,7 +286,16 @@ export default function JobType() {
                       </span>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr className="">
+                  <td className="px-6 py-4 h-96" colSpan={12}>
+                    <p className="text-center text-gray-500 text-bold text-3xl">
+                      No Data Found
+                    </p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

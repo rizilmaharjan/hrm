@@ -11,14 +11,14 @@ export const userLogin = catchAsync(async (req: any, res: any, next: any) => {
     password
   );
   if (status === 200) {
+    const expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
     return res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
       .status(status)
       .json({ message, userData });
   } else {
     return next(new appError(status, message));
   }
-  // const expiryDate = new Date(Date.now() + 3600000);
 });
 
 export const userLogout = async (req: Request, res: Response) => {
