@@ -40,15 +40,10 @@ const ListModal: React.FC<TListModalProps> = ({
     <>
       {isOpen && (
         <div className="flex z-50 items-center justify-center fixed inset-0 w-full">
-          <div className="bg-white w-1/4 max-h-80 p-2 rounded-lg shadow-2xl border">
-            <div className="flex justify-between gap-2">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="px-2 py-1 mb-2 border-2 rounded-md"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          <div className="bg-white w-1/4 max-h-96 p-2 rounded-lg shadow-2xl border">
+            <div className="flex justify-between items-center gap-2">
+              <h3 className="font-bold text-lg">{data[0].id}</h3>
+
               <RxCross2
                 size={20}
                 onClick={() => {
@@ -58,8 +53,15 @@ const ListModal: React.FC<TListModalProps> = ({
                 className="cursor-pointer"
               />
             </div>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="px-2 py-1 mb-2 border-2 rounded-md w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-52">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+              <table className="w-full text-base text-left rtl:text-right text-gray-500 table-fixed">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                   <tr>
                     <th scope="col" className="px-2 py-2 w-1/6">

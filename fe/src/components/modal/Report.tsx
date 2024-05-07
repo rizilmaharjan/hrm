@@ -1,13 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { reportSchema, TReportSchema } from "../../validations/report.schema";
+import { reportSchema } from "../../validations/report.schema";
 import { useFetchData } from "../../api";
 import { TReport } from "../../interfaces/types/report.types";
 import { RxCross2 } from "react-icons/rx";
 import { useEffect, useState } from "react";
 import { departmentData } from "../../constants";
 import { Instance } from "../../utils/Instance";
-import AccountList from "./AccountList";
 import ListModal from "./ListModal";
 
 type TReportProps = {
@@ -15,7 +14,7 @@ type TReportProps = {
   setOpenReport: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
+const Report: React.FC<TReportProps> = ({ openReport, setOpenReport }) => {
   const [year, setYear] = useState<string>();
   // console.log(fiscalYr);
   const [month, setMonth] = useState<string>();
@@ -33,9 +32,10 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<TReportSchema>({
-    // resolver: zodResolver(reportSchema),
+  } = useForm({
+    resolver: zodResolver(reportSchema),
   });
+
   const { data: fiscalYrDatas } = useFetchData("/v1/fiscal-yr");
   const { data: payMonthDatas } = useFetchData("/v1/pay-month");
   const { data: officeDatas } = useFetchData("/v1/office");
@@ -89,66 +89,25 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
     console.log("type of data", typeof data);
   };
 
-  // Function to handle office selection
-  const handleOfficeSelect = (e) => {
-    const selectedOfficeCode = e.target.value;
-    const selectedOffice = officeData.find(
-      (option: TOffice) => option.office_cd === selectedOfficeCode
-    );
-    setSelectedOffice(selectedOfficeCode);
-    setOfficeDescription(selectedOffice?.office_desc || "");
-  };
+  // const handleOfficeSelect = (e) => {
+  //   const selectedOfficeCode = e.target.value;
+  //   console.log(selectedOfficeCode);
+  //   setValue("office", selectedOfficeCode); // Update form value using setValue
+  // };
 
-  useEffect(() => {
-    if (officeData && selectedOffice) {
-      // Update description when selected office changes
-      const updatedOffice = officeData.find(
-        (option: TOffice) => option.office_cd === selectedOffice
-      );
-      setOfficeDescription(updatedOffice?.office_desc || "");
-    }
-  }, [selectedOffice, officeData]);
+  // // Update handleDepartmentSelect function to directly update form value
+  // const handleDepartmentSelect = (e) => {
+  //   const selectedDepartmentCode = e.target.value;
+  //   setValue("department", selectedDepartmentCode); // Update form value using setValue
+  // };
 
-  const handleDepartmentSelect = (e) => {
-    const selectedDepartmentCode = e.target.value;
-    const selectedDepartment = departmentData.find(
-      (option: TDepartment) => option.department_cd === selectedDepartmentCode
-    );
-    setSelectedDepartment(selectedDepartmentCode);
-    setDepartmentDescription(selectedDepartment?.department_desc || "");
-  };
-
-  useEffect(() => {
-    if (departmentData && selectedDepartment) {
-      // Update description when selected office changes
-      const updatedDepartment = departmentData.find(
-        (option: TDepartment) => option.department_cd === selectedDepartment
-      );
-      setDepartmentDescription(updatedDepartment?.department_desc || "");
-    }
-  }, [selectedDepartment]);
-
-  const handlePositionSelect = (e) => {
-    const selectedPositionCode = e.target.value;
-    const selectedPosition = positionData.find(
-      (option: TPosition) => option.position_cd === selectedPositionCode
-    );
-    setSelectedPosition(selectedPositionCode);
-    setPositionDescription(selectedPosition?.position_desc || "");
-  };
-
-  useEffect(() => {
-    if (positionData && selectedPosition) {
-      // Update description when selected office changes
-      const updatedPosition = positionData.find(
-        (option: TPosition) => option.position_cd === selectedPosition
-      );
-      setPositionDescription(updatedPosition?.position_desc || "");
-    }
-  }, [selectedPosition, positionData]);
+  // // Update handlePositionSelect function to directly update form value
+  // const handlePositionSelect = (e) => {
+  //   const selectedPositionCode = e.target.value;
+  //   setValue("position", selectedPositionCode); // Update form value using setValue
+  // };
 
   const openListModal = (data) => {
-    console.log(data);
     setIsOpen(true);
     setListData(data);
   };
@@ -156,25 +115,21 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
   const handleSelectRow = (rowData) => {
     console.log("Selected row data:", rowData);
     switch (rowData.id) {
-      case "o":
+      case "Office":
         setSelectedOffice(rowData.code);
         setOfficeDescription(rowData.description);
         break;
-      case "d":
+      case "Department":
         setSelectedDepartment(rowData.code);
         setDepartmentDescription(rowData.description);
         break;
-      case "p":
+      case "Position":
         setSelectedPosition(rowData.code);
         setPositionDescription(rowData.description);
         break;
       default:
         break;
     }
-  };
-
-  const handleCloseModal = () => {
-    setOpenReport(false);
   };
   if (openReport) {
     return (
@@ -187,7 +142,12 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
           >
             <div className="px-4 py-2 flex justify-between items-center mb-4 border-b-2">
               <h2>{reportHeading}</h2>
-              <RxCross2 onClick={handleCloseModal} className="cursor-pointer" />
+              <RxCross2
+                onClick={() => {
+                  setOpenReport(false);
+                }}
+                className="cursor-pointer"
+              />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="flex items-center z-0 w-full px-4 mb-2">
@@ -318,11 +278,11 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
                     {...register("office")}
                     value={selectedOffice}
-                    onChange={handleOfficeSelect}
+                    // onChange={handleOfficeSelect}
                     onDoubleClick={() =>
                       openListModal(
                         officeData.map((office: TOffice) => ({
-                          id: "o",
+                          id: "Office",
                           code: office.office_cd,
                           description: office.office_desc,
                         }))
@@ -358,15 +318,15 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
                 <div className="flex items-center gap-4">
                   <input
                     id="department"
-                    type="text"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
                     {...register("department")}
                     value={selectedDepartment}
-                    onChange={handleDepartmentSelect}
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
+                    // onChange={handleDepartmentSelect}
                     onDoubleClick={() =>
                       openListModal(
                         departmentData.map((department: TDepartment) => ({
-                          id: "d",
+                          id: "Department",
                           code: department.department_cd,
                           description: department.department_desc,
                         }))
@@ -421,11 +381,11 @@ const Report: React.FC<TReportProps> = (openReport, setOpenReport) => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
                     {...register("position")}
                     value={selectedPosition}
-                    onChange={handlePositionSelect}
+                    // onChange={handlePositionSelect}
                     onDoubleClick={() =>
                       openListModal(
                         positionData.map((position: TPosition) => ({
-                          id: "p",
+                          id: "Position",
                           code: position.position_cd,
                           description: position.position_desc,
                         }))

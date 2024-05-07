@@ -1,13 +1,15 @@
-import { z } from "zod";
+import * as z from "zod";
 
-export const reportSchema = z.object({
+const reportSchema = z.object({
   fiscalYr: z.string(),
   voucherNo: z.string().optional(),
   processMonth: z.string().optional(),
-  office: z.string(),
-  department: z.string(),
-  position: z.string(),
+  office: z.string().optional(),
+  department: z.string().optional(),
+  position: z.string().optional(),
   destination: z.string(),
 });
 
 export type TReportSchema = z.infer<typeof reportSchema>;
+
+export { reportSchema };

@@ -812,22 +812,3 @@ export const departmentData = [
     department_desc: "Anatomy",
   },
 ];
-
-export const positionData = [
-  {
-    position_cd: "0",
-    position_desc: "POSITION",
-  },
-  {
-    position_cd: "ACA",
-    position_desc: "ACADEMIC",
-  },
-  {
-    position_cd: "ANA",
-    position_desc: "Anaesthesiology & Critical Care",
-  },
-  {
-    position_cd: "ATM",
-    position_desc: "Anatomy",
-  },
-];
