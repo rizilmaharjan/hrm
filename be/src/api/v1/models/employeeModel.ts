@@ -84,3 +84,63 @@ export const getEmployeeById = async (id: string) => {
     throw new Error(error.message);
   }
 };
+
+// update employee
+export const updateEmployeeInfo = async (
+  employeeId: string,
+  employeeInfo: any
+) => {
+  try {
+    const connection = await connectToDB();
+
+    // Prepare the SQL statement for update
+    const sql = `
+      UPDATE EMPLOYEE
+      SET
+        first_name = :first_name,
+        middle_name = :middle_name,
+        sur_name = :sur_name,
+        birth_dt = :birth_dt,
+        gender = :gender,
+        marital_status = :marital_status,
+        citizenship_no = :citizenship_no,
+        email = :email,
+        mobile = :mobile
+      WHERE employee_cd = :id
+    `;
+
+    // Convert birth_dt to Date format
+    const birthDate = new Date(employeeInfo.birth_dt);
+
+    // Bind parameters for update
+    const bindParams = {
+      first_name: employeeInfo.first_name,
+      middle_name: employeeInfo.middle_name,
+      sur_name: employeeInfo.sur_name,
+      birth_dt: birthDate,
+      gender: employeeInfo.gender,
+      marital_status: employeeInfo.marital_status,
+      citizenship_no: employeeInfo.citizenship_no,
+      email: employeeInfo.email,
+      mobile: employeeInfo.mobile,
+      id: employeeId,
+    };
+
+    // Execute the update statement
+    const result = await connection.execute(sql, bindParams);
+
+    await connection.commit();
+
+    // Close the connection
+    await connection.close();
+
+    // Check if any rows were affected by the update
+    if (result.rowsAffected) {
+      return { status: 200, message: "Employee updated successfully" };
+    } else {
+      return { status: 404, message: "Employee not found" };
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
