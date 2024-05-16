@@ -3,11 +3,11 @@ import { connectToDB } from "../../../config/database";
 export const userLogin = async (
   username: string,
   password: string
-): Promise<{ status?: number; message?: string; userData?: any }> => {
+): Promise<{ status?: number; message?: string; users?: any[] }> => {
   try {
     const connection = await connectToDB();
     const result = await connection.execute(
-      `SELECT USER_CD FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:password, USER_PASSWORD)`,
+      `SELECT USER_CD,SUPER_USER FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:password, USER_PASSWORD)`,
       { username, password }
     );
 
@@ -16,10 +16,11 @@ export const userLogin = async (
       const users = rows.map((row) => {
         return {
           USER_CD: row[0],
+          SUPER_USER: row[1],
         };
       });
-      const userData = users[0];
-      return { status: 200, message: "User logged in successfully", userData };
+      // const userData = users[0];
+      return { status: 200, message: "User logged in successfully", users };
     } else {
       return { status: 401, message: "Invalid username or password" };
     }
