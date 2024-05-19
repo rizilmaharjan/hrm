@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { appError } from "../helpers/appError";
-type TRoles = ["Y"];
+type TRoles = string[];
 
 export const restrictTo = (...roles: TRoles) => {
   return (req: Request, res: Response, next: NextFunction) => {

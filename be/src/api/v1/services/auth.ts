@@ -14,7 +14,7 @@ export const loginUser = async (
   status: number;
   message: string;
   token?: string;
-  userData?: any[];
+  userData?: any;
 }> => {
   try {
     let response;
@@ -45,7 +45,7 @@ export const loginUser = async (
         status: 200,
         message: "Login successfull",
         token: token,
-        userData: users,
+        userData: userData,
       };
     } else {
       // throw new appError(status, message);

@@ -16,19 +16,21 @@ const routes = () => {
   router.post(
     "/v1/allowance",
     verifyToken,
+    restrictTo("HR"),
     validateResource(allowanceSchema),
     postAllowance
   );
-  router.get("/v1/allowance", verifyToken, getAllowance);
+  router.get("/v1/allowance", verifyToken, restrictTo("HR"), getAllowance);
   router.delete(
     "/v1/allowance/:id",
     verifyToken,
-    restrictTo("Y"),
+    restrictTo("HR"),
     deleteAllowance
   );
   router.put(
     "/v1/allowance/:id",
     verifyToken,
+    restrictTo("HR"),
     validateResource(allowanceSchema),
     updateAllowance
   );
