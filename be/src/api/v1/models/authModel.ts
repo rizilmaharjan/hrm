@@ -1,38 +1,10 @@
 import { connectToDB } from "../../../config/database";
 
-// export const userLogin = async (
-//   username: string,
-//   password: string
-// ): Promise<{ status?: number; message?: string; userData?: any }> => {
-//   try {
-//     const connection = await connectToDB();
-//     const result = await connection.execute(
-//       `SELECT USER_CD FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:password, USER_PASSWORD)`,
-//       { username, password }
-//     );
-
-//     if (result.rows && result.rows.length > 0) {
-//       const rows: any[] = result.rows;
-//       const users = rows.map((row) => {
-//         return {
-//           USER_CD: row[0],
-//         };
-//       });
-//       const userData = users[0];
-//       return { status: 200, message: "User logged in successfully", userData };
-//     } else {
-//       return { status: 401, message: "Invalid username or password" };
-//     }
-//   } catch (error: any) {
-//     throw new Error(error.message);
-//   }
-// };
-
 export const hrLogin = async (username: string, password: string) => {
   try {
     const connection = await connectToDB();
     const result = await connection.execute(
-      `SELECT USER_CD FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:password, USER_PASSWORD)`,
+      `SELECT USER_CD,SUPER_USER FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:password, USER_PASSWORD)`,
       { username, password }
     );
 
@@ -44,7 +16,12 @@ export const hrLogin = async (username: string, password: string) => {
         };
       });
       const userData = users[0];
-      return { status: 200, message: "User logged in successfully", userData };
+      return {
+        status: 200,
+        message: "User logged in successfully",
+        users,
+        userData,
+      };
     } else {
       return { status: 401, message: "Invalid username or password" };
     }
