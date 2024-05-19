@@ -1,6 +1,11 @@
-import { userChangePassword, userLogin } from "../models/authModel";
+import {
+  userChangePassword,
+  hrLogin,
+  employeeLogin,
+} from "../models/authModel";
 import jwt from "jsonwebtoken";
 import { env } from "../../../config/env";
+import { isHRUsername } from "../helpers/auth";
 
 export const loginUser = async (
   username: string,
@@ -12,14 +17,27 @@ export const loginUser = async (
   userData?: any[];
 }> => {
   try {
-    const response = await userLogin(username, password);
-    const { status = 500, users, message = "something went wrong" } = response;
-    if (status === 200 && users) {
-      // console.log("users", users);
+    let response;
+    if (isHRUsername(username)) {
+      // authenticate as HR
+      response = await hrLogin(username, password);
+    } else {
+      // authenticate as user
+      response = await employeeLogin(username, password);
+    }
+    // const response = await userLogin(username, password);
+    const {
+      status = 500,
+      userData,
+      message = "something went wrong",
+    } = response;
+    if (status === 200) {
       const token = jwt.sign(
         {
-          username: users[0].USER_CD,
-          role: users[0].SUPER_USER,
+          username: isHRUsername(username)
+            ? (userData as { USER_CD: string }).USER_CD
+            : (userData as { EMPLOYEE_CD: string }).EMPLOYEE_CD,
+          role: isHRUsername(username) ? "HR" : "Employee",
         },
         env.JWT_SECRET as string
       );
