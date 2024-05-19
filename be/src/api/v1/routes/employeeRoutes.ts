@@ -7,6 +7,7 @@ const router = Router();
 const routes = () => {
   router.get("/v1/employee", EmployeeController.getEmployee);
   router.get("/v1/employee/:id", EmployeeController.getEmployeeById);
+  router.put("/v1/employee/:id", EmployeeController.editEmployeeInfo);
 
   return router;
 };
