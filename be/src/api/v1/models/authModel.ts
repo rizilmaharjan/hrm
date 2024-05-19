@@ -1,9 +1,34 @@
 import { connectToDB } from "../../../config/database";
 
-export const userLogin = async (
-  username: string,
-  password: string
-): Promise<{ status?: number; message?: string; userData?: any }> => {
+// export const userLogin = async (
+//   username: string,
+//   password: string
+// ): Promise<{ status?: number; message?: string; userData?: any }> => {
+//   try {
+//     const connection = await connectToDB();
+//     const result = await connection.execute(
+//       `SELECT USER_CD FROM secu_user_mst WHERE USER_CD = :username AND USER_PASSWORD = decrypt_password(:password, USER_PASSWORD)`,
+//       { username, password }
+//     );
+
+//     if (result.rows && result.rows.length > 0) {
+//       const rows: any[] = result.rows;
+//       const users = rows.map((row) => {
+//         return {
+//           USER_CD: row[0],
+//         };
+//       });
+//       const userData = users[0];
+//       return { status: 200, message: "User logged in successfully", userData };
+//     } else {
+//       return { status: 401, message: "Invalid username or password" };
+//     }
+//   } catch (error: any) {
+//     throw new Error(error.message);
+//   }
+// };
+
+export const hrLogin = async (username: string, password: string) => {
   try {
     const connection = await connectToDB();
     const result = await connection.execute(
@@ -16,6 +41,32 @@ export const userLogin = async (
       const users = rows.map((row) => {
         return {
           USER_CD: row[0],
+        };
+      });
+      const userData = users[0];
+      return { status: 200, message: "User logged in successfully", userData };
+    } else {
+      return { status: 401, message: "Invalid username or password" };
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const employeeLogin = async (username: string, password: string) => {
+  try {
+    const connection = await connectToDB();
+    const result = await connection.execute(
+      `SELECT EMPLOYEE_CD FROM employee WHERE EMPLOYEE_CD = :username AND  EMP_PASSWORD = :password`,
+      { username, password }
+    );
+    // console.log("result", result);
+
+    if (result.rows && result.rows.length > 0) {
+      const rows: any[] = result.rows;
+      const users = rows.map((row) => {
+        return {
+          EMPLOYEE_CD: row[0],
         };
       });
       const userData = users[0];
