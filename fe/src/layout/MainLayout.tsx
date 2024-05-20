@@ -5,11 +5,25 @@ import EmployeeSidebar from "../components/EmployeeSidebar";
 
 export default function MainLayout() {
   const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
+  console.log("Raw userString from localStorage:", userString);
+
+  let user = null;
+
+  if (userString) {
+    try {
+      const parsedOuter = JSON.parse(userString);
+      user = JSON.parse(parsedOuter.user);
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+    }
+  }
+
+  console.log("Parsed user object:", user);
 
   // Determine if the user is an admin or an employee
-  const isAdmin = user && user.currentUser && user.currentUser.USER_CD;
-  const isEmployee = user && user.currentUser && user.currentUser.EMPLOYEE_CD;
+  const isAdmin = user && user.currentUser && user.currentUser.role === "admin";
+  const isEmployee =
+    user && user.currentUser && user.currentUser.role === "employee";
 
   return (
     <>
@@ -17,13 +31,9 @@ export default function MainLayout() {
         <Navbar />
         <div className="flex h-full">
           <div className="">
-            {isAdmin ? (
-              <Sidebar />
-            ) : isEmployee ? (
-              <EmployeeSidebar />
-            ) : (
-              <Sidebar />
-            )}
+            {
+              isAdmin ? <Sidebar /> : isEmployee ? <EmployeeSidebar /> : null // Or you can render a default component or message here
+            }
           </div>
           <div className="w-full h-full">
             <Outlet />
