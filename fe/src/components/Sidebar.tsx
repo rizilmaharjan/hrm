@@ -14,7 +14,7 @@ export default function Sidebar() {
             {sidebarItems.map((item) => (
               <li
                 key={item.title}
-                className=" rounded-lg text-white hover:bg-gray-700 group"
+                className="rounded-lg text-white hover:bg-gray-700 group"
               >
                 <NavLink
                   className={({ isActive }) =>

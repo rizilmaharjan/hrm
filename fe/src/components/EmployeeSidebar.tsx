@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { employeeSidebar } from "../constants";
 import { IconDown, IconUp } from "../assets/svg";
 
@@ -11,17 +11,30 @@ const EmployeeSidebar: React.FC = () => {
   };
 
   return (
-    <div className="w-64 bg-gray-100 p-4">
-      <ul className="space-y-2">
+    <div className="w-14 sm:w-64 h-full transform px-3 py-4 overflow-y-auto bg-[#111827]">
+      <ul className="space-y-2 font-medium ">
         {employeeSidebar.map((item) => (
-          <li key={item.id}>
+          <li
+            key={item.id}
+            className="rounded-lg text-white hover:bg-gray-700 group"
+          >
             <div
-              className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-200 cursor-pointer"
+              className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-700 cursor-pointer"
               onClick={() => handleItemClick(item.id)}
             >
-              <Link to={item.path} className="flex gap-4 items-center">
-                {item.icon()} {item.title}
-              </Link>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? " flex items-center font-bold p-2 rounded-lg bg-gray-600"
+                    : "flex items-center p-2"
+                }
+                to={item.path}
+              >
+                {item.icon()}
+                <span className="flex-1 ms-3 whitespace-nowrap hidden sm:block">
+                  {item.title}
+                </span>
+              </NavLink>
               {item.children && (
                 <span className="ml-2">
                   {openItemId === item.id ? <IconUp /> : <IconDown />}
