@@ -13,6 +13,7 @@ export const hrLogin = async (username: string, password: string) => {
       const users = rows.map((row) => {
         return {
           USER_CD: row[0],
+          role: "admin",
         };
       });
       const userData = users[0];
@@ -44,10 +45,15 @@ export const employeeLogin = async (username: string, password: string) => {
       const users = rows.map((row) => {
         return {
           EMPLOYEE_CD: row[0],
+          role: "employee",
         };
       });
       const userData = users[0];
-      return { status: 200, message: "User logged in successfully", userData };
+      return {
+        status: 200,
+        message: "User logged in successfully",
+        userData,
+      };
     } else {
       return { status: 401, message: "Invalid username or password" };
     }
