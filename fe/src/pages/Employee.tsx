@@ -4,6 +4,8 @@ import Loader from "../components/Loader";
 import { employeeTitle } from "../constants";
 import { dateConversion } from "../utils/dateConversion";
 import { Link } from "react-router-dom";
+import { generatePDF } from "../utils/matrixPdf";
+import { Instance } from "../utils/Instance";
 
 type TEmployee = {
   employee_cd: string;
@@ -19,6 +21,8 @@ type TEmployee = {
 
 const Employee = () => {
   const [page, setPage] = useState<number>(1);
+  // const [payrollData, setPayrollData] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const limit = 20;
   const {
     isPending,
@@ -33,6 +37,20 @@ const Employee = () => {
   useEffect(() => {
     refetch(); // Call refetch whenever page changes
   }, [page, refetch]);
+
+  const handleButtonClick = async () => {
+    try {
+      setIsLoading(true);
+      const response = await Instance.get("/v1/payroll");
+      // console.log("Data:", response?.data?.data);
+      // setPayrollData(response?.data?.data);
+      setIsLoading(false);
+      generatePDF(response?.data?.data); // Call generatePDF after setting the data
+      console.log("Data fetched successfully:", response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handlePrev = () => {
     if (page > 1) {

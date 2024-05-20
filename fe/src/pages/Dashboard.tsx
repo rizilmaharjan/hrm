@@ -1,7 +1,11 @@
+import DynamicSidebar from "../components/DynamicSidebar";
+import EmployeeSidebar from "../components/EmployeeSidebar";
 import coverPage from "/hr.jpg";
 export default function Dashboard() {
   return (
     <>
+      {/* <DynamicSidebar /> */}
+      {/* <EmployeeSidebar /> */}
       <div className="flex flex-col">
         <header className="  w-fit mx-auto  mt-10 leading-10 ">
           <h1 className="text-2xl font-semibold">

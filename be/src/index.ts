@@ -16,6 +16,11 @@ import religionRoutes from "./api/v1/routes//religionRoutes";
 import relationRoutes from "./api/v1/routes/relationRoutes";
 import districtRoutes from "./api/v1/routes/districtRoutes";
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
+
+import payrollRoutes from "./api/v1/routes/payrollRoutes";
+import reportRoutes from "./api/v1/routes/reportRoutes";
+import menyRoutes from "./api/v1/routes/menuRoutes";
+import dropdownRoutes from "./api/v1/routes/dropdownRoutes";
 import applyLeaveRoutes from "./api/v1/routes/applyLeaveRoutes";
 import { errorMiddleware } from "./api/v1/middlewares/error-handler";
 import { appError } from "./api/v1/helpers/appError";
@@ -45,6 +50,10 @@ app.use("/api", religionRoutes());
 app.use("/api", relationRoutes());
 app.use("/api", districtRoutes());
 app.use("/api", employeeRoutes());
+app.use("/api", payrollRoutes());
+app.use("/api", reportRoutes());
+app.use("/api", menyRoutes());
+app.use("/api", dropdownRoutes());
 app.use("/api", applyLeaveRoutes());
 
 // Handling unhandled routes

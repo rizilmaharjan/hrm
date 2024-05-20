@@ -46,7 +46,7 @@ export const postPosition = async (body: TPosition) => {
 export const getPosition = async () => {
   try {
     const connection = await connectToDB();
-    const sql = `SELECT * FROM position`;
+    const sql = `SELECT * FROM position ORDER BY position_cd`;
     const result = await connection.execute(sql);
     await connection.close();
     if (result.rows) {

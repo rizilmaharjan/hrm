@@ -18,6 +18,7 @@ import {
   setEditID,
   setIsEdit,
 } from "../redux/edit/editSlice";
+import { addFooter } from "../utils/pdfFooter";
 
 export default function JobType() {
   const [jobType, setJobType] = useState<TJobType[]>([]);
@@ -111,21 +112,6 @@ export default function JobType() {
     let yPos = 10;
     doc.text("Job Type Data", 10, yPos);
     yPos += 10;
-    const addFooter = (doc: jsPDF, pageNumber: number) => {
-      const pageCount = doc.getNumberOfPages();
-      doc.setFontSize(10);
-      doc.text(
-        `Page ${pageNumber} of ${pageCount}`,
-        doc.internal.pageSize.width / 2,
-        doc.internal.pageSize.height - 10,
-        { align: "center" }
-      );
-      doc.text(
-        new Date().toLocaleDateString(),
-        10,
-        doc.internal.pageSize.height - 10
-      );
-    };
     const headers = ["Code", "Description", "Tax", "CIT", "PF", "Disabled"];
     const data = jobType.map((item) => [
       item.job_type_cd,
@@ -221,7 +207,7 @@ export default function JobType() {
           </div>
         </div>
         <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+          <table className="w-full h-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
               <tr>
                 {jobTypeTitle.map((item) => (

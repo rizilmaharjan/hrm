@@ -3,7 +3,8 @@ import AccountInfoSection from "../components/Profile/AccountInfoSection";
 import PayrollInfoSection from "../components/Profile/PayrollInfoSection";
 import PersonalInfoSection from "../components/Profile/PersonalInfoSection";
 import Allowance from "../pages/Allowance";
-import Attendence from "../pages/Attendence";
+import ApplyLeave from "../pages/ApplyLeave";
+import Attendance from "../pages/Attendance";
 import ChangePassword from "../pages/ChangePassword";
 import Dashboard from "../pages/Dashboard";
 import Employee from "../pages/Employee";
@@ -40,17 +41,20 @@ export const privateRoutes: RouteConfig[] = [
     path: "/employee",
     element: <Employee />,
   },
-  // {
-  //   path: "/employee/:id",
-  //   element: <Profile />,
-  // },
   {
     path: "/payroll",
     element: <Payroll />,
   },
   {
-    path: "/attendence",
-    element: <Attendence />,
+    path: "/attendance",
+    element: <Attendance />,
+    children: [
+      //Employee Routes
+      {
+        path: "apply-leave",
+        element: <ApplyLeave />,
+      },
+    ],
   },
   {
     path: "/service-event",
