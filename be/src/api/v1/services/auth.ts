@@ -29,6 +29,7 @@ export const loginUser = async (
     const {
       status = 500,
       userData,
+
       message = "something went wrong",
     } = response;
     if (status === 200) {
