@@ -42,6 +42,7 @@ export default function Login() {
 
     try {
       const res = await Instance.post("/v1/auth/login", data);
+      console.log("res", res);
       dispatch(logInSuccess(res.data.userData));
       reset();
     } catch (error: any) {
