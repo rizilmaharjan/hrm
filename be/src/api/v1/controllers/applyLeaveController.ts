@@ -53,3 +53,25 @@ export const updateLeave = catchAsync(
     return res.status(status).json({ message });
   }
 );
+export const nepToEng = catchAsync(
+  async (req: any, res: any, next: NextFunction) => {
+    const { status, message, data } = await leaveService.nepToEng(req.body);
+    if (status === 400) {
+      next(new appError(status, message));
+      return;
+    }
+
+    return res.status(status).json({ message, data });
+  }
+);
+export const engToNep = catchAsync(
+  async (req: any, res: any, next: NextFunction) => {
+    const { status, message, data } = await leaveService.engToNep(req.body);
+    if (status === 400) {
+      next(new appError(status, message));
+      return;
+    }
+
+    return res.status(status).json({ message, data });
+  }
+);

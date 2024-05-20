@@ -31,6 +31,19 @@ const routes = () => {
     restrictTo("Employee"),
     leaveController.updateLeave
   );
+
+  router.post(
+    "/v1/nep-to-eng",
+    verifyToken,
+    restrictTo("Employee"),
+    leaveController.nepToEng
+  );
+  router.post(
+    "/v1/eng-to-nep",
+    verifyToken,
+    restrictTo("Employee"),
+    leaveController.engToNep
+  );
   // router.get("/v1/users", getUser);
   return router;
 };
