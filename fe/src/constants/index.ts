@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   AllowanceIcon,
   ClockIcon,
@@ -20,6 +21,14 @@ type District = {
   municipalities: string[];
 };
 
+type SidebarItem = {
+  id: number;
+  title: string;
+  icon?: () => ReactNode;
+  path: string;
+  children?: SidebarItem[];
+};
+
 export const sidebarItems: TsidebarItems[] = [
   {
     title: "Dashboard",
@@ -37,9 +46,9 @@ export const sidebarItems: TsidebarItems[] = [
     path: "/payroll",
   },
   {
-    title: "Attendence",
+    title: "Attendance",
     icon: ClockIcon,
-    path: "/attendence",
+    path: "/attendance",
   },
   {
     title: "Service Event",
@@ -810,5 +819,45 @@ export const departmentData = [
   {
     department_cd: "ATM",
     department_desc: "Anatomy",
+  },
+];
+
+export const employeeSidebar: SidebarItem[] = [
+  {
+    id: 0,
+    title: "Dashboard",
+    icon: HomeIcon,
+    path: "/",
+  },
+  {
+    id: 1,
+    title: "Attendance",
+    path: "/attendance",
+    icon: ClockIcon,
+    children: [
+      {
+        id: 11,
+        title: "Apply Leave",
+        path: "/attendance/apply-leave",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "Paysheet",
+    path: "/paysheet",
+    icon: DollarSignIcon,
+    children: [
+      {
+        id: 21,
+        title: "Payment Sheet",
+        path: "/paysheet/payment-sheet",
+      },
+      {
+        id: 22,
+        title: "Tax Sheet",
+        path: "/paysheet/tax-sheet",
+      },
+    ],
   },
 ];

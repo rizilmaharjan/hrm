@@ -24,7 +24,7 @@ export const postJobType = async (body: TJobType) => {
   // console.log("Repository data:", data, entered_dt);
   try {
     const connection = await connectToDB();
-    const sql = `INSERT INTO job_type (JOB_TYPE_CD, JOB_TYPE_DESC, TAX, PF_ALLOWED, CIT, DISABLED, ENTERED_BY, ENTERED_DT, PAY_GENERATE, TAX_PERCENT, SINGLE_REBATE, MARRIED_REBATE, GRADE_ALLOWED, IS_JOB_EXPIRE_DATE, JOB_EXPIRE_MONTHS, IS_SOCIAL_SECURITY_FUND, JOB_TYPE_GROUP) VALUES (:job_type_cd, :job_type_desc, :tax, :pf_allowed, :cit, :disabled, :entered_by, TO_DATE(:entered_dt, 'YYYY-MM-DD HH24:MI:SS'), :pay_generate, :tax_percent, :single_rebate, :married_rebate, :grade_allowed, :is_job_expire_date, :job_expire_months, :is_social_security_fund, :job_type_group)`;
+    const sql = `INSERT INTO job_type (JOB_TYPE_CD, JOB_TYPE_DESC, TAX, PF_ALLOWED, CIT, DISABLED, ENTERED_BY, ENTERED_DT, PAY_GENERATE, TAX_PERCENT, SINGLE_REBATE, MARRIED_REBATE, GRADE_ALLOWED, IS_JOB_EXPIRE_DATE, JOB_EXPIRE_MONTHS, IS_SOCIAL_SECURITY_FUND, JOB_TYPE_GROUP) VALUES (:job_type_cd, :job_type_desc, :tax, :pf_allowed, :cit, :disabled, :entered_by, sysdate, :pay_generate, :tax_percent, :single_rebate, :married_rebate, :grade_allowed, :is_job_expire_date, :job_expire_months, :is_social_security_fund, :job_type_group)`;
     const result = await connection.execute(sql, {
       job_type_cd,
       job_type_desc,
@@ -33,7 +33,7 @@ export const postJobType = async (body: TJobType) => {
       cit,
       disabled,
       entered_by,
-      entered_dt,
+      // entered_dt,
       pay_generate,
       tax_percent,
       single_rebate,

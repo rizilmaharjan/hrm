@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Report from "../components/modal/Report";
+import ApplyLeave from "./ApplyLeave";
 
-const Attendence = () => {
+const Attendance = () => {
   const [openReport, setOpenReport] = useState<boolean>(false);
   return (
-    <>
-      {openReport && (
+    <div>
+      {/* {openReport && (
         <Report openReport={openReport} setOpenReport={setOpenReport} />
       )}
       <button
@@ -14,9 +15,10 @@ const Attendence = () => {
         type="button"
       >
         Report
-      </button>
-    </>
+      </button> */}
+      <ApplyLeave />
+    </div>
   );
 };
 
-export default Attendence;
+export default Attendance;

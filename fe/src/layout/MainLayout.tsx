@@ -10,7 +10,7 @@ export default function MainLayout() {
           <div className="">
             <Sidebar />
           </div>
-          <div className="w-full">
+          <div className="w-full h-full">
             <Outlet />
           </div>
         </div>

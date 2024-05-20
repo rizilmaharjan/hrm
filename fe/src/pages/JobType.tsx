@@ -18,6 +18,7 @@ import {
   setEditID,
   setIsEdit,
 } from "../redux/edit/editSlice";
+import { addFooter } from "../utils/pdfFooter";
 
 export default function JobType() {
   const [jobType, setJobType] = useState<TJobType[]>([]);
@@ -206,7 +207,7 @@ export default function JobType() {
           </div>
         </div>
         <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg scrollbar-track-gray-100 h-full">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
+          <table className="w-full h-full text-sm text-left rtl:text-right text-gray-500 table-fixed">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
               <tr>
                 {jobTypeTitle.map((item) => (
