@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 type TCurrentUser = {
   USER_CD: string;
+  role: string;
 };
 const initialState = {
   currentUser: null as TCurrentUser | null,
