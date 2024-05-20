@@ -188,3 +188,61 @@ export const updateLeave = async (leaveData: any, id: string) => {
     throw new Error(error.message);
   }
 };
+
+export const nepToEng = async (date: { from: string }) => {
+  try {
+    const connection = await connectToDB();
+
+    const sql = `SELECT fn_neptoeng(:fromDate) as convertedDate FROM dual`;
+    const result: any = await connection.execute(sql, { fromDate: date.from });
+    await connection.close();
+    console.log("result", result);
+
+    if (!result.rows || result.rows.length === 0) {
+      return {
+        status: 404,
+        message: "Date not found",
+      };
+    }
+
+    const convertedDate = result.rows[0][0];
+
+    return {
+      status: 200,
+      message: "Date converted successfully",
+      data: convertedDate,
+    };
+  } catch (error: any) {
+    console.error(error.message); // Log the error for debugging purposes
+    throw new Error(error.message);
+  }
+};
+export const engToNep = async (date: { from: string }) => {
+  try {
+    console.log("date", date);
+    const connection = await connectToDB();
+
+    const sql = `SELECT fn_engtonep(to_date(:fromDate,'YYYY-MM-DD')) as convertedDate FROM dual`;
+    const result: any = await connection.execute(sql, { fromDate: date.from });
+    await connection.close();
+    console.log("result", result);
+
+    if (!result.rows || result.rows.length === 0) {
+      return {
+        status: 404,
+        message: "Date not found",
+      };
+    }
+
+    const convertedDate = result.rows[0][0];
+
+    return {
+      status: 200,
+      message: "Date converted successfully",
+      data: convertedDate,
+    };
+  } catch (error: any) {
+    console.error(error.message); // Log the error for debugging purposes
+    throw new Error(error.message);
+  }
+};
