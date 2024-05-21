@@ -7,22 +7,15 @@ import { restrictTo } from "../middlewares/restrictTo";
 const router = Router();
 
 const routes = () => {
-  router.get(
-    "/v1/employee",
-    verifyToken,
-    restrictTo("HR"),
-    EmployeeController.getEmployee
-  );
+  router.get("/v1/employee", verifyToken, EmployeeController.getEmployee);
   router.get(
     "/v1/employee/:id",
     verifyToken,
-    restrictTo("HR"),
     EmployeeController.getEmployeeById
   );
   router.put(
     "/v1/employee/:id",
     verifyToken,
-    restrictTo("HR"),
     EmployeeController.editEmployeeInfo
   );
 

@@ -91,3 +91,43 @@ export const privateRoutes: RouteConfig[] = [
     ],
   },
 ];
+
+export const employeeRoutes = [
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+  {
+    path: "/attendance",
+    element: <Attendance />,
+    children: [
+      //Employee Routes
+      {
+        path: "apply-leave",
+        element: <ApplyLeave />,
+      },
+    ],
+  },
+  {
+    path: "/payroll",
+    element: <Payroll />,
+  },
+  {
+    path: "/employee",
+    element: <UserProfile />,
+    children: [
+      {
+        path: "profile/:id", // Nested under /user/profile/personal-info
+        element: <PersonalInfoSection />,
+      },
+      {
+        path: "account-info/:id",
+        element: <AccountInfoSection />,
+      },
+      {
+        path: "payroll-info/:id",
+        element: <PayrollInfoSection />,
+      },
+    ],
+  },
+];

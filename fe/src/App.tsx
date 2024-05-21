@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import MainLayout from "./layout/MainLayout";
 import Private from "./layout/Private";
-import { privateRoutes, publicRoutes } from "./routes";
+import { employeeRoutes, privateRoutes, publicRoutes } from "./routes";
 import { useAppSelector } from "./redux/hooks";
 import Attendance from "./pages/Attendance";
 import Dashboard from "./pages/Dashboard";
@@ -19,28 +19,33 @@ export default function App() {
             <Route key={index} path={route.path} element={route.element} />
           ))}
           <Route element={<MainLayout />}>
-            {currentUser?.role === "admin" ? (
-              privateRoutes.map((route, index) => (
-                <Route key={index} path={route.path} element={route.element}>
-                  {route.children &&
-                    route.children.map((childRoute) => (
-                      <Route
-                        key={childRoute.path}
-                        path={childRoute.path}
-                        element={childRoute.element}
-                      />
-                    ))}
-                </Route>
-              ))
-            ) : (
-              <>
-                <Route
-                  path="/attendance/apply-leave"
-                  element={<Attendance />}
-                />
-                <Route path="/dashboard" element={<Dashboard />} />
-              </>
-            )}
+            {currentUser?.role === "admin"
+              ? privateRoutes.map((route, index) => (
+                  <Route key={index} path={route.path} element={route.element}>
+                    {route.children &&
+                      route.children.map((childRoute) => (
+                        <Route
+                          key={childRoute.path}
+                          path={childRoute.path}
+                          element={childRoute.element}
+                        />
+                      ))}
+                  </Route>
+                ))
+              : currentUser?.role === "employee"
+              ? employeeRoutes.map((route, index) => (
+                  <Route key={index} path={route.path} element={route.element}>
+                    {route.children &&
+                      route.children.map((childRoute) => (
+                        <Route
+                          key={childRoute.path}
+                          path={childRoute.path}
+                          element={childRoute.element}
+                        />
+                      ))}
+                  </Route>
+                ))
+              : null}
           </Route>
         </Route>
       </Routes>
