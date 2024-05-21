@@ -55,6 +55,7 @@ export const updateLeave = catchAsync(
 );
 export const nepToEng = catchAsync(
   async (req: any, res: any, next: NextFunction) => {
+    console.log("reqbody", req.body);
     const { status, message, data } = await leaveService.nepToEng(req.body);
     if (status === 400) {
       next(new appError(status, message));
