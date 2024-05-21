@@ -213,12 +213,14 @@ export const updateLeave = async (leaveData: any, id: string) => {
   }
 };
 
-export const nepToEng = async (date: { from: string }) => {
+export const nepToEng = async (date: { nepaliDate: string }) => {
   try {
     const connection = await connectToDB();
 
     const sql = `SELECT fn_neptoeng(:fromDate) as convertedDate FROM dual`;
-    const result: any = await connection.execute(sql, { fromDate: date.from });
+    const result: any = await connection.execute(sql, {
+      fromDate: date.nepaliDate,
+    });
     await connection.close();
     console.log("result", result);
 
@@ -241,13 +243,15 @@ export const nepToEng = async (date: { from: string }) => {
     throw new Error(error.message);
   }
 };
-export const engToNep = async (date: { from: string }) => {
+export const engToNep = async (date: { englishDate: string }) => {
   try {
     console.log("date", date);
     const connection = await connectToDB();
 
     const sql = `SELECT fn_engtonep(to_date(:fromDate,'YYYY-MM-DD')) as convertedDate FROM dual`;
-    const result: any = await connection.execute(sql, { fromDate: date.from });
+    const result: any = await connection.execute(sql, {
+      fromDate: date.englishDate,
+    });
     await connection.close();
     console.log("result", result);
 
