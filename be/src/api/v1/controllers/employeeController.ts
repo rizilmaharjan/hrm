@@ -5,8 +5,8 @@ import { appError } from "../helpers/appError";
 
 export const getEmployee = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const pageNumber = Number(req.query.page) || 1;
-    const pageSize = Number(req.query.limit) || 20;
+    const pageNumber = Number(req.query.page);
+    const pageSize = Number(req.query.limit);
     const { status, message, employees, rowCount } =
       await EmployeeService.getEmployee(pageNumber, pageSize);
     if (status === 404) {

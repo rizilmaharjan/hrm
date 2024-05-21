@@ -1,7 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Instance } from "../utils/Instance";
 
-export const useFetchData = (url: string, page = 1, limit = 20) => {
+type FetchDataOptions = {
+  page?: number;
+  limit?: number;
+};
+export const useFetchData = (url: string, options: FetchDataOptions = {}) => {
+  const { page, limit } = options;
+  console.log("page", page);
+  console.log("limit", limit);
   const { isPending, error, data, refetch } = useQuery({
     queryKey: [url, page, limit],
     queryFn: () =>

@@ -15,6 +15,12 @@ export const applyLeave = async (leaveData: any) => {
       FROM_LEAVE_DT_NEP,
       TO_LEAVE_DT,
       TO_LEAVE_DT_NEP,
+      LEAVE_TYPE,
+      PHONE_NO,
+      REMARKS,
+      JOB_ASSIGN_TO,
+      SUPERVISING_EMPLOYEE_CD,
+      SANCTIONING_EMPLOYEE_CD,
     } = leaveData;
 
     const sql = `
@@ -27,7 +33,13 @@ export const applyLeave = async (leaveData: any) => {
         FROM_LEAVE_DT,
         FROM_LEAVE_DT_NEP,
         TO_LEAVE_DT,
-        TO_LEAVE_DT_NEP
+        TO_LEAVE_DT_NEP,
+        LEAVE_TYPE,
+        PHONE_NO,
+        REMARKS,
+        JOB_ASSIGN_TO,
+        SUPERVISING_EMPLOYEE_CD,
+        SANCTIONING_EMPLOYEE_CD
       ) VALUES (
         :LEAVE_APPLY_ID,
         :EMPLOYEE_CD,
@@ -37,7 +49,13 @@ export const applyLeave = async (leaveData: any) => {
         TO_DATE(:FROM_LEAVE_DT, 'DD-MM-YYYY'),
         :FROM_LEAVE_DT_NEP,
         TO_DATE(:TO_LEAVE_DT, 'DD-MM-YYYY'),
-        :TO_LEAVE_DT_NEP
+        :TO_LEAVE_DT_NEP,
+        :LEAVE_TYPE,
+        :PHONE_NO,
+        :REMARKS,
+        :JOB_ASSIGN_TO,
+        :SUPERVISING_EMPLOYEE_CD,
+        : SANCTIONING_EMPLOYEE_CD
       )`;
 
     const bindParams = {
@@ -50,6 +68,12 @@ export const applyLeave = async (leaveData: any) => {
       FROM_LEAVE_DT_NEP,
       TO_LEAVE_DT,
       TO_LEAVE_DT_NEP,
+      LEAVE_TYPE,
+      PHONE_NO,
+      REMARKS,
+      JOB_ASSIGN_TO,
+      SUPERVISING_EMPLOYEE_CD,
+      SANCTIONING_EMPLOYEE_CD,
     };
 
     const result = await connection.execute(sql, bindParams);
