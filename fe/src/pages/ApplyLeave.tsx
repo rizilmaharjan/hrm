@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import Dropdown, { ItemProps } from "../components/Dropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetchData } from "../api";
+import { Instance } from "../utils/Instance";
 
 type TLeaveType = {
   leave_cd: string;
@@ -9,7 +10,7 @@ type TLeaveType = {
 };
 
 const ApplyLeave = () => {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, reset } = useForm();
   const [selectedJobAssign, setSelectedJobAssign] = useState<ItemProps | null>(
     null
   );
@@ -17,6 +18,47 @@ const ApplyLeave = () => {
     useState<ItemProps | null>(null);
   const [selectedSanctioningOfficer, setSelectedSanctioningOfficer] =
     useState<ItemProps | null>(null);
+
+  const [englishDateFrom, setEnglishDateFrom] = useState("");
+  const [englishDateTo, setEnglishDateTo] = useState("");
+  const [nepaliDateFrom, setNepaliDateFrom] = useState("");
+  const [nepaliDateTo, setNepaliDateTo] = useState("");
+
+  useEffect(() => {
+    if (englishDateFrom) {
+      reset((prevValues) => ({
+        ...prevValues,
+        leaveFrom: englishDateFrom,
+      }));
+    }
+  }, [englishDateFrom, reset]);
+
+  useEffect(() => {
+    if (englishDateTo) {
+      reset((prevValues) => ({
+        ...prevValues,
+        leaveTo: englishDateTo,
+      }));
+    }
+  }, [englishDateTo, reset]);
+
+  useEffect(() => {
+    if (nepaliDateFrom) {
+      reset((prevValues) => ({
+        ...prevValues,
+        leaveFromNep: nepaliDateFrom,
+      }));
+    }
+  }, [nepaliDateFrom, reset]);
+
+  useEffect(() => {
+    if (nepaliDateTo) {
+      reset((prevValues) => ({
+        ...prevValues,
+        leaveToNep: nepaliDateTo,
+      }));
+    }
+  }, [nepaliDateTo, reset]);
 
   const { data: employeeData } = useFetchData("/v1/employee");
   const { data: leaveTypeData } = useFetchData("/v1/leave-type");
@@ -46,6 +88,38 @@ const ApplyLeave = () => {
     console.log(data);
   };
 
+  const convertNepaliToEnglish = async (nepaliDate: string, field: string) => {
+    try {
+      const res = await Instance.post("/v1/nep-to-eng", { nepaliDate });
+      const formattedDate = new Date(res.data.data).toISOString().slice(0, 10);
+      if (field === "leaveFrom") {
+        setEnglishDateFrom(formattedDate);
+      } else if (field === "leaveTo") {
+        setEnglishDateTo(formattedDate);
+      }
+    } catch (error) {
+      console.log("Error converting nepali to english", error);
+    }
+  };
+
+  const convertEnglishToNepali = async (englishDate: string, field: string) => {
+    console.log("englishDate", englishDate);
+    console.log("typeofenglishDate", typeof englishDate);
+    try {
+      const res = await Instance.post("/v1/eng-to-nep", { englishDate });
+      const formattedDate = new Date(res.data.data).toISOString().slice(0, 10);
+
+      console.log("nepaliDate", res);
+      if (field === "leaveFrom") {
+        setNepaliDateFrom(formattedDate);
+      } else if (field === "leaveTo") {
+        setNepaliDateTo(formattedDate);
+      }
+    } catch (error) {
+      console.error("Error converting English to Nepali:", error);
+    }
+  };
+
   return (
     <>
       <div className="bg-gray-100 max-w-[48rem] p-4 m-2 rounded-lg">
@@ -57,7 +131,10 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="text"
-                  {...register("FROM_LEAVE_DT_NEP")}
+                  {...register("leaveFromNep")}
+                  onBlur={(e) =>
+                    convertNepaliToEnglish(e.target.value, "leaveFrom")
+                  }
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">B.S.</span>
@@ -65,7 +142,10 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="date"
-                  {...register("FROM_LEAVE_DT")}
+                  {...register("leaveFrom")}
+                  onBlur={(e) =>
+                    convertEnglishToNepali(e.target.value, "leaveFrom")
+                  }
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">A.D.</span>
@@ -76,7 +156,10 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="text"
-                  {...register("TO_LEAVE_DT_NEP")}
+                  {...register("leaveToNep")}
+                  onBlur={(e) =>
+                    convertNepaliToEnglish(e.target.value, "leaveTo")
+                  }
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">B.S.</span>
@@ -84,7 +167,10 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="date"
-                  {...register("TO_LEAVE_DT")}
+                  {...register("leaveTo")}
+                  onBlur={(e) =>
+                    convertEnglishToNepali(e.target.value, "leaveTo")
+                  }
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">A.D.</span>
