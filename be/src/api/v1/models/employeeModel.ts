@@ -1,21 +1,31 @@
 import { connectToDB } from "../../../config/database";
 
-export const getEmployee = async (pageNumber: number, pageSize: number) => {
+export const getEmployee = async (pageNumber?: number, pageSize?: number) => {
   try {
+    console.log("pageNumber", pageNumber);
+    console.log("pageSize", pageSize);
     const connection = await connectToDB();
-    const offset = (pageNumber - 1) * pageSize;
+    let offset;
+    let sql;
     const count = await connection.execute(
       `SELECT COUNT(*) AS row_count FROM EMPLOYEE`
     );
     const rowCount = count.rows ? (count.rows as any[])[0]?.[0] : 0;
 
-    const sql = `SELECT *
-    FROM (
-        SELECT e.*, ROWNUM AS rn
-        FROM EMPLOYEE e
-    )
-    WHERE rn > ${offset}
-    AND ROWNUM <= ${pageSize}`;
+    if (pageNumber && pageSize) {
+      console.log("i am inside if block");
+      offset = (pageNumber - 1) * pageSize;
+      sql = `SELECT *
+      FROM (
+          SELECT e.*, ROWNUM AS rn
+          FROM EMPLOYEE e
+      )
+      WHERE rn > ${offset}
+      AND ROWNUM <= ${pageSize}`;
+    } else {
+      sql = `SELECT e.*, ROWNUM AS rn FROM EMPLOYEE e`;
+    }
+
     const result = await connection.execute(sql);
     await connection.close();
     if (result.rows) {

@@ -29,7 +29,7 @@ const Employee = () => {
     error,
     data: employeeData,
     refetch,
-  } = useFetchData("/v1/employee", page, limit);
+  } = useFetchData("/v1/employee", { page, limit });
   // console.log(employeeData);
   const employee = employeeData?.employees;
   const count = employeeData?.rowCount;

@@ -67,8 +67,8 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div
           className={`absolute left-0 mt-2 max-h-48 w-full overflow-auto bg-white border rounded-md shadow-lg z-10 ${dropdownStyles}`}
         >
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
+          {filteredItems?.length > 0 ? (
+            filteredItems?.map((item) => (
               <a
                 key={item.id}
                 href="#"
