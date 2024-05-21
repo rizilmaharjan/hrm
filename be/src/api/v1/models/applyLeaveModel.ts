@@ -15,6 +15,12 @@ export const applyLeave = async (leaveData: any) => {
       FROM_LEAVE_DT_NEP,
       TO_LEAVE_DT,
       TO_LEAVE_DT_NEP,
+      LEAVE_TYPE,
+      PHONE_NO,
+      REMARKS,
+      JOB_ASSIGN_TO,
+      SUPERVISING_EMPLOYEE_CD,
+      SANCTIONING_EMPLOYEE_CD,
     } = leaveData;
 
     const sql = `
@@ -27,7 +33,13 @@ export const applyLeave = async (leaveData: any) => {
         FROM_LEAVE_DT,
         FROM_LEAVE_DT_NEP,
         TO_LEAVE_DT,
-        TO_LEAVE_DT_NEP
+        TO_LEAVE_DT_NEP,
+        LEAVE_TYPE,
+        PHONE_NO,
+        REMARKS,
+        JOB_ASSIGN_TO,
+        SUPERVISING_EMPLOYEE_CD,
+        SANCTIONING_EMPLOYEE_CD
       ) VALUES (
         :LEAVE_APPLY_ID,
         :EMPLOYEE_CD,
@@ -37,7 +49,13 @@ export const applyLeave = async (leaveData: any) => {
         TO_DATE(:FROM_LEAVE_DT, 'DD-MM-YYYY'),
         :FROM_LEAVE_DT_NEP,
         TO_DATE(:TO_LEAVE_DT, 'DD-MM-YYYY'),
-        :TO_LEAVE_DT_NEP
+        :TO_LEAVE_DT_NEP,
+        :LEAVE_TYPE,
+        :PHONE_NO,
+        :REMARKS,
+        :JOB_ASSIGN_TO,
+        :SUPERVISING_EMPLOYEE_CD,
+        : SANCTIONING_EMPLOYEE_CD
       )`;
 
     const bindParams = {
@@ -50,6 +68,12 @@ export const applyLeave = async (leaveData: any) => {
       FROM_LEAVE_DT_NEP,
       TO_LEAVE_DT,
       TO_LEAVE_DT_NEP,
+      LEAVE_TYPE,
+      PHONE_NO,
+      REMARKS,
+      JOB_ASSIGN_TO,
+      SUPERVISING_EMPLOYEE_CD,
+      SANCTIONING_EMPLOYEE_CD,
     };
 
     const result = await connection.execute(sql, bindParams);
@@ -185,6 +209,64 @@ export const updateLeave = async (leaveData: any, id: string) => {
       message: "Leave updated successfully",
     };
   } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const nepToEng = async (date: { from: string }) => {
+  try {
+    const connection = await connectToDB();
+
+    const sql = `SELECT fn_neptoeng(:fromDate) as convertedDate FROM dual`;
+    const result: any = await connection.execute(sql, { fromDate: date.from });
+    await connection.close();
+    console.log("result", result);
+
+    if (!result.rows || result.rows.length === 0) {
+      return {
+        status: 404,
+        message: "Date not found",
+      };
+    }
+
+    const convertedDate = result.rows[0][0];
+
+    return {
+      status: 200,
+      message: "Date converted successfully",
+      data: convertedDate,
+    };
+  } catch (error: any) {
+    console.error(error.message); // Log the error for debugging purposes
+    throw new Error(error.message);
+  }
+};
+export const engToNep = async (date: { from: string }) => {
+  try {
+    console.log("date", date);
+    const connection = await connectToDB();
+
+    const sql = `SELECT fn_engtonep(to_date(:fromDate,'YYYY-MM-DD')) as convertedDate FROM dual`;
+    const result: any = await connection.execute(sql, { fromDate: date.from });
+    await connection.close();
+    console.log("result", result);
+
+    if (!result.rows || result.rows.length === 0) {
+      return {
+        status: 404,
+        message: "Date not found",
+      };
+    }
+
+    const convertedDate = result.rows[0][0];
+
+    return {
+      status: 200,
+      message: "Date converted successfully",
+      data: convertedDate,
+    };
+  } catch (error: any) {
+    console.error(error.message); // Log the error for debugging purposes
     throw new Error(error.message);
   }
 };

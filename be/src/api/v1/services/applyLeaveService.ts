@@ -32,3 +32,19 @@ export const updateLeave = async (body: any, id: string) => {
     throw new Error(error.message);
   }
 };
+export const nepToEng = async (body: any) => {
+  try {
+    const res = await leaveService.nepToEng(body);
+    return res;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+export const engToNep = async (body: any) => {
+  try {
+    const res = await leaveService.engToNep(body);
+    return res;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

@@ -1,6 +1,6 @@
 import * as EmployeeModel from "../models/employeeModel";
 
-export const getEmployee = async (pageNumber: number, pageSize: number) => {
+export const getEmployee = async (pageNumber?: number, pageSize?: number) => {
   try {
     const res = await EmployeeModel.getEmployee(pageNumber, pageSize);
     return res;
