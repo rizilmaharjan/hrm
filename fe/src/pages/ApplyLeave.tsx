@@ -29,17 +29,17 @@ const ApplyLeave = () => {
 
   const handleSelectJobAssign = (item: ItemProps) => {
     setSelectedJobAssign(item);
-    setValue("jobAssign", item.id); // Set the value in the form
+    setValue("JOB_ASSIGN_TO", item.id); // Set the value in the form
   };
 
   const handleSelectSupervisor = (item: ItemProps) => {
     setSelectedSupervisor(item);
-    setValue("supervisingOfficer", item.id); // Set the value in the form
+    setValue("SUPERVISING_EMPLOYEE_CD", item.id); // Set the value in the form
   };
 
   const handleSelectSanctioningOfficer = (item: ItemProps) => {
     setSelectedSanctioningOfficer(item);
-    setValue("sanctioningOfficer", item.id); // Set the value in the form
+    setValue("SANCTIONING_EMPLOYEE_CD", item.id); // Set the value in the form
   };
 
   const onSubmit = (data) => {
@@ -57,7 +57,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="text"
-                  {...register("leaveFromNep")}
+                  {...register("FROM_LEAVE_DT_NEP")}
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">B.S.</span>
@@ -65,7 +65,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="date"
-                  {...register("leaveFrom")}
+                  {...register("FROM_LEAVE_DT")}
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">A.D.</span>
@@ -76,7 +76,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="text"
-                  {...register("leaveToNep")}
+                  {...register("TO_LEAVE_DT_NEP")}
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">B.S.</span>
@@ -84,7 +84,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="date"
-                  {...register("leaveTo")}
+                  {...register("TO_LEAVE_DT")}
                   className="block w-full p-2.5 text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <span className="ml-3 font-bold">A.D.</span>
@@ -93,7 +93,7 @@ const ApplyLeave = () => {
             <div className="grid grid-cols-2 mb-2">
               <label htmlFor="leave-type">Leave Type</label>
               <select
-                {...register("leaveType")}
+                {...register("LEAVE_CD")}
                 className="bg-gray-50 border border-gray-300 text-gray-900 mb-5 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
                 <option value="">Select</option>
@@ -111,7 +111,7 @@ const ApplyLeave = () => {
                   id="full-time-leave"
                   type="radio"
                   value="C"
-                  {...register("absenceType")}
+                  {...register("LEAVE_TYPE")}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
                 <label
@@ -126,7 +126,7 @@ const ApplyLeave = () => {
                   id="fore-noon"
                   type="radio"
                   value="F"
-                  {...register("absenceType")}
+                  {...register("LEAVE_TYPE")}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
                 <label
@@ -139,7 +139,7 @@ const ApplyLeave = () => {
                   id="after-noon"
                   type="radio"
                   value="A"
-                  {...register("absenceType")}
+                  {...register("LEAVE_TYPE")}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
                 <label
@@ -154,14 +154,14 @@ const ApplyLeave = () => {
               <label htmlFor="contact-no">Contact No</label>
               <input
                 type="text"
-                {...register("phoneNo")}
+                {...register("PHONE_NO")}
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div className="grid grid-cols-2 mb-2 items-center">
               <label htmlFor="remarks">Remarks</label>
               <textarea
-                {...register("remarks")}
+                {...register("REMARKS")}
                 className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -174,7 +174,7 @@ const ApplyLeave = () => {
                 dropdownStyles="bg-white"
                 onSelect={handleSelectJobAssign}
               />
-              <input type="hidden" {...register("jobAssign")} />
+              <input type="hidden" {...register("JOB_ASSIGN_TO")} />
             </div>
             <div className="grid grid-cols-2 mb-2 items-center">
               <label htmlFor="supervising-officer-cd">
@@ -187,7 +187,7 @@ const ApplyLeave = () => {
                 dropdownStyles="bg-white"
                 onSelect={handleSelectSupervisor}
               />
-              <input type="hidden" {...register("supervisingOfficer")} />
+              <input type="hidden" {...register("SUPERVISING_EMPLOYEE_CD")} />
             </div>
             <div className="grid grid-cols-2 mb-2 items-center">
               <label htmlFor="sanctioning-officer-cd">
@@ -200,7 +200,7 @@ const ApplyLeave = () => {
                 dropdownStyles="bg-white"
                 onSelect={handleSelectSanctioningOfficer}
               />
-              <input type="hidden" {...register("sanctioningOfficer")} />
+              <input type="hidden" {...register("SANCTIONING_EMPLOYEE_CD")} />
             </div>
             <div className="flex items-center justify-end gap-4">
               <button
