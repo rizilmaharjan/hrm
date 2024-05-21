@@ -9,26 +9,43 @@ type TLeaveType = {
 };
 
 const ApplyLeave = () => {
-  const { register, handleSubmit } = useForm();
-  const [selectedItem, setSelectedItem] = useState<ItemProps | null>(null);
+  const { register, handleSubmit, setValue } = useForm();
+  const [selectedJobAssign, setSelectedJobAssign] = useState<ItemProps | null>(
+    null
+  );
+  const [selectedSupervisor, setSelectedSupervisor] =
+    useState<ItemProps | null>(null);
+  const [selectedSanctioningOfficer, setSelectedSanctioningOfficer] =
+    useState<ItemProps | null>(null);
+
   const { data: employeeData } = useFetchData("/v1/employee");
   const { data: leaveTypeData } = useFetchData("/v1/leave-type");
   const leaveType = leaveTypeData?.data;
-  // const employees = employeeData?.employees;
-  // console.log("Employees: ", employees);
+
   const dropdownData = employeeData?.employees?.map((item) => ({
     id: item.employee_cd,
     title: `${item.first_name} ${item.middle_name || ""} ${item.sur_name}`,
   }));
-  // console.log(dropdownData);
-  const handleSelect = (item: ItemProps) => {
-    setSelectedItem(item);
-    console.log(item);
+
+  const handleSelectJobAssign = (item: ItemProps) => {
+    setSelectedJobAssign(item);
+    setValue("jobAssign", item.id); // Set the value in the form
+  };
+
+  const handleSelectSupervisor = (item: ItemProps) => {
+    setSelectedSupervisor(item);
+    setValue("supervisingOfficer", item.id); // Set the value in the form
+  };
+
+  const handleSelectSanctioningOfficer = (item: ItemProps) => {
+    setSelectedSanctioningOfficer(item);
+    setValue("sanctioningOfficer", item.id); // Set the value in the form
   };
 
   const onSubmit = (data) => {
     console.log(data);
   };
+
   return (
     <>
       <div className="bg-gray-100 max-w-[48rem] p-4 m-2 rounded-lg">
@@ -155,21 +172,22 @@ const ApplyLeave = () => {
                 placeholder="Search items..."
                 inputStyles="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 dropdownStyles="bg-white"
-                onSelect={handleSelect}
+                onSelect={handleSelectJobAssign}
               />
-              {/* <input
-                type="text"
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-              /> */}
+              <input type="hidden" {...register("jobAssign")} />
             </div>
             <div className="grid grid-cols-2 mb-2 items-center">
               <label htmlFor="supervising-officer-cd">
                 Supervising Officer Code
               </label>
-              <input
-                type="text"
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              <Dropdown
+                items={dropdownData}
+                placeholder="Search items..."
+                inputStyles="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                dropdownStyles="bg-white"
+                onSelect={handleSelectSupervisor}
               />
+              <input type="hidden" {...register("supervisingOfficer")} />
             </div>
             <div className="grid grid-cols-2 mb-2 items-center">
               <label htmlFor="sanctioning-officer-cd">
@@ -180,31 +198,19 @@ const ApplyLeave = () => {
                 placeholder="Search items..."
                 inputStyles="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 dropdownStyles="bg-white"
-                onSelect={handleSelect}
+                onSelect={handleSelectSanctioningOfficer}
               />
-              {/* <input
-                type="text"
-                className="block p-2.5 w-full text-sm text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-              /> */}
+              <input type="hidden" {...register("sanctioningOfficer")} />
             </div>
-            {/* <Dropdown
-              items={["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]}
-              placeholder="Search items..."
-              inputStyles="text-gray-700"
-              dropdownStyles="bg-white"
-              onSelect={handleSelect}
-            /> */}
             <div className="flex items-center justify-end gap-4">
               <button
                 type="submit"
-                // disabled={isLoading}
                 className="text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
               >
                 Submit
               </button>
               <button
                 type="reset"
-                // disabled={isLoading}
                 className="text-white bg-red-600 hover:bg-red-700 focus:ring-2 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
               >
                 Reset
