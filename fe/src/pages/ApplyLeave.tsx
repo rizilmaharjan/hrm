@@ -26,13 +26,6 @@ type TApplyLeave = {
 
 const ApplyLeave = () => {
   const { register, handleSubmit, setValue, reset } = useForm<TApplyLeave>();
-  const [selectedJobAssign, setSelectedJobAssign] = useState<ItemProps | null>(
-    null
-  );
-  const [selectedSupervisor, setSelectedSupervisor] =
-    useState<ItemProps | null>(null);
-  const [selectedSanctioningOfficer, setSelectedSanctioningOfficer] =
-    useState<ItemProps | null>(null);
 
   const [englishDateFrom, setEnglishDateFrom] = useState("");
   const [englishDateTo, setEnglishDateTo] = useState("");
@@ -41,66 +34,50 @@ const ApplyLeave = () => {
 
   useEffect(() => {
     if (englishDateFrom) {
-      reset((prevValues) => ({
-        ...prevValues,
-        FROM_LEAVE_DT: englishDateFrom,
-      }));
+      setValue("FROM_LEAVE_DT", englishDateFrom);
     }
-  }, [englishDateFrom, reset]);
+  }, [englishDateFrom, setValue]);
 
   useEffect(() => {
     if (englishDateTo) {
-      reset((prevValues) => ({
-        ...prevValues,
-        TO_LEAVE_DT: englishDateTo,
-      }));
+      setValue("TO_LEAVE_DT", englishDateTo);
     }
-  }, [englishDateTo, reset]);
+  }, [englishDateTo, setValue]);
 
   useEffect(() => {
     if (nepaliDateFrom) {
-      reset((prevValues) => ({
-        ...prevValues,
-        FROM_LEAVE_DT_NEP: nepaliDateFrom,
-      }));
+      setValue("FROM_LEAVE_DT_NEP", nepaliDateFrom);
     }
-  }, [nepaliDateFrom, reset]);
+  }, [nepaliDateFrom, setValue]);
 
   useEffect(() => {
     if (nepaliDateTo) {
-      reset((prevValues) => ({
-        ...prevValues,
-        TO_LEAVE_DT_NEP: nepaliDateTo,
-      }));
+      setValue("TO_LEAVE_DT_NEP", nepaliDateTo);
     }
-  }, [nepaliDateTo, reset]);
+  }, [nepaliDateTo, setValue]);
 
   const { data: employeeData } = useFetchData("/v1/employee");
   const { data: leaveTypeData } = useFetchData("/v1/leave-type");
   const leaveType = leaveTypeData?.data;
 
-  const dropdownData = employeeData?.employees?.map((item) => ({
+  const dropdownData = employeeData?.employees?.map((item: any) => ({
     id: item.employee_cd,
     title: `${item.first_name} ${item.middle_name || ""} ${item.sur_name}`,
   }));
 
   const handleSelectJobAssign = (item: ItemProps) => {
-    setSelectedJobAssign(item);
     setValue("JOB_ASSIGN_TO", item.id); // Set the value in the form
   };
 
   const handleSelectSupervisor = (item: ItemProps) => {
-    setSelectedSupervisor(item);
     setValue("SUPERVISING_EMPLOYEE_CD", item.id); // Set the value in the form
   };
 
   const handleSelectSanctioningOfficer = (item: ItemProps) => {
-    setSelectedSanctioningOfficer(item);
     setValue("SANCTIONING_EMPLOYEE_CD", item.id); // Set the value in the form
   };
 
   const onSubmit: SubmitHandler<TApplyLeave> = async (data) => {
-    // console.log(data);
     try {
       const res = await Instance.post(
         "http://localhost:8000/api/v1/leave",
