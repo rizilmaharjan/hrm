@@ -28,7 +28,7 @@ const ApplyLeave = () => {
     if (englishDateFrom) {
       reset((prevValues) => ({
         ...prevValues,
-        leaveFrom: englishDateFrom,
+        FROM_LEAVE_DT: englishDateFrom,
       }));
     }
   }, [englishDateFrom, reset]);
@@ -37,7 +37,7 @@ const ApplyLeave = () => {
     if (englishDateTo) {
       reset((prevValues) => ({
         ...prevValues,
-        leaveTo: englishDateTo,
+        TO_LEAVE_DT: englishDateTo,
       }));
     }
   }, [englishDateTo, reset]);
@@ -46,7 +46,7 @@ const ApplyLeave = () => {
     if (nepaliDateFrom) {
       reset((prevValues) => ({
         ...prevValues,
-        leaveFromNep: nepaliDateFrom,
+        FROM_LEAVE_DT_NEP: nepaliDateFrom,
       }));
     }
   }, [nepaliDateFrom, reset]);
@@ -55,7 +55,7 @@ const ApplyLeave = () => {
     if (nepaliDateTo) {
       reset((prevValues) => ({
         ...prevValues,
-        leaveToNep: nepaliDateTo,
+        TO_LEAVE_DT_NEP: nepaliDateTo,
       }));
     }
   }, [nepaliDateTo, reset]);
@@ -131,7 +131,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="text"
-                  {...register("leaveFromNep")}
+                  {...register("FROM_LEAVE_DT_NEP")}
                   onBlur={(e) =>
                     convertNepaliToEnglish(e.target.value, "leaveFrom")
                   }
@@ -142,7 +142,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="date"
-                  {...register("leaveFrom")}
+                  {...register("FROM_LEAVE_DT")}
                   onBlur={(e) =>
                     convertEnglishToNepali(e.target.value, "leaveFrom")
                   }
@@ -156,7 +156,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="text"
-                  {...register("leaveToNep")}
+                  {...register("TO_LEAVE_DT_NEP")}
                   onBlur={(e) =>
                     convertNepaliToEnglish(e.target.value, "leaveTo")
                   }
@@ -167,7 +167,7 @@ const ApplyLeave = () => {
               <div className="flex items-center">
                 <input
                   type="date"
-                  {...register("leaveTo")}
+                  {...register("TO_LEAVE_DT")}
                   onBlur={(e) =>
                     convertEnglishToNepali(e.target.value, "leaveTo")
                   }
