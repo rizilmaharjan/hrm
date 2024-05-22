@@ -21,13 +21,13 @@ const EmployeeSidebar: React.FC = () => {
           {employeeSidebar.map((item) => (
             <li key={item.id} className="rounded-lg text-white group">
               <div
-                className="flex justify-between items-center rounded-lg cursor-pointer hover:bg-gray-600"
+                className="flex justify-between items-center rounded-lg cursor-pointer hover:bg-gray-500"
                 onClick={() => handleItemClick(item.id)}
               >
                 <NavLink
                   className={({ isActive }) =>
                     isActive
-                      ? "w-full flex items-center font-bold p-2 rounded-lg bg-gray-600"
+                      ? "w-full flex items-center font-bold p-2 rounded-lg bg-gray-500"
                       : "flex items-center p-2"
                   }
                   to={item.path}
@@ -51,8 +51,8 @@ const EmployeeSidebar: React.FC = () => {
                         to={child.path}
                         className={({ isActive }) =>
                           isActive
-                            ? "w-full flex items-center font-bold p-2 rounded-lg text-gray-600 hover:text-gray-600"
-                            : "flex items-center p-2 hover:text-gray-600"
+                            ? "w-full flex items-center font-bold p-2 rounded-lg text-gray-500 hover:text-gray-500"
+                            : "flex items-center p-2 hover:text-gray-500"
                         }
                       >
                         {child.title}
