@@ -3,6 +3,7 @@ import Dropdown, { ItemProps } from "../components/Dropdown";
 import { useEffect, useState } from "react";
 import { useFetchData } from "../api";
 import { Instance } from "../utils/Instance";
+import toast from "react-hot-toast";
 
 type TLeaveType = {
   leave_cd: string;
@@ -98,8 +99,19 @@ const ApplyLeave = () => {
     setValue("SANCTIONING_EMPLOYEE_CD", item.id); // Set the value in the form
   };
 
-  const onSubmit: SubmitHandler<TApplyLeave> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TApplyLeave> = async (data) => {
+    // console.log(data);
+    try {
+      const res = await Instance.post(
+        "http://localhost:8000/api/v1/leave",
+        data
+      );
+      toast.success(res.data.message);
+      reset();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   const convertNepaliToEnglish = async (nepaliDate: string, field: string) => {
