@@ -270,7 +270,7 @@ export default function Allowance() {
                   >
                     <th
                       scope="row"
-                      className=" py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
                     >
                       {item.allowance_CD}
                     </th>
