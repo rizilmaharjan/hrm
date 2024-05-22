@@ -1,13 +1,12 @@
 import { connectToDB } from "../../../config/database";
 
-export const applyLeave = async (leaveData: any) => {
+export const applyLeave = async (leaveData: any, username: string) => {
   console.log("leave datas", leaveData);
   try {
     const connection = await connectToDB();
 
     const {
       LEAVE_APPLY_ID,
-      EMPLOYEE_CD,
       LEAVE_APPLIED_DT,
       LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
@@ -22,6 +21,29 @@ export const applyLeave = async (leaveData: any) => {
       SUPERVISING_EMPLOYEE_CD,
       SANCTIONING_EMPLOYEE_CD,
     } = leaveData;
+
+    // Query to check the leave balance
+    const balanceSql = `
+      SELECT LEAVE_BALANCE
+      FROM leave_balance
+      WHERE EMPLOYEE_CD = :username AND LEAVE_CD = :leaveCd
+    `;
+    const balanceResult: any = await connection.execute(balanceSql, {
+      username,
+      leaveCd: LEAVE_CD,
+    });
+
+    if (
+      !balanceResult.rows ||
+      balanceResult.rows.length === 0 ||
+      balanceResult.rows[0][0] <= 0
+    ) {
+      await connection.close();
+      return {
+        status: 400,
+        message: "Insufficient leave balance",
+      };
+    }
 
     const sql = `
       INSERT INTO employee_leave_apply (
@@ -55,12 +77,13 @@ export const applyLeave = async (leaveData: any) => {
         :REMARKS,
         :JOB_ASSIGN_TO,
         :SUPERVISING_EMPLOYEE_CD,
-        : SANCTIONING_EMPLOYEE_CD
-      )`;
+        :SANCTIONING_EMPLOYEE_CD
+      )
+    `;
 
     const bindParams = {
       LEAVE_APPLY_ID,
-      EMPLOYEE_CD,
+      EMPLOYEE_CD: username,
       LEAVE_APPLIED_DT,
       LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
@@ -81,16 +104,13 @@ export const applyLeave = async (leaveData: any) => {
     await connection.commit();
     await connection.close();
 
-    console.log("Leave applied successfully.");
-
     return {
       status: 201,
-      message: "leave applied successfully",
+      message: "Leave applied successfully",
       data: result.rows,
     };
-  } catch (error) {
-    console.error("Error applying leave:", error);
-    throw error;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
 
@@ -245,7 +265,6 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
 };
 export const engToNep = async (date: { englishDate: string }) => {
   try {
-    console.log("date", date);
     const connection = await connectToDB();
 
     const sql = `SELECT fn_engtonep(to_date(:fromDate,'YYYY-MM-DD')) as convertedDate FROM dual`;
@@ -253,7 +272,6 @@ export const engToNep = async (date: { englishDate: string }) => {
       fromDate: date.englishDate,
     });
     await connection.close();
-    console.log("result", result);
 
     if (!result.rows || result.rows.length === 0) {
       return {
@@ -271,6 +289,49 @@ export const engToNep = async (date: { englishDate: string }) => {
     };
   } catch (error: any) {
     console.error(error.message); // Log the error for debugging purposes
+    throw new Error(error.message);
+  }
+};
+
+export const leaveBalance = async (username: string) => {
+  try {
+    const connection = await connectToDB();
+    const sql = `
+      SELECT lb.EMPLOYEE_CD, lb.LEAVE_CD, lb.LEAVE_BALANCE, lb.ELIGIBLE_LEAVE,
+             lb.LEAVE_UPDATED_DT, lb.MONTHLY_LEAVE_ADD_DT,
+             lm.LEAVE_DESC AS LEAVE_TYPE
+      FROM leave_balance lb
+      JOIN leave_mst lm ON lb.LEAVE_CD = lm.LEAVE_CD
+      WHERE lb.EMPLOYEE_CD = :username
+    `;
+    const result: any = await connection.execute(sql, [username]);
+
+    if (!result.metaData || !result.rows) {
+      throw new Error("No metadata or rows found");
+    }
+
+    // Extract the column names from metaData
+    const columns = result.metaData.map((col: any) => col.name);
+
+    // Map rows to an array of objects
+    const rows = result.rows.map((row: any[]) => {
+      let obj: any = {};
+      columns.forEach((col: string, index: number) => {
+        obj[col] = row[index];
+      });
+      return obj;
+    });
+
+    console.log("leave balance result", rows);
+
+    await connection.close();
+
+    return {
+      status: 200,
+      message: "Leave balance fetched successfully",
+      data: rows,
+    };
+  } catch (error: any) {
     throw new Error(error.message);
   }
 };
