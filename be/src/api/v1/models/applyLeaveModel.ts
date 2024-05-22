@@ -63,7 +63,7 @@ export const applyLeave = async (leaveData: any, username: string) => {
         SUPERVISING_EMPLOYEE_CD,
         SANCTIONING_EMPLOYEE_CD
       ) VALUES (
-        :LEAVE_APPLY_ID,
+        pkgleave.fn_getleaveapplyid(fn_engtonep(sysdate)),
         :EMPLOYEE_CD,
         sysdate,
         fn_engtonep(sysdate),
@@ -234,10 +234,12 @@ export const updateLeave = async (leaveData: any, id: string) => {
 };
 
 export const nepToEng = async (date: { nepaliDate: string }) => {
+  console.log("Date:", date);
+  console.log("typeOf nepalidate", typeof date.nepaliDate);
   try {
     const connection = await connectToDB();
 
-    const sql = `SELECT fn_neptoeng(:fromDate) as convertedDate FROM dual`;
+    const sql = `SELECT to_char(fn_neptoeng(:fromDate),'yyyy-mm-dd') as convertedDate FROM dual`;
     const result: any = await connection.execute(sql, {
       fromDate: date.nepaliDate,
     });
@@ -253,6 +255,8 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
 
     const convertedDate = result.rows[0][0];
 
+    console.log("Converted Date", typeof convertedDate);
+
     return {
       status: 200,
       message: "Date converted successfully",
@@ -264,6 +268,7 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
   }
 };
 export const engToNep = async (date: { englishDate: string }) => {
+  console.log("Eng Date", date);
   try {
     const connection = await connectToDB();
 
@@ -281,6 +286,7 @@ export const engToNep = async (date: { englishDate: string }) => {
     }
 
     const convertedDate = result.rows[0][0];
+    console.log("eng to nep", convertedDate);
 
     return {
       status: 200,
