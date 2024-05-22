@@ -6,9 +6,6 @@ export const applyLeave = async (leaveData: any, username: string) => {
     const connection = await connectToDB();
 
     const {
-      LEAVE_APPLY_ID,
-      LEAVE_APPLIED_DT,
-      LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
       FROM_LEAVE_DT,
       FROM_LEAVE_DT_NEP,
@@ -82,10 +79,10 @@ export const applyLeave = async (leaveData: any, username: string) => {
     `;
 
     const bindParams = {
-      LEAVE_APPLY_ID,
+      // LEAVE_APPLY_ID,
       EMPLOYEE_CD: username,
-      LEAVE_APPLIED_DT,
-      LEAVE_APPLIED_DT_NEP,
+      // LEAVE_APPLIED_DT,
+      // LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
       FROM_LEAVE_DT: FROM_LEAVE_DT.replace(/-/g, "/"), // Replace '-' with '/' for Oracle's TO_DATE function
       FROM_LEAVE_DT_NEP,
@@ -234,8 +231,6 @@ export const updateLeave = async (leaveData: any, id: string) => {
 };
 
 export const nepToEng = async (date: { nepaliDate: string }) => {
-  console.log("Date:", date);
-  console.log("typeOf nepalidate", typeof date.nepaliDate);
   try {
     const connection = await connectToDB();
 
@@ -244,8 +239,6 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
       fromDate: date.nepaliDate,
     });
     await connection.close();
-    console.log("result", result);
-
     if (!result.rows || result.rows.length === 0) {
       return {
         status: 404,
@@ -254,9 +247,6 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
     }
 
     const convertedDate = result.rows[0][0];
-
-    console.log("Converted Date", typeof convertedDate);
-
     return {
       status: 200,
       message: "Date converted successfully",
@@ -286,7 +276,7 @@ export const engToNep = async (date: { englishDate: string }) => {
     }
 
     const convertedDate = result.rows[0][0];
-    console.log("eng to nep", convertedDate);
+    // console.log("eng to nep", convertedDate);
 
     return {
       status: 200,
