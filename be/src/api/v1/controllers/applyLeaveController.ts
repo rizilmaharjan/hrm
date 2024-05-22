@@ -5,7 +5,12 @@ import { appError } from "../helpers/appError";
 
 export const applyLeave = catchAsync(
   async (req: any, res: any, next: NextFunction) => {
-    const { status, message, data } = await leaveService.applyLeave(req.body);
+    const { username } = res.locals.user;
+
+    const { status, message, data } = await leaveService.applyLeave(
+      req.body,
+      username
+    );
     if (status === 400) {
       next(new appError(status, message));
       return;
@@ -68,6 +73,19 @@ export const nepToEng = catchAsync(
 export const engToNep = catchAsync(
   async (req: any, res: any, next: NextFunction) => {
     const { status, message, data } = await leaveService.engToNep(req.body);
+    if (status === 400) {
+      next(new appError(status, message));
+      return;
+    }
+
+    return res.status(status).json({ message, data });
+  }
+);
+export const leaveBalance = catchAsync(
+  async (req: any, res: any, next: NextFunction) => {
+    const { username } = res.locals.user;
+
+    const { status, message, data } = await leaveService.leaveBalance(username);
     if (status === 400) {
       next(new appError(status, message));
       return;

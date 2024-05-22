@@ -44,6 +44,12 @@ const routes = () => {
     restrictTo("Employee"),
     leaveController.engToNep
   );
+  router.get(
+    "/v1/leave-balance",
+    verifyToken,
+    restrictTo("Employee"),
+    leaveController.leaveBalance
+  );
   // router.get("/v1/users", getUser);
   return router;
 };
