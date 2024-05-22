@@ -3,7 +3,6 @@ import Dropdown, { ItemProps } from "../components/Dropdown";
 import { useEffect, useState } from "react";
 import { useFetchData } from "../api";
 import { Instance } from "../utils/Instance";
-import { useAppSelector } from "../redux/hooks";
 
 type TLeaveType = {
   leave_cd: string;
@@ -25,9 +24,6 @@ type TApplyLeave = {
 };
 
 const ApplyLeave = () => {
-  const { currentUser } = useAppSelector((state) => state.user);
-  const EMPLOYEE_CD = currentUser?.EMPLOYEE_CD;
-
   const { register, handleSubmit, setValue, reset } = useForm<TApplyLeave>();
   const [selectedJobAssign, setSelectedJobAssign] = useState<ItemProps | null>(
     null
@@ -103,8 +99,7 @@ const ApplyLeave = () => {
   };
 
   const onSubmit: SubmitHandler<TApplyLeave> = (data) => {
-    const leaveData = { EMPLOYEE_CD, ...data };
-    console.log(leaveData);
+    console.log(data);
   };
 
   const convertNepaliToEnglish = async (nepaliDate: string, field: string) => {

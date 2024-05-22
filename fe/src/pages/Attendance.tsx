@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Report from "../components/modal/Report";
 import ApplyLeave from "./ApplyLeave";
+import LeaveBalance from "../components/LeaveBalance";
 
 const Attendance = () => {
   const [openReport, setOpenReport] = useState<boolean>(false);
@@ -16,7 +17,12 @@ const Attendance = () => {
       >
         Report
       </button> */}
-      <ApplyLeave />
+      <div className="flex justify-between">
+        <ApplyLeave />
+        <div className="mt-10 mr-10">
+          <LeaveBalance />
+        </div>
+      </div>
     </div>
   );
 };
