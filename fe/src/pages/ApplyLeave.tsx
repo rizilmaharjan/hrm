@@ -1,16 +1,34 @@
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import Dropdown, { ItemProps } from "../components/Dropdown";
 import { useEffect, useState } from "react";
 import { useFetchData } from "../api";
 import { Instance } from "../utils/Instance";
+import { useAppSelector } from "../redux/hooks";
 
 type TLeaveType = {
   leave_cd: string;
   leave_desc: string;
 };
 
+type TApplyLeave = {
+  FROM_LEAVE_DT_NEP: string;
+  FROM_LEAVE_DT: string;
+  TO_LEAVE_DT_NEP: string;
+  TO_LEAVE_DT: string;
+  LEAVE_CD: string;
+  LEAVE_TYPE: string;
+  PHONE_NO: string;
+  REMARKS: string;
+  JOB_ASSIGN_TO: string;
+  SUPERVISING_EMPLOYEE_CD: string;
+  SANCTIONING_EMPLOYEE_CD: string;
+};
+
 const ApplyLeave = () => {
-  const { register, handleSubmit, setValue, reset } = useForm();
+  const { currentUser } = useAppSelector((state) => state.user);
+  const EMPLOYEE_CD = currentUser?.EMPLOYEE_CD;
+
+  const { register, handleSubmit, setValue, reset } = useForm<TApplyLeave>();
   const [selectedJobAssign, setSelectedJobAssign] = useState<ItemProps | null>(
     null
   );
@@ -84,8 +102,9 @@ const ApplyLeave = () => {
     setValue("SANCTIONING_EMPLOYEE_CD", item.id); // Set the value in the form
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TApplyLeave> = (data) => {
+    const leaveData = { EMPLOYEE_CD, ...data };
+    console.log(leaveData);
   };
 
   const convertNepaliToEnglish = async (nepaliDate: string, field: string) => {

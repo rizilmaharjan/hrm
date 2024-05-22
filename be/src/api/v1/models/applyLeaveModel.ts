@@ -8,8 +8,6 @@ export const applyLeave = async (leaveData: any) => {
     const {
       LEAVE_APPLY_ID,
       EMPLOYEE_CD,
-      LEAVE_APPLIED_DT,
-      LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
       FROM_LEAVE_DT,
       FROM_LEAVE_DT_NEP,
@@ -43,30 +41,28 @@ export const applyLeave = async (leaveData: any) => {
       ) VALUES (
         :LEAVE_APPLY_ID,
         :EMPLOYEE_CD,
-        TO_DATE(:LEAVE_APPLIED_DT, 'DD-MM-YYYY'),
-        :LEAVE_APPLIED_DT_NEP,
+        sysdate,
+        fn_engtonep(sysdate),
         :LEAVE_CD,
-        TO_DATE(:FROM_LEAVE_DT, 'DD-MM-YYYY'),
+        TO_DATE(:FROM_LEAVE_DT, 'YYYY-MM-DD'),
         :FROM_LEAVE_DT_NEP,
-        TO_DATE(:TO_LEAVE_DT, 'DD-MM-YYYY'),
+        TO_DATE(:TO_LEAVE_DT, 'YYYY-MM-DD'),
         :TO_LEAVE_DT_NEP,
         :LEAVE_TYPE,
         :PHONE_NO,
         :REMARKS,
         :JOB_ASSIGN_TO,
         :SUPERVISING_EMPLOYEE_CD,
-        : SANCTIONING_EMPLOYEE_CD
+        :SANCTIONING_EMPLOYEE_CD
       )`;
 
     const bindParams = {
       LEAVE_APPLY_ID,
       EMPLOYEE_CD,
-      LEAVE_APPLIED_DT,
-      LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
-      FROM_LEAVE_DT,
+      FROM_LEAVE_DT: FROM_LEAVE_DT.replace(/-/g, "/"), // Replace '-' with '/' for Oracle's TO_DATE function
       FROM_LEAVE_DT_NEP,
-      TO_LEAVE_DT,
+      TO_LEAVE_DT: TO_LEAVE_DT.replace(/-/g, "/"), // Replace '-' with '/' for Oracle's TO_DATE function
       TO_LEAVE_DT_NEP,
       LEAVE_TYPE,
       PHONE_NO,
@@ -85,7 +81,7 @@ export const applyLeave = async (leaveData: any) => {
 
     return {
       status: 201,
-      message: "leave applied successfully",
+      message: "Leave applied successfully",
       data: result.rows,
     };
   } catch (error) {
