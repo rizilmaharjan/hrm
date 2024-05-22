@@ -1,14 +1,10 @@
 import { connectToDB } from "../../../config/database";
 
 export const applyLeave = async (leaveData: any, username: string) => {
-  console.log("leave datas", leaveData);
   try {
     const connection = await connectToDB();
 
     const {
-      LEAVE_APPLY_ID,
-      LEAVE_APPLIED_DT,
-      LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
       FROM_LEAVE_DT,
       FROM_LEAVE_DT_NEP,
@@ -22,7 +18,6 @@ export const applyLeave = async (leaveData: any, username: string) => {
       SANCTIONING_EMPLOYEE_CD,
     } = leaveData;
 
-    // Query to check the leave balance
     const balanceSql = `
       SELECT LEAVE_BALANCE
       FROM leave_balance
@@ -82,14 +77,11 @@ export const applyLeave = async (leaveData: any, username: string) => {
     `;
 
     const bindParams = {
-      LEAVE_APPLY_ID,
       EMPLOYEE_CD: username,
-      LEAVE_APPLIED_DT,
-      LEAVE_APPLIED_DT_NEP,
       LEAVE_CD,
-      FROM_LEAVE_DT: FROM_LEAVE_DT.replace(/-/g, "/"), // Replace '-' with '/' for Oracle's TO_DATE function
+      FROM_LEAVE_DT,
       FROM_LEAVE_DT_NEP,
-      TO_LEAVE_DT: TO_LEAVE_DT.replace(/-/g, "/"), // Replace '-' with '/' for Oracle's TO_DATE function
+      TO_LEAVE_DT,
       TO_LEAVE_DT_NEP,
       LEAVE_TYPE,
       PHONE_NO,
@@ -100,7 +92,6 @@ export const applyLeave = async (leaveData: any, username: string) => {
     };
 
     const result = await connection.execute(sql, bindParams);
-    console.log("result", result);
     await connection.commit();
     await connection.close();
 
@@ -146,7 +137,6 @@ export const getLeave = async (employeeCd: string) => {
         };
       });
 
-      console.log("Leave data", leaveDatas);
       return {
         status: 200,
         message: "Leave data fetched successfully",
@@ -234,8 +224,6 @@ export const updateLeave = async (leaveData: any, id: string) => {
 };
 
 export const nepToEng = async (date: { nepaliDate: string }) => {
-  console.log("Date:", date);
-  console.log("typeOf nepalidate", typeof date.nepaliDate);
   try {
     const connection = await connectToDB();
 
@@ -244,7 +232,6 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
       fromDate: date.nepaliDate,
     });
     await connection.close();
-    console.log("result", result);
 
     if (!result.rows || result.rows.length === 0) {
       return {
@@ -255,20 +242,16 @@ export const nepToEng = async (date: { nepaliDate: string }) => {
 
     const convertedDate = result.rows[0][0];
 
-    console.log("Converted Date", typeof convertedDate);
-
     return {
       status: 200,
       message: "Date converted successfully",
       data: convertedDate,
     };
   } catch (error: any) {
-    console.error(error.message); // Log the error for debugging purposes
     throw new Error(error.message);
   }
 };
 export const engToNep = async (date: { englishDate: string }) => {
-  console.log("Eng Date", date);
   try {
     const connection = await connectToDB();
 
@@ -286,7 +269,6 @@ export const engToNep = async (date: { englishDate: string }) => {
     }
 
     const convertedDate = result.rows[0][0];
-    console.log("eng to nep", convertedDate);
 
     return {
       status: 200,
@@ -294,7 +276,6 @@ export const engToNep = async (date: { englishDate: string }) => {
       data: convertedDate,
     };
   } catch (error: any) {
-    console.error(error.message); // Log the error for debugging purposes
     throw new Error(error.message);
   }
 };
@@ -327,8 +308,6 @@ export const leaveBalance = async (username: string) => {
       });
       return obj;
     });
-
-    console.log("leave balance result", rows);
 
     await connection.close();
 
