@@ -861,3 +861,27 @@ export const employeeSidebar: SidebarItem[] = [
     ],
   },
 ];
+
+export const noticeData = [
+  {
+    id: 1,
+    title: "New Collaboration Tool",
+    description:
+      "We've just launched a new collaboration tool to help teams work more efficiently.",
+    date: "May 20, 2024",
+  },
+  {
+    id: 2,
+    title: "Upcoming Company Retreat",
+    description:
+      "Join us for our annual company retreat in the mountains next month.",
+    date: "May 18, 2024",
+  },
+  {
+    id: 3,
+    title: "New HR Policy Update",
+    description:
+      "Please review the updated HR policy regarding time off and benefits.",
+    date: "May 15, 2024",
+  },
+];
