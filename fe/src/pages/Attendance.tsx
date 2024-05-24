@@ -17,12 +17,7 @@ const Attendance = () => {
       >
         Report
       </button> */}
-      <div className="flex justify-between">
-        <ApplyLeave />
-        <div className="mt-10 mr-10">
-          <LeaveBalance />
-        </div>
-      </div>
+      <div>Attendance</div>
     </div>
   );
 };

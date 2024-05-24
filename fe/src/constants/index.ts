@@ -264,6 +264,45 @@ export const serviceEventTitle = [
   },
 ];
 
+export const LeaveRequestTitle = [
+  {
+    id: 1,
+    title: "Code",
+  },
+  {
+    id: 2,
+    title: "Name",
+  },
+  {
+    id: 3,
+    title: "Leave Type",
+  },
+  {
+    id: 4,
+    title: "Applied Date",
+  },
+  {
+    id: 5,
+    title: "From",
+  },
+  {
+    id: 6,
+    title: "To",
+  },
+  {
+    id: 7,
+    title: "No of Days",
+  },
+  {
+    id: 8,
+    title: "Status",
+  },
+  // {
+  //   id: 9,
+  //   title: "Action",
+  // },
+];
+
 export const provincesData: Province[] = [
   {
     name: "Bagmati Province",
@@ -839,6 +878,11 @@ export const employeeSidebar: SidebarItem[] = [
         id: 11,
         title: "Apply Leave",
         path: "/attendance/apply-leave",
+      },
+      {
+        id: 12,
+        title: "Leave Request",
+        path: "/attendance/leave-request",
       },
     ],
   },

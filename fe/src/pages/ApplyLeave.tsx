@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFetchData } from "../api";
 import { Instance } from "../utils/Instance";
 import toast from "react-hot-toast";
+import LeaveBalance from "../components/LeaveBalance";
 
 type TLeaveType = {
   leave_cd: string;
@@ -124,7 +125,7 @@ const ApplyLeave = () => {
   };
 
   return (
-    <>
+    <div className="flex justify-between">
       <div className="bg-gray-100 max-w-[48rem] p-4 m-2 rounded-lg">
         <h1 className="text-lg font-bold mb-6">Leave Application</h1>
         <div>
@@ -308,7 +309,10 @@ const ApplyLeave = () => {
           </form>
         </div>
       </div>
-    </>
+      <div className="mt-10 mr-10">
+        <LeaveBalance />
+      </div>
+    </div>
   );
 };
 
