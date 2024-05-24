@@ -56,7 +56,12 @@ export const applyLeave = async (leaveData: any, username: string) => {
         REMARKS,
         JOB_ASSIGN_TO,
         SUPERVISING_EMPLOYEE_CD,
-        SANCTIONING_EMPLOYEE_CD
+        SANCTIONING_EMPLOYEE_CD,
+        LEAVE_SANCTION_FROM_DT,
+        LEAVE_SANCTION_TO_DT,
+        LEAVE_SANCTION_FROM_DT_NEP,
+        LEAVE_SANCTION_TO_DT_NEP,
+        ENTERED_BY
       ) VALUES (
         pkgleave.fn_getleaveapplyid(fn_engtonep(sysdate)),
         :EMPLOYEE_CD,
@@ -72,7 +77,12 @@ export const applyLeave = async (leaveData: any, username: string) => {
         :REMARKS,
         :JOB_ASSIGN_TO,
         :SUPERVISING_EMPLOYEE_CD,
-        :SANCTIONING_EMPLOYEE_CD
+        :SANCTIONING_EMPLOYEE_CD,
+        TO_DATE(:LEAVE_SANCTION_FROM_DT,'YYYY-MM-DD'),
+        TO_DATE(:LEAVE_SANCTION_TO_DT,'YYYY-MM-DD'),
+        :LEAVE_SANCTION_FROM_DT_NEP,
+        :LEAVE_SANCTION_TO_DT_NEP,
+        :ENTERED_BY
       )
     `;
 
@@ -89,6 +99,11 @@ export const applyLeave = async (leaveData: any, username: string) => {
       JOB_ASSIGN_TO,
       SUPERVISING_EMPLOYEE_CD,
       SANCTIONING_EMPLOYEE_CD,
+      LEAVE_SANCTION_FROM_DT: FROM_LEAVE_DT,
+      LEAVE_SANCTION_TO_DT: TO_LEAVE_DT,
+      LEAVE_SANCTION_FROM_DT_NEP: FROM_LEAVE_DT_NEP,
+      LEAVE_SANCTION_TO_DT_NEP: TO_LEAVE_DT_NEP,
+      ENTERED_BY: username,
     };
 
     const result = await connection.execute(sql, bindParams);
@@ -109,7 +124,7 @@ export const getLeave = async (employeeCd: string) => {
   try {
     const connection = await connectToDB();
 
-    let sql = `SELECT * FROM employee_leave_apply WHERE SUPERVISING_EMPLOYEE_CD = :employeeCd OR EMPLOYEE_CD = :employeeCd`;
+    let sql = `SELECT LEAVE_APPLY_ID, EMPLOYEE_CD, FN_EMPNAME(EMPLOYEE_CD) EMPNAME, LEAVE_CD, LEAVE_APPLIED_DT, LEAVE_APPLIED_DT_NEP, FROM_LEAVE_DT, FROM_LEAVE_DT_NEP, TO_LEAVE_DT, TO_LEAVE_DT_NEP, NO_OF_DAYS, APPROVED from employee_leave_apply WHERE SUPERVISING_EMPLOYEE_CD = :employeeCd OR EMPLOYEE_CD = :employeeCd`;
     const binds = {
       employeeCd,
     };
@@ -125,15 +140,16 @@ export const getLeave = async (employeeCd: string) => {
         return {
           LEAVE_APPLY_ID: row[0],
           EMPLOYEE_CD: row[1],
-          LEAVE_APPLIED_DT: row[2],
-          LEAVE_APPLIED_DT_NEP: row[3],
-          LEAVE_CD: row[4],
-          FROM_LEAVE_DT: row[5],
-          FROM_LEAVE_DT_NEP: row[6],
-          TO_LEAVE_DT: row[7],
-          TO_LEAVE_DT_NEP: row[8],
-          NO_OF_DAYS: row[9],
-          LEAVE_TYPE: row[10],
+          EMPNAME: row[2],
+          LEAVE_CD: row[3],
+          LEAVE_APPLIED_DT: row[4],
+          LEAVE_APPLIED_DT_NEP: row[5],
+          FROM_LEAVE_DT: row[6],
+          FROM_LEAVE_DT_NEP: row[7],
+          TO_LEAVE_DT: row[8],
+          TO_LEAVE_DT_NEP: row[9],
+          NO_OF_DAYS: row[10],
+          APPROVED: row[11],
         };
       });
 

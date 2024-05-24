@@ -1,4 +1,3 @@
-// import Profile from "../components/Profile";
 import AccountInfoSection from "../components/Profile/AccountInfoSection";
 import PayrollInfoSection from "../components/Profile/PayrollInfoSection";
 import PersonalInfoSection from "../components/Profile/PersonalInfoSection";
@@ -9,6 +8,7 @@ import ChangePassword from "../pages/ChangePassword";
 import Dashboard from "../pages/Dashboard";
 import Employee from "../pages/Employee";
 import JobType from "../pages/JobType";
+import LeaveRequest from "../pages/LeaveRequest";
 import Login from "../pages/Login";
 import Payroll from "../pages/Payroll";
 import Position from "../pages/Position";
@@ -100,13 +100,15 @@ export const employeeRoutes = [
   {
     path: "/attendance",
     element: <Attendance />,
-    children: [
-      //Employee Routes
-      {
-        path: "apply-leave",
-        element: <ApplyLeave />,
-      },
-    ],
+  },
+  //Employee Routes
+  {
+    path: "attendance/apply-leave",
+    element: <ApplyLeave />,
+  },
+  {
+    path: "attendance/leave-request",
+    element: <LeaveRequest />,
   },
   {
     path: "/payroll",
