@@ -1,4 +1,3 @@
-// import Profile from "../components/Profile";
 import AccountInfoSection from "../components/Profile/AccountInfoSection";
 import PayrollInfoSection from "../components/Profile/PayrollInfoSection";
 import PersonalInfoSection from "../components/Profile/PersonalInfoSection";

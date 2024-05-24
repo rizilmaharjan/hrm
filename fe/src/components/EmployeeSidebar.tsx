@@ -28,7 +28,7 @@ const EmployeeSidebar: React.FC = () => {
                   className={({ isActive }) =>
                     isActive
                       ? "w-full flex items-center font-bold p-2 rounded-lg bg-gray-600"
-                      : "flex items-center p-2"
+                      : "flex items-center p-2 w-full"
                   }
                   to={item.path}
                 >
@@ -36,23 +36,26 @@ const EmployeeSidebar: React.FC = () => {
                   <span className="flex-1 ms-3 whitespace-nowrap hidden sm:block">
                     {item.title}
                   </span>
+                  {item.children && (
+                    <span className="mr-2">
+                      {openItemId === item.id ? <IconUp /> : <IconDown />}
+                    </span>
+                  )}
                 </NavLink>
-                {item.children && (
-                  <span className="ml-2">
-                    {openItemId === item.id ? <IconUp /> : <IconDown />}
-                  </span>
-                )}
               </div>
               {item.children && openItemId === item.id && (
-                <ul className="ml-4 space-y-1">
+                <ul className="space-y-1 w-full mt-2">
                   {item.children.map((child) => (
-                    <li key={child.id}>
+                    <li
+                      className="px-8 rounded-lg  hover:bg-gray-600"
+                      key={child.id}
+                    >
                       <NavLink
                         to={child.path}
                         className={({ isActive }) =>
                           isActive
-                            ? "w-full flex items-center font-bold p-2 rounded-lg text-gray-600 hover:text-gray-600"
-                            : "flex items-center p-2 hover:text-gray-600"
+                            ? "w-full flex items-center font-bold p-2 rounded-lg"
+                            : "flex items-center p-2"
                         }
                       >
                         {child.title}
