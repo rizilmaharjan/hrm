@@ -264,6 +264,45 @@ export const serviceEventTitle = [
   },
 ];
 
+export const LeaveRequestTitle = [
+  {
+    id: 1,
+    title: "Code",
+  },
+  {
+    id: 2,
+    title: "Name",
+  },
+  {
+    id: 3,
+    title: "Leave Type",
+  },
+  {
+    id: 4,
+    title: "Applied Date",
+  },
+  {
+    id: 5,
+    title: "From",
+  },
+  {
+    id: 6,
+    title: "To",
+  },
+  {
+    id: 7,
+    title: "No of Days",
+  },
+  {
+    id: 8,
+    title: "Status",
+  },
+  // {
+  //   id: 9,
+  //   title: "Action",
+  // },
+];
+
 export const provincesData: Province[] = [
   {
     name: "Bagmati Province",
@@ -840,6 +879,11 @@ export const employeeSidebar: SidebarItem[] = [
         title: "Apply Leave",
         path: "/attendance/apply-leave",
       },
+      {
+        id: 12,
+        title: "Leave Request",
+        path: "/attendance/leave-request",
+      },
     ],
   },
   {
@@ -859,5 +903,29 @@ export const employeeSidebar: SidebarItem[] = [
         path: "/paysheet/tax-sheet",
       },
     ],
+  },
+];
+
+export const noticeData = [
+  {
+    id: 1,
+    title: "New Collaboration Tool",
+    description:
+      "We've just launched a new collaboration tool to help teams work more efficiently.",
+    date: "May 20, 2024",
+  },
+  {
+    id: 2,
+    title: "Upcoming Company Retreat",
+    description:
+      "Join us for our annual company retreat in the mountains next month.",
+    date: "May 18, 2024",
+  },
+  {
+    id: 3,
+    title: "New HR Policy Update",
+    description:
+      "Please review the updated HR policy regarding time off and benefits.",
+    date: "May 15, 2024",
   },
 ];
